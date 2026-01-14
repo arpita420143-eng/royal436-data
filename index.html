@@ -49,15 +49,15 @@
         }
         .live-dot { width: 6px; height: 6px; background: white; border-radius: 50%; }
 
-        /* 🔥 QUALITY & VIEWERS ROW 🔥 */
+        /* Controls Row */
         .controls-right { display: flex; align-items: center; gap: 10px; }
         
-        /* Quality Dropdown Style - AAPKA WALA STYLE */
+        /* Quality Dropdown Style */
         .quality-select {
             background: #333; color: white; border: 1px solid #777;
             padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: bold;
             outline: none; cursor: pointer; height: 26px;
-            display: none; /* Load hone par dikhega */
+            display: none; 
         }
 
         .viewer-count { color: #ccc; font-size: 12px; font-weight: 600; }
@@ -71,7 +71,6 @@
             overflow: hidden;
         }
         
-        /* Shaka Video Size */
         video { width: 100%; height: 100%; }
 
         /* Buttons */
@@ -123,9 +122,9 @@
 
     <script>
         // ==========================================
-        // 🔥 LINK UPDATE AREA 🔥
+        // 🔥 NEW STAR SPORTS LINK ADDED HERE 🔥
         // ==========================================
-        const liveLink = "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/cb403e1a7b7b6f8a9a9f3d6cd1f341f2d15560d2513adc356faa5e9d57612e24daf6a89fb11af06d429f0fc61d533314156cdb6880284398872eb85031770716e7f0b77bd99d027bf781537e35d6017f50e00c16d124532a97b94a59cc7d9469151fed3e6b541984a946a87555db830c9b6752f3c9a01d256d0606c4084d92f50df8a0f84d36802efeec4957942b46f9825cced015b29ed55f9853fb29a34dc1c7e0e88246d3c4c87cac54b57a5a0e60399f832cc2c80ae38ad76c3c987465174f53b6eecba74a6ccb45150dfcaa9abd63ad40978d17ab0a58d3964762fe52a345e86c8eef4aa9acc9b028231897b490e5bac29fc4abe83c32c706b1c2bb9f1b78e86b826dc7350c8c0252f2014fe616a4f035dcda0296bd685213cf9d4e9a89b3b93dd1e7bafd08c5ddfd94314301364a52c6158e9363ce31863889c01733534440edcb009fc6eb7308371fd6d41ef60612b5dfc4b6f43f6a8432480bb9308115553c9d7d2c5df53df59f0b698b0d03917a68a80f7bd314bcf007dd93f6c94a7bb9d7cc47bf48eab601ddbf428a652e560fb6bd7d0b16022d9eb9325469379211b293e7ee75000ce9b7feffc6522a0e7642015bc5b1b102f6e4a7081312d35c2f64067246c37eb82bb32d460227c51b939c017b8b032b4fb3f3df3cab817863d79ef9588e112d8e0f56a685099b2bb585/54/384x216_734654/index.m3u8";
+        const liveLink = "https://Jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD2_BTS/output/dash/Star_Sports_HD2_BTS-video=8219600-1061036621405.dash?__hdnea__=st=1768378922~exp=1768465322~acl=/*~hmac=16d56cfe4d293bb30d4ad9816ab22333736ea9fe5915b6baad55bda1aee232c5";
         // ==========================================
 
         function updateViewers() {
@@ -136,74 +135,62 @@
         setInterval(updateViewers, 3000); updateViewers();
 
         async function initApp() {
-            const video = document.getElementById('video');
-            const ui = video['ui'];
-            const controls = ui.getControls();
-            const player = controls.getPlayer();
-            const qualitySelect = document.getElementById('qualitySelect');
+            shaka.polyfill.installAll(); 
 
-            // Default config: Auto Bandwidth on
-            player.configure({ abr: { enabled: true } });
+            if (shaka.Player.isBrowserSupported()) {
+                const video = document.getElementById('video');
+                const ui = video['ui'];
+                const controls = ui.getControls();
+                const player = controls.getPlayer();
+                const qualitySelect = document.getElementById('qualitySelect');
 
-            try {
-                await player.load(liveLink);
-                console.log('Video loaded');
+                // Error listener
+                player.addEventListener('error', (e) => console.error(e));
 
-                // 🔥 LOGIC: Shaka Player Tracks ko Aapke Dropdown me daalna 🔥
-                const tracks = player.getVariantTracks();
-                
-                // Sirf unique resolution (height) waale tracks filter karo
-                const uniqueTracks = [];
-                const heights = new Set();
-                
-                // Sort tracks high to low
-                tracks.sort((a, b) => b.height - a.height);
-
-                tracks.forEach(track => {
-                    if (!heights.has(track.height) && track.height !== null) {
-                        uniqueTracks.push(track);
-                        heights.add(track.height);
-                    }
-                });
-
-                if (uniqueTracks.length > 0) {
-                    qualitySelect.style.display = 'block';
-                    qualitySelect.innerHTML = '<option value="-1">Auto</option>';
+                try {
+                    await player.load(liveLink);
+                    console.log("Star Sports Loaded");
                     
-                    uniqueTracks.forEach(track => {
-                        const option = document.createElement('option');
-                        option.value = track.id; // Track ID store karein
-                        option.text = track.height + 'p'; // User ko 720p, 480p dikhayein
-                        qualitySelect.appendChild(option);
-                    });
+                    const tracks = player.getVariantTracks();
+                    const uniqueTracks = [];
+                    const heights = new Set();
+                    
+                    tracks.sort((a, b) => b.height - a.height);
 
-                    // Dropdown Change Event
-                    qualitySelect.addEventListener('change', (e) => {
-                        const selectedValue = e.target.value;
-                        
-                        if (selectedValue == -1) {
-                            // Enable Auto (ABR)
-                            console.log('Switching to Auto');
-                            player.configure({ abr: { enabled: true } });
-                        } else {
-                            // Disable Auto & Set Specific Track
-                            console.log('Switching to Specific Track ID:', selectedValue);
-                            player.configure({ abr: { enabled: false } });
-                            
-                            // Find the track object by ID
-                            const trackToSelect = tracks.find(t => t.id == selectedValue);
-                            if (trackToSelect) {
-                                player.selectVariantTrack(trackToSelect, true); // true = clear buffer for immediate switch
-                            }
+                    tracks.forEach(track => {
+                        // DASH streams me kabhi kabhi height null hoti hai audio ke liye, usse filter kar rahe hain
+                        if (track.height && !heights.has(track.height)) {
+                            uniqueTracks.push(track);
+                            heights.add(track.height);
                         }
                     });
-                }
 
-            } catch (error) {
-                console.error('Error:', error);
+                    if (uniqueTracks.length > 0) {
+                        qualitySelect.style.display = 'block';
+                        qualitySelect.innerHTML = '<option value="-1">Auto</option>';
+                        uniqueTracks.forEach(track => {
+                            const option = document.createElement('option');
+                            option.value = track.id; 
+                            option.text = track.height + 'p';
+                            qualitySelect.appendChild(option);
+                        });
+
+                        qualitySelect.addEventListener('change', (e) => {
+                            if (e.target.value == -1) {
+                                player.configure({ abr: { enabled: true } });
+                            } else {
+                                player.configure({ abr: { enabled: false } });
+                                const track = tracks.find(t => t.id == e.target.value);
+                                if (track) player.selectVariantTrack(track, true);
+                            }
+                        });
+                    }
+
+                } catch (error) {
+                    console.error('Error:', error);
+                }
             }
         }
-
         document.addEventListener('shaka-ui-loaded', initApp);
     </script>
 </body>
