@@ -3,87 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Match Manas Pro Live</title>
+    <title>Match Manas Pro</title>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     
     <style>
-        /* --- BROADCASTER THEME --- */
-        body {
-            margin: 0; padding: 0; background-color: #0b0f19; color: white;
-            font-family: 'Segoe UI', sans-serif; text-align: center;
-        }
-
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, #b71540, #0c2461);
-            padding: 20px 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-        }
-        .header h1 {
-            margin: 0; font-size: 24px; text-transform: uppercase;
-            letter-spacing: 2px; color: #fff; font-weight: 900;
-        }
+        /* --- THEME STYLES --- */
+        body { margin: 0; padding: 0; background-color: #0b0f19; color: white; font-family: 'Segoe UI', sans-serif; text-align: center; }
+        .header { background: linear-gradient(135deg, #b71540, #0c2461); padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
+        .header h1 { margin: 0; font-size: 24px; text-transform: uppercase; color: #fff; font-weight: 900; }
         .header span { color: #f6b93b; }
-
-        /* Container */
-        .container { max-width: 900px; margin: 20px auto; padding: 10px; }
-
-        /* Player Box */
-        .player-box {
-            background: #1e272e; padding: 10px; border-radius: 15px;
-            border: 1px solid #4b6584; box-shadow: 0 0 25px rgba(0, 229, 255, 0.1);
-        }
-
-        /* Live Info Bar */
-        .live-info-bar {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 10px; padding: 0 5px;
-        }
-
-        .live-badge {
-            background-color: #ff0000; color: white; padding: 4px 10px;
-            border-radius: 4px; font-weight: bold; font-size: 11px;
-            display: flex; align-items: center; gap: 5px;
-            animation: blink 1.5s infinite;
-        }
-        .live-dot { width: 6px; height: 6px; background: white; border-radius: 50%; }
-
-        /* 🔥 QUALITY & VIEWERS ROW 🔥 */
-        .controls-right { display: flex; align-items: center; gap: 10px; }
         
-        /* Quality Dropdown Style */
-        .quality-select {
-            background: #333; color: white; border: 1px solid #777;
-            padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: bold;
-            outline: none; cursor: pointer; height: 26px;
-        }
-
+        .container { max-width: 900px; margin: 20px auto; padding: 10px; }
+        
+        .player-box { background: #1e272e; padding: 10px; border-radius: 15px; border: 1px solid #4b6584; box-shadow: 0 0 25px rgba(0, 229, 255, 0.1); }
+        
+        .live-info-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 5px; }
+        .live-badge { background-color: #ff0000; color: white; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 11px; display: flex; align-items: center; gap: 5px; animation: blink 1.5s infinite; }
+        .live-dot { width: 6px; height: 6px; background: white; border-radius: 50%; }
         .viewer-count { color: #ccc; font-size: 12px; font-weight: 600; }
 
-        /* Video */
-        .video-wrapper {
-            position: relative; width: 100%; padding-bottom: 56.25%; height: 0;
-            background: #000; border-radius: 8px; overflow: hidden;
-        }
-        .video-wrapper video, .video-wrapper iframe, .no-signal {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
-        }
-        .no-signal {
-            display: flex; align-items: center; justify-content: center;
-            color: #777; font-weight: bold; font-size: 18px;
-        }
+        /* Plyr Customization */
+        .plyr { border-radius: 10px; overflow: hidden; --plyr-color-main: #e50914; }
 
-        /* Buttons */
-        .btn-container {
-            margin-top: 25px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;
-        }
-        .btn {
-            text-decoration: none; padding: 12px 30px; border-radius: 50px;
-            font-weight: bold; color: white; font-size: 14px;
-            display: flex; align-items: center; gap: 8px;
-            background: linear-gradient(90deg, #e52d27, #b31217);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
+        .btn-container { margin-top: 25px; display: flex; justify-content: center; gap: 15px; }
+        .btn { text-decoration: none; padding: 12px 30px; border-radius: 50px; font-weight: bold; color: white; font-size: 14px; background: linear-gradient(90deg, #e52d27, #b31217); display: flex; align-items: center; gap: 8px; }
         .btn-tg { background: linear-gradient(90deg, #1fa2ff, #12d8fa); }
 
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
@@ -99,17 +44,10 @@
         <div class="player-box">
             <div class="live-info-bar">
                 <div class="live-badge"><div class="live-dot"></div> LIVE</div>
-                
-                <div class="controls-right">
-                    <select id="qualitySelect" class="quality-select" style="display:none;">
-                        <option value="-1">Auto</option>
-                    </select>
-
-                    <div class="viewer-count">👁 <span id="viewers">21,450</span> Watching</div>
-                </div>
+                <div class="viewer-count">👁 <span id="viewers">24,102</span> Watching</div>
             </div>
 
-            <div class="video-wrapper" id="singleVideoBox"></div>
+            <video id="player" controls crossorigin playsinline poster="https://wallpaperaccess.com/full/1088620.jpg"></video>
         </div>
 
         <div class="btn-container">
@@ -120,88 +58,64 @@
 
     <script>
         // ==========================================
-        // 🔥 LINK UPDATE AREA 🔥
+        // 🔥 LINK UPDATE 🔥
         // ==========================================
-        const liveLink = "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/cb403e1a7b7b6f8a9a9f3d6cd1f341f2d15560d2513adc356faa5e9d57612e24daf6a89fb11af06d429f0fc61d533314156cdb6880284398872eb85031770716e7f0b77bd99d027bf781537e35d6017f50e00c16d124532a97b94a59cc7d9469151fed3e6b541984a946a87555db830c9b6752f3c9a01d256d0606c4084d92f50df8a0f84d36802efeec4957942b46f9825cced015b29ed55f9853fb29a34dc1c7e0e88246d3c4c87cac54b57a5a0e60399f832cc2c80ae38ad76c3c987465174f53b6eecba74a6ccb45150dfcaa9abd63ad40978d17ab0a58d3964762fe52a345e86c8eef4aa9acc9b028231897b490e5bac29fc4abe83c32c706b1c2bb9f1b78e86b826dc7350c8c0252f2014fe616a4f035dcda0296bd685213cf9d4e9a89b3b93dd1e7bafd08c5ddfd94314301364a52c6158e9363ce31863889c01733534440edcb009fc6eb7308371fd6d41ef60612b5dfc4b6f43f6a8432480bb9308115553c9d7d2c5df53df59f0b698b0d03917a68a80f7bd314bcf007dd93f6c94a7bb9d7cc47bf48eab601ddbf428a652e560fb6bd7d0b16022d9eb9325469379211b293e7ee75000ce9b7feffc6522a0e7642015bc5b1b102f6e4a7081312d35c2f64067246c37eb82bb32d460227c51b939c017b8b032b4fb3f3df3cab817863d79ef9588e112d8e0f56a685099b2bb585/54/384x216_734654/index.m3u8";
-        // ==========================================
+        const source = "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/cb403e1a7b7b6f8a9a9f3d6cd1f341f2d15560d2513adc356faa5e9d57612e24daf6a89fb11af06d429f0fc61d533314156cdb6880284398872eb85031770716e7f0b77bd99d027bf781537e35d6017f50e00c16d124532a97b94a59cc7d9469151fed3e6b541984a946a87555db830c9b6752f3c9a01d256d0606c4084d92f50df8a0f84d36802efeec4957942b46f9825cced015b29ed55f9853fb29a34dc1c7e0e88246d3c4c87cac54b57a5a0e60399f832cc2c80ae38ad76c3c987465174f53b6eecba74a6ccb45150dfcaa9abd63ad40978d17ab0a58d3964762fe52a345e86c8eef4aa9acc9b028231897b490e5bac29fc4abe83c32c706b1c2bb9f1b78e86b826dc7350c8c0252f2014fe616a4f035dcda0296bd685213cf9d4e9a89b3b93dd1e7bafd08c5ddfd94314301364a52c6158e9363ce31863889c01733534440edcb009fc6eb7308371fd6d41ef60612b5dfc4b6f43f6a8432480bb9308115553c9d7d2c5df53df59f0b698b0d03917a68a80f7bd314bcf007dd93f6c94a7bb9d7cc47bf48eab601ddbf428a652e560fb6bd7d0b16022d9eb9325469379211b293e7ee75000ce9b7feffc6522a0e7642015bc5b1b102f6e4a7081312d35c2f64067246c37eb82bb32d460227c51b939c017b8b032b4fb3f3df3cab817863d79ef9588e112d8e0f56a685099b2bb585/54/384x216_734654/index.m3u8";
 
-        function updateViewers() {
-            const min = 20000; const max = 25000;
-            let count = Math.floor(Math.random() * (max - min + 1)) + min;
-            document.getElementById("viewers").innerText = count.toLocaleString();
-        }
-        setInterval(updateViewers, 3000); updateViewers();
-
-        function initSinglePlayer(url) {
-            const container = document.getElementById('singleVideoBox');
-            const qualitySelect = document.getElementById('qualitySelect');
-            container.innerHTML = ""; 
-
-            if (!url) {
-                container.innerHTML = '<div class="no-signal">Waiting...</div>';
-                return;
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.getElementById('player');
+            
+            // Viewers logic
+            function updateViewers() {
+                const count = Math.floor(Math.random() * (25000 - 20000 + 1)) + 20000;
+                document.getElementById("viewers").innerText = count.toLocaleString();
             }
+            setInterval(updateViewers, 3000); updateViewers();
 
-            // HLS Logic for Quality Control
-            if (url.includes('.m3u8')) {
-                const video = document.createElement('video');
-                video.controls = true; video.autoplay = true; video.muted = false; video.playsInline = true;
-                container.appendChild(video);
+            // 🔥 HLS + PLYR INTEGRATION 🔥
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(source);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                    const availableQualities = hls.levels.map((l) => l.height);
+                    availableQualities.unshift(0); // Add Auto option
 
-                if (Hls.isSupported()) {
-                    var hls = new Hls();
-                    hls.loadSource(url);
-                    hls.attachMedia(video);
-
-                    // 🔥 QUALITY LEVEL LOAD HONE PAR DROPDOWN BANAO 🔥
-                    hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
-                        const levels = hls.levels;
-                        
-                        if (levels.length > 1) {
-                            qualitySelect.style.display = 'block';
-                            qualitySelect.innerHTML = '<option value="-1">Auto</option>';
-                            
-                            levels.forEach((level, index) => {
-                                // Calculate Label (e.g. 720p)
-                                const label = level.height ? `${level.height}p` : `Q${index}`;
-                                qualitySelect.innerHTML += `<option value="${index}">${label}</option>`;
-                            });
-
-                            // Switch Quality Function
-                            qualitySelect.onchange = function() {
-                                hls.currentLevel = parseInt(this.value);
-                            };
-                        } else {
-                            // Agar sirf 1 quality hai toh button mat dikhao
-                            qualitySelect.style.display = 'none';
+                    // Initialize Plyr with Quality Options
+                    const player = new Plyr(video, {
+                        controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
+                        settings: ['quality', 'speed'],
+                        quality: {
+                            default: 0,
+                            options: availableQualities,
+                            forced: true,
+                            onChange: (e) => updateQuality(e),
                         }
                     });
+                });
 
-                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                    video.src = url;
-                    qualitySelect.style.display = 'none'; // iPhone khud handle karta hai
+                hls.attachMedia(video);
+                window.hls = hls;
+
+                // Handle Quality Change
+                function updateQuality(newQuality) {
+                    if (newQuality === 0) {
+                        window.hls.currentLevel = -1; // Auto
+                    } else {
+                        window.hls.levels.forEach((level, levelIndex) => {
+                            if (level.height === newQuality) {
+                                window.hls.currentLevel = levelIndex;
+                            }
+                        });
+                    }
                 }
-            } 
-            else if (url.includes('.mpd')) {
-                // DASH Logic
-                const video = document.createElement('video');
-                video.controls = true; video.autoplay = true; video.muted = false; video.playsInline = true;
-                container.appendChild(video);
-                var player = dashjs.MediaPlayer().create();
-                player.initialize(video, url, true);
-                qualitySelect.style.display = 'none';
+
+            } else {
+                // For iPhone/Safari (Native HLS)
+                video.src = source;
+                const player = new Plyr(video);
             }
-            else {
-                // Iframe/YouTube
-                const iframe = document.createElement('iframe');
-                iframe.src = url;
-                iframe.setAttribute('allowfullscreen', 'true');
-                iframe.setAttribute('allow', 'autoplay; encrypted-media');
-                container.appendChild(iframe);
-                qualitySelect.style.display = 'none';
-            }
-        }
-        initSinglePlayer(liveLink);
+        });
     </script>
 </body>
 </html>
