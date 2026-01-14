@@ -1,239 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Match Manas Pro Live</title>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    
-    <style>
-        /* =========================================
-           PREMIUM DARK THEME CSS
-           ========================================= */
-        
-        body { 
-            background-color: #000000; /* Pitch Black Background */
-            color: #ffffff; 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            margin: 0; 
-            padding: 20px 10px;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Manas Pro Live - Single</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+    
+    <style>
+        /* =========================================
+           PREMIUM DARK THEME (Single Player)
+           ========================================= */
+        
+        body { 
+            background-color: #000000; 
+            color: #ffffff; 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            margin: 0; 
+            padding: 20px 10px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-        .container { 
-            max-width: 1000px; 
-            margin: auto; 
-            /* Glassmorphism Effect */
-            background: rgba(20, 20, 20, 0.9); 
-            padding: 30px; 
-            border-radius: 20px; 
-            border: 1px solid #333; 
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1); /* Halka sa blue glow */
-        }
+        .container { 
+            width: 100%;
+            max-width: 900px; /* Bada Screen */
+            margin: auto; 
+            background: rgba(20, 20, 20, 0.9); 
+            padding: 30px; 
+            border-radius: 20px; 
+            border: 1px solid #333; 
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.1); 
+            text-align: center;
+        }
 
-        h2 { 
-            color: #ff3e3e; /* Red Color for "Live" feel */
-            text-transform: uppercase; 
-            letter-spacing: 3px; 
-            margin-bottom: 30px; 
-            text-shadow: 0 0 10px rgba(255, 62, 62, 0.7); /* Red Glow Text */
-            font-size: 28px;
-        }
-        
-        /* Grid Layout */
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 25px; 
-            margin-top: 10px; 
-        }
+        h2 { 
+            color: #ff3e3e; 
+            text-transform: uppercase; 
+            letter-spacing: 3px; 
+            margin-bottom: 25px; 
+            text-shadow: 0 0 15px rgba(255, 62, 62, 0.8); 
+            font-size: 28px;
+        }
 
-        /* Player Box Design */
-        .player-box { 
-            background: #111; /* Dark Card Background */
-            border-radius: 15px; 
-            padding: 15px; 
-            border: 1px solid #333; 
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
-        }
+        /* Single Big Player Box */
+        .player-box-large { 
+            background: #111; 
+            border-radius: 15px; 
+            padding: 15px; 
+            border: 2px solid #333; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .player-box-large:hover {
+             border-color: #00e5ff; /* Blue Glow on Hover */
+             box-shadow: 0 10px 40px rgba(0, 229, 255, 0.2);
+        }
 
-        /* Hover Effect on Box */
-        .player-box:hover { 
-            transform: translateY(-5px); 
-            border-color: #00e5ff; /* Hover karne pe Blue Border */
-            box-shadow: 0 5px 20px rgba(0, 229, 255, 0.2);
-        }
-        
-        h3 { 
-            font-size: 14px; 
-            margin: 0 0 12px 0; 
-            color: #aaa; 
-            letter-spacing: 1px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 8px;
-            display: inline-block;
-            width: 100%;
-        }
+        h3 { 
+            font-size: 18px; 
+            margin: 0 0 15px 0; 
+            color: #00e5ff; 
+            letter-spacing: 2px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+        }
 
-        /* Video Area */
-        .video-wrapper {
-            width: 100%;
-            height: 200px; /* Video ki height */
-            background: #000;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-            border: 1px solid #222;
-        }
+        /* Responsive Video Area (16:9 Aspect Ratio) */
+        .video-wrapper-large {
+            width: 100%;
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Ratio */
+            height: 0;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #222;
+        }
 
-        video { width: 100%; height: 100%; object-fit: contain; }
-        iframe { width: 100%; height: 100%; border: none; }
-        
-        .no-signal {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            color: #444;
-            font-size: 14px;
-            font-weight: bold;
-            background: #050505;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
+        .video-wrapper-large video, 
+        .video-wrapper-large iframe,
+        .no-signal { 
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+        }
+        iframe { border: none; }
+        
+        .no-signal {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #555;
+            font-size: 18px;
+            font-weight: bold;
+            background: #050505;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
 
-        /* Modern Buttons */
-        .btn-box { 
-            display: flex; 
-            justify-content: center; 
-            gap: 20px; 
-            margin-top: 40px; 
-            flex-wrap: wrap;
-        }
-        
-        .btn { 
-            padding: 12px 30px; 
-            text-decoration: none; 
-            border-radius: 50px; 
-            font-weight: bold; 
-            color: white; 
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: 0.3s;
-            text-transform: uppercase;
-            font-size: 14px;
-            letter-spacing: 1px;
-        }
+        /* Buttons */
+        .btn-box { 
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+            margin-top: 30px; 
+            flex-wrap: wrap;
+        }
+        .btn { 
+            padding: 12px 35px; 
+            text-decoration: none; 
+            border-radius: 50px; 
+            font-weight: bold; 
+            color: white; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-size: 15px;
+            letter-spacing: 1px;
+        }
+        .btn-yt { background: linear-gradient(45deg, #cc0000, #ff0000); box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); }
+        .btn-tg { background: linear-gradient(45deg, #0088cc, #00bfff); box-shadow: 0 0 15px rgba(0, 191, 255, 0.4); }
+        .btn:hover { transform: scale(1.05); filter: brightness(1.2); }
 
-        /* YouTube Button (Red Gradient) */
-        .btn-yt { 
-            background: linear-gradient(45deg, #cc0000, #ff0000); 
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); 
-        }
-        
-        /* Telegram Button (Blue Gradient) */
-        .btn-tg { 
-            background: linear-gradient(45deg, #0088cc, #00bfff); 
-            box-shadow: 0 0 15px rgba(0, 191, 255, 0.4); 
-        }
-
-        .btn:hover { 
-            transform: scale(1.05); 
-            filter: brightness(1.2);
-        }
-
-        /* Mobile adjustments */
-        @media (max-width: 600px) {
-            .container { padding: 15px; }
-            h2 { font-size: 22px; }
-            .grid { grid-template-columns: 1fr; } /* Mobile pe single column */
-            .video-wrapper { height: 220px; }
-        }
-    </style>
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h2>🔥 Match Manas Live 🔥</h2>
-        
-        <div class="grid">
-            <div class="player-box">
-                <h3>LIVE MATCH 1</h3>
-                <div class="video-wrapper" id="box1"></div>
-            </div>
+    <div class="container">
+        <h2>🔥 Match Manas Live 🔥</h2>
+        
+        <div class="player-box-large">
+            <h3>⚡ LIVE STREAM ⚡</h3>
+            <div class="video-wrapper-large" id="singleVideoBox"></div>
+        </div>
 
-            <div class="player-box">
-                <h3>LIVE MATCH 2</h3>
-                <div class="video-wrapper" id="box2"></div>
-            </div>
+        <div class="btn-box">
+            <a href="https://youtube.com/@mkssports3" class="btn btn-yt">
+                <span>▶</span> YouTube
+            </a>
+            <a href="https://t.me/MKSSports_3" class="btn btn-tg">
+                <span>✈</span> Telegram
+            </a>
+        </div>
+    </div>
 
-            <div class="player-box">
-                <h3>LIVE MATCH 3</h3>
-                <div class="video-wrapper" id="box3"></div>
-            </div>
-        </div>
+    <script>
+        // ==========================================
+        // 🔥 AAPKA SAVED LINK YAHAN HAI 🔥
+        // ==========================================
+        
+        const liveLink = "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/cb403e1a7b7b6f8a9a9f3d6cd1f341f2d15560d2513adc356faa5e9d57612e24daf6a89fb11af06d429f0fc61d533314156cdb6880284398872eb85031770716e7f0b77bd99d027bf781537e35d6017f50e00c16d124532a97b94a59cc7d9469151fed3e6b541984a946a87555db830c9b6752f3c9a01d256d0606c4084d92f50df8a0f84d36802efeec4957942b46f9825cced015b29ed55f9853fb29a34dc1c7e0e88246d3c4c87cac54b57a5a0e60399f832cc2c80ae38ad76c3c987465174f53b6eecba74a6ccb45150dfcaa9abd63ad40978d17ab0a58d3964762fe52a345e86c8eef4aa9acc9b028231897b490e5bac29fc4abe83c32c706b1c2bb9f1b78e86b826dc7350c8c0252f2014fe616a4f035dcda0296bd685213cf9d4e9a89b3b93dd1e7bafd08c5ddfd94314301364a52c6158e9363ce31863889c01733534440edcb009fc6eb7308371fd6d41ef60612b5dfc4b6f43f6a8432480bb9308115553c9d7d2c5df53df59f0b698b0d03917a68a80f7bd314bcf007dd93f6c94a7bb9d7cc47bf48eab601ddbf428a652e560fb6bd7d0b16022d9eb9325469379211b293e7ee75000ce9b7feffc6522a0e7642015bc5b1b102f6e4a7081312d35c2f64067246c37eb82bb32d460227c51b939c017b8b032b4fb3f3df3cab817863d79ef9588e112d8e0f56a685099b2bb585/54/384x216_734654/index.m3u8";
 
-        <div class="btn-box">
-            <a href="https://youtube.com/@mkssports3" class="btn btn-yt">
-                <span>▶</span> YouTube
-            </a>
-            <a href="https://t.me/MKSSports_3" class="btn btn-tg">
-                <span>✈</span> Telegram
-            </a>
-        </div>
-    </div>
+        // ==========================================
 
-    <script>
-        // ==========================================
-        // 🔥 LINKS YAHAN UPDATE KARO 🔥
-        // ==========================================
-        const matchLinks = {
-            1: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/cb403e1a7b7b6f8a9a9f3d6cd1f341f2d15560d2513adc356faa5e9d57612e24daf6a89fb11af06d429f0fc61d533314156cdb6880284398872eb85031770716e7f0b77bd99d027bf781537e35d6017f50e00c16d124532a97b94a59cc7d9469151fed3e6b541984a946a87555db830c9b6752f3c9a01d256d0606c4084d92f50df8a0f84d36802efeec4957942b46f9825cced015b29ed55f9853fb29a34dc1c7e0e88246d3c4c87cac54b57a5a0e60399f832cc2c80ae38ad76c3c987465174f53b6eecba74a6ccb45150dfcaa9abd63ad40978d17ab0a58d3964762fe52a345e86c8eef4aa9acc9b028231897b490e5bac29fc4abe83c32c706b1c2bb9f1b78e86b826dc7350c8c0252f2014fe616a4f035dcda0296bd685213cf9d4e9a89b3b93dd1e7bafd08c5ddfd94314301364a52c6158e9363ce31863889c01733534440edcb009fc6eb7308371fd6d41ef60612b5dfc4b6f43f6a8432480bb9308115553c9d7d2c5df53df59f0b698b0d03917a68a80f7bd314bcf007dd93f6c94a7bb9d7cc47bf48eab601ddbf428a652e560fb6bd7d0b16022d9eb9325469379211b293e7ee75000ce9b7feffc6522a0e7642015bc5b1b102f6e4a7081312d35c2f64067246c37eb82bb32d460227c51b939c017b8b032b4fb3f3df3cab817863d79ef9588e112d8e0f56a685099b2bb585/54/384x216_734654/index.m3u8",
-            
-            2: "https://www.youtube.com/embed/jfKfPfyJRdk", 
-            
-            3: "" // No Signal
-        };
-        // ==========================================
+        function initSinglePlayer(url) {
+            const container = document.getElementById('singleVideoBox');
+            container.innerHTML = ""; 
 
-        function initPlayer(boxId, url) {
-            const container = document.getElementById(boxId);
-            container.innerHTML = ""; 
+            if (!url) {
+                container.innerHTML = '<div class="no-signal">NO SIGNAL</div>';
+                return;
+            }
 
-            if (!url) {
-                container.innerHTML = '<div class="no-signal">Waiting for Signal...</div>';
-                return;
-            }
+            // MPD (DASH) CHECK
+            if (url.includes('.mpd')) {
+                const video = document.createElement('video');
+                video.controls = true;
+                video.autoplay = true;
+                video.muted = false;
+                video.playsInline = true;
+                container.appendChild(video);
+                var player = dashjs.MediaPlayer().create();
+                player.initialize(video, url, true);
+            }
+            // M3U8 (HLS) CHECK
+            else if (url.includes('.m3u8')) {
+                const video = document.createElement('video');
+                video.controls = true;
+                video.autoplay = true;
+                video.muted = false; 
+                video.playsInline = true; 
+                container.appendChild(video);
 
-            if (url.includes('.m3u8')) {
-                const video = document.createElement('video');
-                video.controls = true;
-                video.autoplay = true;
-                video.muted = false; 
-                video.playsInline = true; // Important for Mobile
-                container.appendChild(video);
+                if (Hls.isSupported()) {
+                    var hls = new Hls();
+                    hls.loadSource(url);
+                    hls.attachMedia(video);
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = url;
+                }
+            } 
+            // YOUTUBE / IFRAME CHECK
+            else {
+                const iframe = document.createElement('iframe');
+                iframe.src = url;
+                iframe.setAttribute('allowfullscreen', 'true');
+                iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+                container.appendChild(iframe);
+            }
+        }
 
-                if (Hls.isSupported()) {
-                    var hls = new Hls();
-                    hls.loadSource(url);
-                    hls.attachMedia(video);
-                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                    video.src = url;
-                }
-            } else {
-                const iframe = document.createElement('iframe');
-                iframe.src = url;
-                iframe.setAttribute('allowfullscreen', 'true');
-                iframe.setAttribute('allow', 'autoplay; encrypted-media');
-                container.appendChild(iframe);
-            }
-        }
+        initSinglePlayer(liveLink);
 
-        initPlayer('box1', matchLinks[1]);
-        initPlayer('box2', matchLinks[2]);
-        initPlayer('box3', matchLinks[3]);
-    </script>
+    </script>
 </body>
 </html>
