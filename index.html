@@ -3,264 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Match Manas God Mode</title>
+    <title>Match Manas Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        :root {
-            --bg: #000000;
-            --card: #121212;
-            --primary: #3a86ff;
-            --live: #ff004f;
-            --text: #ffffff;
-            --gray: #a0a0a0;
-        }
-        
+        :root { --bg: #000; --card: #121212; --primary: #3a86ff; --live: #ff004f; --text: #fff; --gray: #a0a0a0; }
         * { box-sizing: border-box; }
-        
-        body {
-            margin: 0; padding: 0; background-color: var(--bg); color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            padding-bottom: 20px;
-        }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
 
-        /* 1. STICKY VIDEO PLAYER (Scroll karne pe upar rahega) */
-        .sticky-player {
-            position: sticky; top: 0; z-index: 1000; background: #000; width: 100%;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+        /* Header with Share */
+        .header {
+            display: flex; justify-content: space-between; align-items: center; padding: 10px 15px;
+            background: #111; border-bottom: 1px solid #333;
         }
-        .video-box {
-            position: relative; width: 100%; padding-bottom: 56.25%; /* 16:9 */
-            height: 0; overflow: hidden;
-        }
-        .video-box video, .video-box iframe, .no-signal {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
-        }
-        .no-signal { display: flex; align-items: center; justify-content: center; color: #555; }
+        .logo { font-weight: 900; font-size: 18px; color: white; }
+        .logo span { color: var(--primary); }
+        .share-btn { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
 
-        /* 2. MATCH CENTER CARD (Flags & Score) */
-        .match-card {
-            background: linear-gradient(180deg, #1a1a1a 0%, #000000 100%);
-            padding: 20px 15px; border-bottom: 1px solid #333;
-            text-align: center;
+        /* Sticky Player */
+        .sticky-player { position: sticky; top: 0; z-index: 1000; background: #000; width: 100%; box-shadow: 0 5px 20px rgba(0,0,0,0.8); }
+        .video-box { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+        .video-box video, .video-box iframe, .no-signal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        /* SERVER SELECTOR (NEW) */
+        .server-strip {
+            display: flex; gap: 10px; padding: 10px 15px; background: #1a1a1a; overflow-x: auto;
+            border-bottom: 1px solid #333; white-space: nowrap; scrollbar-width: none;
         }
-        .teams-row {
-            display: flex; justify-content: space-between; align-items: center;
-            max-width: 400px; margin: 0 auto;
+        .server-btn {
+            background: #333; color: #ddd; padding: 6px 12px; border-radius: 20px; font-size: 11px;
+            font-weight: bold; border: 1px solid #444; cursor: pointer; display: flex; align-items: center; gap: 5px;
         }
+        .server-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .server-dot { width: 6px; height: 6px; background: #0f0; border-radius: 50%; box-shadow: 0 0 5px #0f0; }
+
+        /* Match Card */
+        .match-card { background: #000; padding: 15px; border-bottom: 1px solid #222; text-align: center; }
+        .teams-row { display: flex; justify-content: space-between; align-items: center; max-width: 400px; margin: 0 auto; }
         .team { text-align: center; flex: 1; }
-        .team-flag { font-size: 30px; margin-bottom: 5px; display: block; }
-        .team-name { font-size: 14px; font-weight: bold; color: var(--gray); text-transform: uppercase; }
+        .team-flag { font-size: 28px; display: block; }
+        .team-name { font-size: 13px; font-weight: bold; color: var(--gray); text-transform: uppercase; }
         .score-center { flex: 1.5; }
-        .live-badge { 
-            background: var(--live); color: white; padding: 3px 10px; border-radius: 20px; 
-            font-size: 10px; font-weight: 800; display: inline-block; margin-bottom: 5px;
-            box-shadow: 0 0 10px rgba(255, 0, 79, 0.5); animation: pulse 1.5s infinite;
-        }
-        .main-score { font-size: 24px; font-weight: 900; color: white; line-height: 1.2; }
-        .overs { font-size: 12px; color: var(--gray); }
+        .live-badge { background: var(--live); color: white; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 800; animation: pulse 1.5s infinite; }
+        .main-score { font-size: 22px; font-weight: 900; color: white; }
 
-        /* 3. MODERN TABS */
-        .tabs-container {
-            display: flex; background: #111; margin-top: 10px; border-bottom: 1px solid #222;
-            position: sticky; top: 56.25vw; /* Player height approx */ z-index: 900;
-        }
-        .tab-btn {
-            flex: 1; padding: 15px; background: none; border: none; color: var(--gray);
-            font-weight: 600; font-size: 14px; position: relative; cursor: pointer;
-        }
-        .tab-btn.active { color: white; }
-        .tab-btn.active::after {
-            content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 40px; height: 3px; background: var(--primary); border-radius: 10px;
-        }
-
-        /* 4. TAB CONTENT */
-        .tab-content { display: none; padding: 15px; min-height: 300px; }
+        /* Tabs */
+        .tabs-container { display: flex; background: #111; margin-top: 5px; border-bottom: 1px solid #222; }
+        .tab-btn { flex: 1; padding: 12px; background: none; border: none; color: var(--gray); font-weight: 600; font-size: 13px; cursor: pointer; }
+        .tab-btn.active { color: white; border-bottom: 3px solid var(--primary); }
+        .tab-content { display: none; padding: 15px; }
         .tab-content.active { display: block; }
 
-        /* Poll Design */
-        .poll-card {
-            background: #1e1e1e; border-radius: 12px; padding: 15px; margin-bottom: 20px;
-            border: 1px solid #333;
-        }
-        .poll-head { font-size: 13px; color: var(--gray); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
-        .poll-bar-bg {
-            background: #333; height: 40px; border-radius: 8px; margin-bottom: 10px; 
-            position: relative; overflow: hidden; cursor: pointer; display: flex; align-items: center; padding: 0 15px;
-        }
-        .poll-fill {
-            position: absolute; top: 0; left: 0; height: 100%; background: rgba(58, 134, 255, 0.2);
-            width: 0%; transition: width 0.5s; z-index: 1;
-        }
-        .poll-label { position: relative; z-index: 2; font-weight: 600; font-size: 14px; flex: 1; }
-        .poll-perc { position: relative; z-index: 2; font-weight: bold; font-size: 14px; color: var(--primary); }
+        /* Chat System */
+        .chat-box { height: 250px; overflow-y: auto; display: flex; flex-direction: column-reverse; padding-right: 5px; }
+        .chat-msg { display: flex; gap: 8px; margin-bottom: 10px; align-items: flex-start; }
+        .avatar { width: 28px; height: 28px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; flex-shrink: 0; }
+        .msg-content { background: #1e1e1e; padding: 6px 10px; border-radius: 0 10px 10px 10px; font-size: 13px; color: #ddd; }
+        .user-name { color: var(--gray); font-size: 10px; margin-bottom: 2px; display: block; font-weight: bold; }
+        .my-msg .msg-content { background: #3a86ff; color: white; }
+        .my-msg { flex-direction: row-reverse; }
 
-        /* Chat Design */
-        .chat-box {
-            height: 300px; overflow-y: auto; padding-right: 5px; margin-bottom: 10px;
-            display: flex; flex-direction: column-reverse; /* Newest at bottom visually, code prepends */
-        }
-        .chat-msg { display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start; }
-        .avatar {
-            width: 30px; height: 30px; border-radius: 50%; background: #333; 
-            display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;
-        }
-        .msg-content { background: #1e1e1e; padding: 8px 12px; border-radius: 0 12px 12px 12px; font-size: 13px; color: #ddd; }
-        .user-name { color: var(--gray); font-size: 11px; margin-bottom: 2px; display: block; font-weight: bold; }
-        
-        /* Fake Input */
-        .chat-input-area {
-            display: flex; gap: 10px; background: #111; padding: 10px; border-radius: 30px; border: 1px solid #333;
-        }
-        .fake-input { flex: 1; background: none; border: none; color: white; font-size: 13px; outline: none; }
-        .send-btn { color: var(--primary); cursor: pointer; }
+        .chat-input-area { display: flex; gap: 8px; background: #111; padding: 8px; border-radius: 30px; border: 1px solid #333; align-items: center; margin-top: 10px; }
+        .fake-input { flex: 1; background: none; border: none; color: white; font-size: 13px; outline: none; padding-left: 10px; }
+        .send-btn { color: var(--primary); cursor: pointer; padding: 5px 10px; }
 
-        /* Buttons */
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .btn {
-            padding: 12px; border-radius: 8px; text-decoration: none; color: white;
-            font-weight: bold; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px;
-            font-size: 14px; transition: 0.2s;
-        }
-        .yt { background: #e62117; } .tg { background: #0088cc; }
+        /* Reaction Overlay */
+        .reaction-container { position: absolute; bottom: 10px; right: 10px; z-index: 1002; display: flex; gap: 8px; }
+        .react-btn { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 50%; width: 38px; height: 38px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .react-btn:active { transform: scale(0.9); }
         
+        .floating-emoji { position: absolute; bottom: 50px; right: 20px; font-size: 30px; animation: floatUp 2s ease-out forwards; pointer-events: none; z-index: 1001; }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-150px) scale(1.5); opacity: 0; } }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        /* Notification Toast */
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; font-size: 12px; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 2000; }
+        .toast.show { opacity: 1; bottom: 50px; }
     </style>
 </head>
 <body>
 
+    <div class="header">
+        <div class="logo">MATCH <span>MANAS</span></div>
+        <button class="share-btn" onclick="shareMatch()"><i class="fas fa-share-alt"></i></button>
+    </div>
+
     <div class="sticky-player">
-        <div class="video-box" id="singleVideoBox"></div>
+        <div class="video-box" id="singleVideoBox">
+            <div class="reaction-container">
+                <div class="react-btn" onclick="triggerReaction('❤️')">❤️</div>
+                <div class="react-btn" onclick="triggerReaction('🔥')">🔥</div>
+                <div class="react-btn" onclick="triggerCelebration()">🎉</div>
+            </div>
+        </div>
+        
+        <div class="server-strip">
+            <div class="server-btn active" onclick="changeServer(1, this)"><div class="server-dot"></div> Server 1 (HD)</div>
+            <div class="server-btn" onclick="changeServer(2, this)">Server 2 (LQ)</div>
+            <div class="server-btn" onclick="changeServer(3, this)">Backup Link</div>
+        </div>
     </div>
 
     <div class="match-card">
         <div class="teams-row">
-            <div class="team">
-                <span class="team-flag">🇮🇳</span>
-                <span class="team-name">India</span>
-            </div>
+            <div class="team"><span class="team-flag">🇮🇳</span><span class="team-name">India</span></div>
             <div class="score-center">
                 <div class="live-badge">● LIVE</div>
                 <div class="main-score" id="score">245/3</div>
-                <div class="overs">38.2 Overs</div>
+                <div style="font-size: 11px; color:#aaa">38.2 Overs</div>
             </div>
-            <div class="team">
-                <span class="team-flag">🇦🇺</span>
-                <span class="team-name">AUS</span>
-            </div>
+            <div class="team"><span class="team-flag">🇦🇺</span><span class="team-name">AUS</span></div>
         </div>
-        <div style="margin-top: 10px; font-size: 12px; color: #4cd137; font-weight: bold;">
+        <div style="margin-top: 8px; font-size: 11px; color: #4cd137; font-weight: bold;">
             <i class="fas fa-eye"></i> <span id="viewers">124,500</span> Watching
         </div>
     </div>
 
     <div class="tabs-container">
-        <button class="tab-btn active" onclick="switchTab('live')">Live Center</button>
-        <button class="tab-btn" onclick="switchTab('chat')">Live Chat</button>
+        <button class="tab-btn active" onclick="switchTab('chat', this)">Live Chat</button>
+        <button class="tab-btn" onclick="switchTab('info', this)">Match Info</button>
     </div>
 
-    <div id="live" class="tab-content active">
-        
-        <div class="poll-card">
-            <div class="poll-head">Who will win?</div>
-            <div class="poll-bar-bg" onclick="vote(this, 82)">
-                <div class="poll-fill"></div>
-                <span class="poll-label">India</span>
-                <span class="poll-perc">0%</span>
-            </div>
-            <div class="poll-bar-bg" onclick="vote(this, 18)">
-                <div class="poll-fill" style="background: rgba(255, 206, 86, 0.2);"></div>
-                <span class="poll-label">Australia</span>
-                <span class="poll-perc">0%</span>
-            </div>
-        </div>
-
-        <div class="action-grid">
-            <a href="https://youtube.com/@mkssports3" class="btn yt"><i class="fab fa-youtube"></i> Subscribe</a>
-            <a href="https://t.me/MKSSports_3" class="btn tg"><i class="fab fa-telegram"></i> Join Telegram</a>
-        </div>
-    </div>
-
-    <div id="chat" class="tab-content">
-        <div class="chat-box" id="chatBox">
-            </div>
-        
+    <div id="chat" class="tab-content active">
+        <div class="chat-box" id="chatBox"></div>
         <div class="chat-input-area">
-            <input type="text" class="fake-input" placeholder="Chat as Guest..." disabled>
-            <i class="fas fa-paper-plane send-btn"></i>
+            <input type="text" id="userMsg" class="fake-input" placeholder="Type a message...">
+            <i class="fas fa-paper-plane send-btn" onclick="sendMessage()"></i>
         </div>
     </div>
+
+    <div id="info" class="tab-content">
+        <p style="text-align:center; color:#777;">Subscribe for more updates.</p>
+        <a href="https://youtube.com/@mkssports3" style="display:block; background:red; color:white; padding:10px; text-align:center; border-radius:5px; text-decoration:none;">Subscribe YouTube</a>
+    </div>
+
+    <div class="toast" id="toast">Link Copied!</div>
 
     <script>
-        // ================= CONFIGURATION =================
-        const liveLink = "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/cb403e1a7b7b6f8a9a9f3d6cd1f341f2d15560d2513adc356faa5e9d57612e24daf6a89fb11af06d429f0fc61d533314156cdb6880284398872eb85031770716e7f0b77bd99d027bf781537e35d6017f50e00c16d124532a97b94a59cc7d9469151fed3e6b541984a946a87555db830c9b6752f3c9a01d256d0606c4084d92f50df8a0f84d36802efeec4957942b46f9825cced015b29ed55f9853fb29a34dc1c7e0e88246d3c4c87cac54b57a5a0e60399f832cc2c80ae38ad76c3c987465174f53b6eecba74a6ccb45150dfcaa9abd63ad40978d17ab0a58d3964762fe52a345e86c8eef4aa9acc9b028231897b490e5bac29fc4abe83c32c706b1c2bb9f1b78e86b826dc7350c8c0252f2014fe616a4f035dcda0296bd685213cf9d4e9a89b3b93dd1e7bafd08c5ddfd94314301364a52c6158e9363ce31863889c01733534440edcb009fc6eb7308371fd6d41ef60612b5dfc4b6f43f6a8432480bb9308115553c9d7d2c5df53df59f0b698b0d03917a68a80f7bd314bcf007dd93f6c94a7bb9d7cc47bf48eab601ddbf428a652e560fb6bd7d0b16022d9eb9325469379211b293e7ee75000ce9b7feffc6522a0e7642015bc5b1b102f6e4a7081312d35c2f64067246c37eb82bb32d460227c51b939c017b8b032b4fb3f3df3cab817863d79ef9588e112d8e0f56a685099b2bb585/54/384x216_734654/index.m3u8";
-        document.getElementById("score").innerText = "245/3"; // Update Score Here
+        // ================= CONFIG =================
+        const links = {
+            1: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/cb403e1a7b7b6f8a9a9f3d6cd1f341f2d15560d2513adc356faa5e9d57612e24daf6a89fb11af06d429f0fc61d533314156cdb6880284398872eb85031770716e7f0b77bd99d027bf781537e35d6017f50e00c16d124532a97b94a59cc7d9469151fed3e6b541984a946a87555db830c9b6752f3c9a01d256d0606c4084d92f50df8a0f84d36802efeec4957942b46f9825cced015b29ed55f9853fb29a34dc1c7e0e88246d3c4c87cac54b57a5a0e60399f832cc2c80ae38ad76c3c987465174f53b6eecba74a6ccb45150dfcaa9abd63ad40978d17ab0a58d3964762fe52a345e86c8eef4aa9acc9b028231897b490e5bac29fc4abe83c32c706b1c2bb9f1b78e86b826dc7350c8c0252f2014fe616a4f035dcda0296bd685213cf9d4e9a89b3b93dd1e7bafd08c5ddfd94314301364a52c6158e9363ce31863889c01733534440edcb009fc6eb7308371fd6d41ef60612b5dfc4b6f43f6a8432480bb9308115553c9d7d2c5df53df59f0b698b0d03917a68a80f7bd314bcf007dd93f6c94a7bb9d7cc47bf48eab601ddbf428a652e560fb6bd7d0b16022d9eb9325469379211b293e7ee75000ce9b7feffc6522a0e7642015bc5b1b102f6e4a7081312d35c2f64067246c37eb82bb32d460227c51b939c017b8b032b4fb3f3df3cab817863d79ef9588e112d8e0f56a685099b2bb585/54/384x216_734654/index.m3u8",
+            
+            // Backup links (Aap same bhi rakh sakte ho agar backup nahi hai)
+            2: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/cb403e1a7b7b6f8a9a9f3d6cd1f341f2d15560d2513adc356faa5e9d57612e24daf6a89fb11af06d429f0fc61d533314156cdb6880284398872eb85031770716e7f0b77bd99d027bf781537e35d6017f50e00c16d124532a97b94a59cc7d9469151fed3e6b541984a946a87555db830c9b6752f3c9a01d256d0606c4084d92f50df8a0f84d36802efeec4957942b46f9825cced015b29ed55f9853fb29a34dc1c7e0e88246d3c4c87cac54b57a5a0e60399f832cc2c80ae38ad76c3c987465174f53b6eecba74a6ccb45150dfcaa9abd63ad40978d17ab0a58d3964762fe52a345e86c8eef4aa9acc9b028231897b490e5bac29fc4abe83c32c706b1c2bb9f1b78e86b826dc7350c8c0252f2014fe616a4f035dcda0296bd685213cf9d4e9a89b3b93dd1e7bafd08c5ddfd94314301364a52c6158e9363ce31863889c01733534440edcb009fc6eb7308371fd6d41ef60612b5dfc4b6f43f6a8432480bb9308115553c9d7d2c5df53df59f0b698b0d03917a68a80f7bd314bcf007dd93f6c94a7bb9d7cc47bf48eab601ddbf428a652e560fb6bd7d0b16022d9eb9325469379211b293e7ee75000ce9b7feffc6522a0e7642015bc5b1b102f6e4a7081312d35c2f64067246c37eb82bb32d460227c51b939c017b8b032b4fb3f3df3cab817863d79ef9588e112d8e0f56a685099b2bb585/54/384x216_734654/index.m3u8",
+            3: "https://www.youtube.com/embed/jfKfPfyJRdk"
+        };
+        document.getElementById("score").innerText = "245/3";
 
         // ================= LOGIC =================
-        
-        // 1. CHAT SIMULATOR (With Avatars)
-        const colors = ['#e55039', '#4a69bd', '#60a3bc', '#78e08f', '#f6b93b'];
-        const chats = [
-            {u: "ViratFan", m: "King Kohli OP! 🔥"},
-            {u: "Mahi7781", m: "Dhoni finish karega aaj"},
-            {u: "Rohit_Hitman", m: "Sixer chahiye ab"},
-            {u: "CricketLover", m: "Clear quality bhai 👌"},
-            {u: "Rahul_K", m: "India Jeetega 🇮🇳"},
-            {u: "Sky_Surya", m: "What a shot!"}
-        ];
 
-        function addChat() {
+        // 1. SERVER SWITCHER
+        function changeServer(id, btn) {
+            document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            initPlayer(links[id]);
+            showToast(`Switched to Server ${id}`);
+        }
+
+        // 2. CELEBRATION (CONFETTI)
+        function triggerCelebration() {
+            confetti({
+                particleCount: 100, spread: 70, origin: { y: 0.6 },
+                colors: ['#ff0000', '#00ff00', '#0000ff']
+            });
+            triggerReaction('🎉');
+        }
+
+        // 3. SHARE
+        function shareMatch() {
+            if (navigator.share) {
+                navigator.share({ title: 'Match Manas Live', url: window.location.href });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showToast("Link Copied!");
+            }
+        }
+
+        function triggerReaction(emoji) {
+            const container = document.querySelector('.video-box');
+            const el = document.createElement('div'); el.innerText = emoji;
+            el.className = 'floating-emoji';
+            el.style.right = (Math.random() * 20 + 10) + 'px';
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 2000);
+        }
+
+        function sendMessage() {
+            const input = document.getElementById("userMsg");
+            if(!input.value.trim()) return;
             const container = document.getElementById('chatBox');
-            const data = chats[Math.floor(Math.random() * chats.length)];
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            const letter = data.u.charAt(0);
-            
-            const div = document.createElement('div');
-            div.className = 'chat-msg';
-            div.innerHTML = `
-                <div class="avatar" style="background:${color}">${letter}</div>
-                <div class="msg-content">
-                    <span class="user-name" style="color:${color}">${data.u}</span>
-                    ${data.m}
-                </div>
-            `;
+            const div = document.createElement('div'); div.className = 'chat-msg my-msg';
+            div.innerHTML = `<div class="msg-content"><span class="user-name" style="color:#fff;text-align:right">You</span>${input.value}</div>`;
             container.prepend(div);
-            if (container.children.length > 30) container.removeChild(container.lastChild);
-        }
-        setInterval(addChat, 1200);
-
-        // 2. POLL SYSTEM
-        function vote(el, val) {
-            document.querySelectorAll('.poll-fill').forEach(f => f.style.width = '0%');
-            document.querySelectorAll('.poll-perc').forEach(p => p.innerText = '0%');
-            
-            el.querySelector('.poll-fill').style.width = val + '%';
-            let i = 0;
-            const int = setInterval(() => {
-                i++; el.querySelector('.poll-perc').innerText = i + '%';
-                if(i >= val) clearInterval(int);
-            }, 10);
+            input.value = "";
         }
 
-        // 3. TABS
-        function switchTab(id) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        const fakeChats = [{u:"Rahul_K", m:"India jeetega! 🇮🇳"}, {u:"ViratFan", m:"King Kohli 🔥"}, {u:"Mahi77", m:"Dhoni missing 🥺"}];
+        setInterval(() => {
+            const c = document.getElementById('chatBox');
+            const d = fakeChats[Math.floor(Math.random()*fakeChats.length)];
+            const div = document.createElement('div'); div.className = 'chat-msg';
+            div.innerHTML = `<div class="avatar">${d.u.charAt(0)}</div><div class="msg-content"><span class="user-name">${d.u}</span>${d.m}</div>`;
+            c.prepend(div);
+            if (c.children.length > 50) c.removeChild(c.lastChild);
+        }, 1500);
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
+        }
+
+        function switchTab(id, btn) {
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            event.currentTarget.classList.add('active');
+            document.getElementById(id).style.display = 'block';
+            btn.classList.add('active');
         }
 
-        // 4. PLAYER & VIEWERS
-        function updateViewers() {
-            document.getElementById("viewers").innerText = (Math.floor(Math.random() * (200000 - 50000) + 50000)).toLocaleString();
-        }
+        function updateViewers() { document.getElementById("viewers").innerText = (Math.floor(Math.random()*150000)+50000).toLocaleString(); }
         setInterval(updateViewers, 3000); updateViewers();
 
         function initPlayer(url) {
-            const c = document.getElementById('singleVideoBox');
+            const c = document.getElementById('singleVideoBox'); c.innerHTML = "";
             if (url.includes('.mpd')) {
                 const v = document.createElement('video'); v.controls=true; v.autoplay=true; v.playsInline=true; c.appendChild(v);
                 dashjs.MediaPlayer().create().initialize(v, url, true);
@@ -271,7 +239,7 @@
                 c.innerHTML = `<iframe src="${url}" allowfullscreen allow="autoplay; encrypted-media" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>`;
             }
         }
-        initPlayer(liveLink);
+        initPlayer(links[1]);
     </script>
 </body>
 </html>
