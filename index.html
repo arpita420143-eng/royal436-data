@@ -3,229 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Match Manas Ultra</title>
+    <title>Match Manas God Mode</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
     <style>
-        /* --- ULTRA PREMIUM DARK THEME --- */
-        :root {
-            --bg: #000000;
-            --surface: #121212;
-            --primary: #3a86ff;
-            --accent: #e50914;
-            --text-main: #ffffff;
-            --text-dim: #a0a0a0;
-            --border: rgba(255,255,255,0.1);
-        }
-        
+        :root { --bg: #000; --surface: #121212; --primary: #3a86ff; --accent: #ff0055; --text: #fff; --glass: rgba(20, 20, 20, 0.8); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg); color: var(--text-main); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding-bottom: 60px; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
 
-        /* HEADER */
-        .app-header {
+        /* 🔥 STICKY PLAYER & HEADER 🔥 */
+        .sticky-wrapper { position: sticky; top: 0; z-index: 100; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .header-strip { display: flex; justify-content: space-between; padding: 10px 15px; background: linear-gradient(90deg, #b71540, #0c2461); align-items: center; }
+        .logo { font-weight: 900; font-size: 14px; letter-spacing: 1px; }
+        .live-badge { background: red; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; animation: pulse 1.5s infinite; }
+
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; }
+        .video-container video, .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        /* 🏝️ DYNAMIC ISLAND (STATUS BAR) 🏝️ */
+        .dynamic-island {
+            background: #1a1a1a; margin: 10px 15px; padding: 10px; border-radius: 30px;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 16px; background: rgba(18,18,18,0.95); backdrop-filter: blur(10px);
-            position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--border);
+            border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: slideDown 0.5s ease-out;
         }
-        .brand { font-size: 16px; font-weight: 900; letter-spacing: 0.5px; background: linear-gradient(45deg, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .live-pill { background: var(--accent); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; animation: pulse 1.5s infinite; }
+        .di-score { font-size: 18px; font-weight: 900; color: #fff; }
+        .di-update { font-size: 12px; color: var(--primary); font-weight: bold; animation: fade 2s infinite; }
+        .di-overs { font-size: 11px; color: #888; }
 
-        /* VIDEO PLAYER STICKY */
-        .player-wrapper {
-            position: sticky; top: 0; z-index: 40; background: #000;
-            width: 100%; aspect-ratio: 16/9;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        iframe { width: 100%; height: 100%; border: none; }
+        /* TABS */
+        .tabs { display: flex; background: var(--surface); border-bottom: 1px solid #333; margin-top: 10px; position: sticky; top: 56.25vw; z-index: 90; }
+        .tab-btn { flex: 1; padding: 15px; text-align: center; color: #888; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .tab-btn.active { color: white; border-bottom: 3px solid var(--primary); background: linear-gradient(to top, rgba(58,134,255,0.1), transparent); }
 
-        /* INFO STRIP */
-        .info-strip {
-            padding: 12px 16px; background: var(--surface);
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--border);
-        }
-        .match-title { font-size: 14px; font-weight: 600; color: #fff; }
-        .watching { font-size: 11px; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        /* CONTENT AREA */
+        .content { padding: 15px; min-height: 400px; display: none; }
+        .content.active { display: block; animation: fadeIn 0.3s; }
 
-        /* TABS (JioCinema Style) */
-        .tabs {
-            display: flex; background: var(--bg); border-bottom: 1px solid var(--border);
-        }
-        .tab-btn {
-            flex: 1; padding: 14px; text-align: center; color: var(--text-dim);
-            font-size: 13px; font-weight: 600; cursor: pointer; position: relative;
-        }
-        .tab-btn.active { color: var(--text-main); }
-        .tab-btn.active::after {
-            content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 30px; height: 3px; background: var(--primary); border-radius: 3px;
-        }
-
-        /* TAB CONTENT AREAS */
-        .content-area { display: none; padding: 16px; min-height: 300px; animation: fadeIn 0.3s; }
-        .content-area.active { display: block; }
-
-        /* --- SCOREBOARD DESIGN --- */
-        .score-card {
-            background: linear-gradient(180deg, #1a1a1a, #111);
-            border-radius: 12px; border: 1px solid var(--border);
-            padding: 16px; text-align: center;
-        }
-        .teams-hud { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .flag-icon { font-size: 28px; display: block; margin-bottom: 4px; }
-        .t-code { font-size: 12px; font-weight: bold; color: var(--text-dim); }
-        .big-score { font-size: 28px; font-weight: 800; color: #fff; }
-        .curr-overs { font-size: 12px; color: var(--text-dim); }
+        /* SCORECARD UI */
+        .stat-card { background: #1e1e1e; border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #333; }
+        .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .p-name { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #ddd; }
+        .p-name.striker { color: #fff; font-weight: bold; }
+        .p-val { font-weight: bold; color: var(--primary); }
         
-        .stat-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .stat-table td { padding: 8px 0; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .pl-name { text-align: left; color: #ddd; }
-        .pl-score { text-align: right; font-weight: bold; color: var(--primary); }
-        
-        /* --- CHAT DESIGN --- */
-        .chat-container { height: 300px; display: flex; flex-direction: column; }
-        .chat-list { flex: 1; overflow-y: auto; padding-right: 5px; display: flex; flex-direction: column-reverse; }
-        .chat-item { display: flex; gap: 10px; margin-bottom: 12px; font-size: 13px; }
-        .c-avatar { width: 28px; height: 28px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #aaa; flex-shrink: 0; }
-        .c-bubble { background: #222; padding: 6px 10px; border-radius: 0 10px 10px 10px; color: #ddd; }
-        .chat-input-box { display: flex; gap: 8px; margin-top: 10px; }
-        .c-input { flex: 1; background: #222; border: 1px solid #333; padding: 10px; border-radius: 20px; color: white; outline: none; }
-        .c-send { background: var(--primary); border: none; width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        /* Balls */
+        .balls-row { display: flex; gap: 6px; margin-top: 10px; }
+        .ball { width: 24px; height: 24px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; }
+        .ball.four { background: #3a86ff; } .ball.six { background: #9b59b6; } .ball.out { background: #e74c3c; }
+
+        /* CHAT UI */
+        .chat-box { height: 300px; overflow-y: auto; display: flex; flex-direction: column-reverse; padding-right: 5px; }
+        .chat-msg { display: flex; gap: 10px; margin-bottom: 12px; font-size: 13px; }
+        .avatar { width: 30px; height: 30px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #aaa; flex-shrink: 0; }
+        .bubble { background: #252525; padding: 8px 12px; border-radius: 0 12px 12px 12px; color: #ddd; line-height: 1.4; }
+        .input-area { display: flex; gap: 10px; margin-top: 10px; position: sticky; bottom: 10px; }
+        .inp { flex: 1; background: #222; border: 1px solid #444; padding: 12px; border-radius: 25px; color: white; outline: none; }
+        .send { width: 45px; height: 45px; border-radius: 50%; background: var(--primary); border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
         /* ANIMATIONS */
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* BUTTONS */
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .app-btn { background: #222; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; font-size: 13px; transition: 0.2s; }
-        .app-btn:active { transform: scale(0.96); }
-        .yt-btn { color: #ff0000; } .tg-btn { color: #0088cc; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="app-header">
-        <div class="brand">MATCH <span style="color:var(--primary)">MANAS</span></div>
-        <div class="live-pill">● LIVE</div>
+    <div class="sticky-wrapper">
+        <div class="header-strip">
+            <div class="logo">MATCH <span style="color:var(--primary)">MANAS</span></div>
+            <div class="live-badge">● LIVE</div>
+        </div>
+        
+        <div class="video-container" id="videoBox">
+            </div>
     </div>
 
-    <div class="player-wrapper" id="videoContainer">
+    <div class="dynamic-island">
+        <div>
+            <div class="di-score" id="mainScore">0/0 ❤️</div>
+            <div class="di-overs">0.0 Overs ❤️</div>
         </div>
-
-    <div class="info-strip">
-        <div class="match-title">India vs New Zealand • Live</div>
-        <div class="watching"><i class="fas fa-eye"></i> <span id="viewers">12.5K</span></div>
+        <div class="di-update" id="matchStatus">Tap to Refresh ⚡</div>
     </div>
 
     <div class="tabs">
-        <div class="tab-btn active" onclick="switchTab('score', this)">Scorecard</div>
-        <div class="tab-btn" onclick="switchTab('chat', this)">Live Chat</div>
-        <div class="tab-btn" onclick="switchTab('info', this)">More</div>
+        <div class="tab-btn active" onclick="openTab('score', this)">Scorecard</div>
+        <div class="tab-btn" onclick="openTab('chat', this)">Live Chat</div>
+        <div class="tab-btn" onclick="openTab('info', this)">Info</div>
     </div>
 
-    <div id="score" class="content-area active">
-        <div class="score-card">
-            <div class="teams-hud">
-                <div><span class="flag-icon">🇮🇳</span><div class="t-code">IND ❤️</div></div>
-                <div>
-                    <div class="big-score" id="scoreDisplay">0/0 ❤️</div>
-                    <div class="curr-overs">0.0 Overs ❤️</div>
-                </div>
-                <div><span class="flag-icon">🇳🇿</span><div class="t-code">NZ ❤️</div></div>
+    <div id="score" class="content active">
+        <div class="stat-card">
+            <div style="font-size:10px; color:#666; margin-bottom:10px; font-weight:bold;">BATTERS</div>
+            <div class="row">
+                <div class="p-name striker">🏏 Rohit Sharma ❤️</div>
+                <div class="p-val">45 (28) ❤️</div>
             </div>
-            <table class="stat-table">
-                <tr><td class="pl-name">🏏 Batsman ❤️</td><td class="pl-score">0 (0) ❤️</td></tr>
-                <tr><td class="pl-name">🥎 Bowler ❤️</td><td class="pl-score">0-0 ❤️</td></tr>
-            </table>
-        </div>
-
-        <div class="action-grid">
-            <a href="https://youtube.com/@mkssports3" class="app-btn yt-btn"><i class="fab fa-youtube"></i> YouTube</a>
-            <a href="https://t.me/MKSSports_3" class="app-btn tg-btn"><i class="fab fa-telegram"></i> Telegram</a>
-        </div>
-    </div>
-
-    <div id="chat" class="content-area">
-        <div class="chat-container">
-            <div class="chat-list" id="chatList"></div>
-            <div class="chat-input-box">
-                <input type="text" id="chatInput" class="c-input" placeholder="Chat as You...">
-                <button class="c-send" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
+            <div class="row">
+                <div class="p-name">S. Gill ❤️</div>
+                <div class="p-val">12 (10) ❤️</div>
+            </div>
+            
+            <div style="font-size:10px; color:#666; margin:15px 0 10px; font-weight:bold;">BOWLER</div>
+            <div class="row" style="border:none;">
+                <div class="p-name striker">🥎 Trent Boult ❤️</div>
+                <div class="p-val">1-32 (4.2) ❤️</div>
             </div>
         </div>
+
+        <div class="stat-card">
+            <div style="font-size:10px; color:#666; margin-bottom:5px; font-weight:bold;">RECENT BALLS</div>
+            <div class="balls-row">
+                <div class="ball">1</div>
+                <div class="ball four">4</div>
+                <div class="ball">0</div>
+                <div class="ball six">6</div>
+                <div class="ball out">W</div>
+                <div class="ball">1</div>
+            </div>
+        </div>
+        
+        <button onclick="confetti({particleCount:100, spread:70})" style="width:100%; padding:12px; background:linear-gradient(90deg, #ff0055, #ff0000); border:none; border-radius:8px; color:white; font-weight:bold; cursor:pointer;">🎉 Celebrate Wicket/Six</button>
     </div>
 
-    <div id="info" class="content-area">
-        <p style="color:#777; font-size:13px; text-align:center;">
-            Match: 3rd ODI<br>Venue: Wankhede Stadium<br>Stream provided by Match Manas
+    <div id="chat" class="content">
+        <div class="chat-box" id="chatList"></div>
+        <div class="input-area">
+            <input type="text" id="chatInput" class="inp" placeholder="Cheer for your team...">
+            <button class="send" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <div id="info" class="content">
+        <p style="text-align:center; color:#777; font-size:13px;">
+            Match: 3rd ODI Final<br>Venue: Wankhede Stadium<br>
+            <span style="color:var(--primary); cursor:pointer;" onclick="location.reload()">Refresh Stream</span>
         </p>
     </div>
 
     <script>
         // ==========================================
-        // 🔥 LINK CONFIGURATION 🔥
+        // 🔥 UNIVERSAL LINK ENGINE 🔥
+        // Chahe YouTube ho ya M3U8, ye code sab chalayega!
         // ==========================================
-        const youtubeLink = "https://www.youtube.com/live/GLlHqWwWMms?si=feAM_NfBI9q2_40n";
         
-        document.getElementById("scoreDisplay").innerText = "0/0"; // ❤️ UPDATE SCORE
-
+        const streamLink = "https://www.youtube.com/live/GLlHqWwWMms?si=feAM_NfBI9q2_40n";
+        
         // ==========================================
 
-        // 1. EMBED LOGIC (Smart Detector)
-        function initPlayer() {
-            const container = document.getElementById('videoContainer');
-            let videoId = '';
+        function initUniversalPlayer(url) {
+            const box = document.getElementById('videoBox');
+            box.innerHTML = ""; // Clear previous
 
-            if (youtubeLink.includes('youtube.com') || youtubeLink.includes('youtu.be')) {
-                // Extract ID
-                if (youtubeLink.includes('/live/')) videoId = youtubeLink.split('/live/')[1].split('?')[0];
-                else if (youtubeLink.includes('v=')) videoId = youtubeLink.split('v=')[1].split('&')[0];
-                else if (youtubeLink.includes('youtu.be/')) videoId = youtubeLink.split('youtu.be/')[1].split('?')[0];
-
-                container.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&rel=0&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
-            } else {
-                container.innerHTML = `<div style="color:white; padding:20px; text-align:center;">Invalid Link</div>`;
+            // 1. YouTube Detector
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                let vId = '';
+                if (url.includes('/live/')) vId = url.split('/live/')[1].split('?')[0];
+                else if (url.includes('v=')) vId = url.split('v=')[1].split('&')[0];
+                else if (url.includes('youtu.be/')) vId = url.split('youtu.be/')[1].split('?')[0];
+                
+                box.innerHTML = `<iframe src="https://www.youtube.com/embed/${vId}?autoplay=1&mute=0&rel=0&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+            } 
+            // 2. HLS Detector
+            else if (url.includes('.m3u8')) {
+                const video = document.createElement('video');
+                video.controls = true; video.autoplay = true; video.playsInline = true;
+                box.appendChild(video);
+                
+                if (Hls.isSupported()) {
+                    const hls = new Hls(); hls.loadSource(url); hls.attachMedia(video);
+                } else { video.src = url; }
+            }
+            // 3. Direct Iframe fallback
+            else {
+                box.innerHTML = `<iframe src="${url}" allowfullscreen></iframe>`;
             }
         }
-        initPlayer();
+        initUniversalPlayer(streamLink);
 
-        // 2. TAB LOGIC
-        function switchTab(id, btn) {
-            document.querySelectorAll('.content-area').forEach(d => d.classList.remove('active'));
+        // --- Tabs Logic ---
+        function openTab(id, btn) {
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             btn.classList.add('active');
         }
 
-        // 3. CHAT LOGIC
-        const chats = [
-            {n:"Rahul", t:"India jeetega! 🇮🇳"}, {n:"Vk_18", t:"King Kohli 🔥"}, {n:"RohitFan", t:"Hitman show!"}
-        ];
-        function addFakeChat() {
+        // --- Chat Logic ---
+        const chats = [{n:"Rahul", t:"India jeetega!"}, {n:"ViratFan", t:"King Kohli 🔥"}, {n:"Sky", t:"Sixer!"}];
+        function addFake() {
             const c = document.getElementById('chatList');
-            const d = chats[Math.floor(Math.random() * chats.length)];
-            const el = document.createElement('div'); el.className = 'chat-item';
-            el.innerHTML = `<div class="c-avatar">${d.n[0]}</div><div class="c-bubble"><span style="color:#aaa; font-size:10px; display:block;">${d.n}</span>${d.t}</div>`;
+            const d = chats[Math.floor(Math.random()*chats.length)];
+            const el = document.createElement('div'); el.className = 'chat-msg';
+            el.innerHTML = `<div class="avatar">${d.n[0]}</div><div class="bubble"><span style="color:#888; font-size:10px; display:block;">${d.n}</span>${d.t}</div>`;
             c.prepend(el);
-            if(c.children.length > 30) c.removeChild(c.lastChild);
         }
-        setInterval(addFakeChat, 2000);
+        setInterval(addFake, 2000);
 
         function sendMsg() {
             const inp = document.getElementById('chatInput');
             if(!inp.value) return;
             const c = document.getElementById('chatList');
-            const el = document.createElement('div'); el.className = 'chat-item';
-            el.innerHTML = `<div class="c-avatar" style="background:var(--primary); color:white;">Y</div><div class="c-bubble" style="background:#1a2e4d; color:white;">${inp.value}</div>`;
+            const el = document.createElement('div'); el.className = 'chat-msg';
+            el.innerHTML = `<div class="avatar" style="background:var(--primary); color:white;">Y</div><div class="bubble" style="background:#2a3b55; border:1px solid #3a86ff;">${inp.value}</div>`;
             c.prepend(el);
             inp.value = "";
         }
 
-        // 4. VIEWERS LOGIC
+        // --- Dynamic Island Updates ---
+        const updates = ["4 Runs!", "Good Shot!", "Wicket?", "Direct Hit!", "1 Run"];
         setInterval(() => {
-            const v = Math.floor(Math.random() * (15000 - 12000 + 1)) + 12000;
-            document.getElementById("viewers").innerText = (v/1000).toFixed(1) + "K";
-        }, 3000);
+            document.getElementById('matchStatus').innerText = updates[Math.floor(Math.random()*updates.length)];
+        }, 4000);
 
     </script>
 </body>
