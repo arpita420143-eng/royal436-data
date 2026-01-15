@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Match Manas Pro Max</title>
+    <title>Match Manas Live</title>
     
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -31,7 +31,7 @@
         }
         iframe, video { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; }
 
-        /* 🔥 REACTION BUTTONS (FLOATING) 🔥 */
+        /* 🔥 REACTION BUTTONS 🔥 */
         .reaction-layer {
             position: absolute; bottom: 15px; right: 10px; z-index: 60;
             display: flex; gap: 10px; flex-direction: column; pointer-events: auto;
@@ -51,25 +51,40 @@
         }
         @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-150px) scale(1.5); opacity: 0; } }
 
-        /* SCORE & TABS */
-        .mini-score { background: #1a1a1a; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
-        .center-score { text-align: center; flex: 1; }
-        .big-score { font-size: 24px; font-weight: 900; color: #fff; }
-        
-        .tabs { display: flex; background: #000; border-bottom: 1px solid #222; margin-top: 10px; }
+        /* 🔥 MATCH BANNER (Zero Maintenance) 🔥 */
+        .match-banner {
+            background: #1a1a1a; padding: 15px; 
+            display: flex; justify-content: space-around; align-items: center;
+            border-bottom: 1px solid #333;
+        }
+        .team-box { text-align: center; }
+        .flag { font-size: 28px; display: block; margin-bottom: 4px; }
+        .t-name { font-weight: 900; font-size: 14px; color: #fff; letter-spacing: 1px; }
+        .vs-tag { font-size: 12px; font-weight: bold; color: #555; background: #111; padding: 6px; border-radius: 50%; border: 1px solid #333; }
+
+        /* 🔥 VIEW COUNTER 🔥 */
+        .views-bar {
+            background: #111; text-align: center; padding: 8px;
+            font-size: 12px; color: #aaa; font-weight: bold;
+            border-bottom: 1px solid #222;
+        }
+        .views-bar span { color: #fff; }
+
+        /* TABS */
+        .tabs { display: flex; background: #000; border-bottom: 1px solid #222; margin-top: 0; }
         .tab { flex: 1; padding: 14px; text-align: center; font-size: 13px; font-weight: 600; color: #777; cursor: pointer; }
         .tab.active { color: white; border-bottom: 3px solid var(--primary); }
 
         .content { display: none; padding: 15px; }
         .content.active { display: block; }
 
-        /* 🔥 SOCIAL BUTTONS (RESTORED) 🔥 */
+        /* SOCIAL BUTTONS */
         .social-row { display: flex; gap: 10px; margin-bottom: 20px; }
         .s-btn { flex: 1; padding: 12px; border-radius: 10px; text-decoration: none; color: white; font-weight: bold; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .yt { background: linear-gradient(135deg, #ff0000, #990000); }
         .tg { background: linear-gradient(135deg, #0088cc, #005580); }
 
-        /* CHAT WITH SEND BUTTON */
+        /* CHAT */
         .chat-box { height: 250px; overflow-y: auto; display: flex; flex-direction: column-reverse; padding-right: 5px; }
         .msg { display: flex; gap: 10px; margin-bottom: 10px; font-size: 13px; }
         .av { width: 30px; height: 30px; background: #333; border-radius: 50%; display:flex; align-items:center; justify-content:center; font-weight:bold; color:#aaa; flex-shrink: 0; }
@@ -99,45 +114,62 @@
         </div>
     </div>
 
-    <div class="mini-score">
-        <div>🇮🇳 IND ❤️</div>
-        <div class="center-score">
-            <div class="big-score" id="score">0/0 ❤️</div>
-            <div style="font-size:12px; color:#3a86ff;">0.0 Overs ❤️</div>
+    <div class="match-banner">
+        <div class="team-box">
+            <span class="flag">🇮🇳</span>
+            <div class="t-name">IND</div>
         </div>
-        <div>🇳🇿 NZ ❤️</div>
+        <div class="vs-tag">VS</div>
+        <div class="team-box">
+            <span class="flag">🇳🇿</span>
+            <div class="t-name">NZ</div>
+        </div>
+    </div>
+
+    <div class="views-bar">
+        <i class="fas fa-eye" style="color:red;"></i> 
+        <span id="viewers">12,500</span> Watching Now
     </div>
 
     <div class="tabs">
         <div class="tab active" onclick="openTab('chat')">Live Chat</div>
-        <div class="tab" onclick="openTab('info')">Links</div>
+        <div class="tab" onclick="openTab('links')">Links</div>
     </div>
 
     <div id="chat" class="content active">
         <div class="chat-box" id="chatList"></div>
-        
         <div class="input-area">
             <input type="text" id="chatInput" class="inp" placeholder="Cheer for your team...">
             <button class="send-btn" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
-    <div id="info" class="content">
+    <div id="links" class="content">
         <div class="social-row">
             <a href="https://youtube.com/@mkssports3" class="s-btn yt"><i class="fab fa-youtube"></i> YouTube</a>
             <a href="https://t.me/MKSSports_3" class="s-btn tg"><i class="fab fa-telegram"></i> Telegram</a>
         </div>
-        <p style="text-align:center; color:#777;">Stream provided by Match Manas</p>
+        <p style="text-align:center; color:#555; font-size:12px;">Enjoy Ad-free Streaming!</p>
     </div>
 
     <script>
         // ==========================================
-        // 🔥 LINK & SCORE UPDATE 🔥
+        // 🔥 LINK CONFIGURATION 🔥
         // ==========================================
-        const streamLink = "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/cb403e1a7b7b6f8a9a9f3d6cd1f341f2d15560d2513adc356faa5e9d57612e24daf6a89fb11af06d429f0fc61d533314156cdb6880284398872eb85031770716e7f0b77bd99d027bf781537e35d6017f50e00c16d124532a97b94a59cc7d9469151fed3e6b541984a946a87555db830c9b6752f3c9a01d256d0606c4084d92f50df8a0f84d36802efeec4957942b46f9825cced015b29ed55f9853fb29a34dc1c7e0e88246d3c4c87cac54b57a5a0e60399f832cc2c80ae38ad76c3c987465174f53b6eecba74a6ccb45150dfcaa9abd63ad40978d17ab0a58d3964762fe52a345e86c8eef4aa9acc9b028231897b490e5bac29fc4abe83c32c706b1c2bb9f1b78e86b826dc7350c8c0252f2014fe616a4f035dcda0296bd685213cf9d4e9a89b3b93dd1e7bafd08c5ddfd94314301364a52c6158e9363ce31863889c01733534440edcb009fc6eb7308371fd6d41ef60612b5dfc4b6f43f6a8432480bb9308115553c9d7d2c5df53df59f0b698b0d03917a68a80f7bd314bcf007dd93f6c94a7bb9d7cc47bf48eab601ddbf428a652e560fb6bd7d0b16022d9eb9325469379211b293e7ee75000ce9b7feffc6522a0e7642015bc5b1b102f6e4a7081312d35c2f64067246c37eb82bb32d460227c51b939c017b8b032b4fb3f3df3cab817863d79ef9588e112d8e0f56a685099b2bb585/54/384x216_734654/index.m3u8";
-        document.getElementById("score").innerText = "0/0"; 
+        const streamLink = "https://www.youtube.com/live/GLlHqWwWMms?si=feAM_NfBI9q2_40n";
         // ==========================================
 
+        // 🔥 FAKE VIEWS LOGIC (1000 - 15000) 🔥
+        function updateViewers() {
+            const min = 1000;
+            const max = 15000;
+            let count = Math.floor(Math.random() * (max - min + 1)) + min;
+            document.getElementById("viewers").innerText = count.toLocaleString();
+        }
+        setInterval(updateViewers, 3000); // Har 3 second me change hoga
+        updateViewers();
+
+        // Player Logic
         function initPlayer(url) {
             const box = document.getElementById('playerContainer');
             if (url.includes('youtube.com') || url.includes('youtu.be')) {
@@ -160,13 +192,12 @@
             event.target.classList.add('active');
         }
 
-        // --- 🎉 CELEBRATION LOGIC 🎉 ---
+        // Celebration Logic
         function triggerCelebration() {
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff0000', '#00ff00', '#0000ff'] });
             triggerReaction('🎉');
         }
 
-        // --- ❤️ FLOATING REACTION LOGIC ❤️ ---
         function triggerReaction(emoji) {
             const container = document.querySelector('.video-wrapper');
             const el = document.createElement('div');
@@ -177,7 +208,7 @@
         }
 
         // Chat Logic
-        const chats = ["India Jeetega!", "Kohli 🔥", "Sixer!", "Wicket!"];
+        const chats = ["India Jeetega!", "Kohli 🔥", "Sixer!", "Wicket!", "Full Support", "Maza aa gaya"];
         function addFake() {
             const c = document.getElementById('chatList');
             const t = chats[Math.floor(Math.random()*chats.length)];
@@ -196,7 +227,6 @@
             c.prepend(d);
             inp.value = "";
         }
-
     </script>
 </body>
 </html>
