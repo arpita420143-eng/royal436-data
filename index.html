@@ -51,7 +51,7 @@
         }
         @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-150px) scale(1.5); opacity: 0; } }
 
-        /* 🔥 MATCH BANNER (Zero Maintenance) 🔥 */
+        /* 🔥 MATCH BANNER 🔥 */
         .match-banner {
             background: #1a1a1a; padding: 15px; 
             display: flex; justify-content: space-around; align-items: center;
@@ -139,7 +139,7 @@
     <div id="chat" class="content active">
         <div class="chat-box" id="chatList"></div>
         <div class="input-area">
-            <input type="text" id="chatInput" class="inp" placeholder="Cheer for your team...">
+            <input type="text" id="chatInput" class="inp" placeholder="Type a message...">
             <button class="send-btn" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
@@ -153,28 +153,24 @@
     </div>
 
     <script>
-        // ==========================================
-        // 🔥 LINK CONFIGURATION 🔥
-        // ==========================================
+        // --- 1. CONFIGURATION ---
         const streamLink = "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8";
-        // ==========================================
 
-        // 🔥 FAKE VIEWS LOGIC (1000 - 15000) 🔥
+        // --- 2. VIEW COUNTER ---
         function updateViewers() {
-            const min = 1000;
-            const max = 15000;
+            const min = 5000; const max = 25000;
             let count = Math.floor(Math.random() * (max - min + 1)) + min;
             document.getElementById("viewers").innerText = count.toLocaleString();
         }
-        setInterval(updateViewers, 3000); // Har 3 second me change hoga
+        setInterval(updateViewers, 5000);
         updateViewers();
 
-        // Player Logic
+        // --- 3. PLAYER LOGIC ---
         function initPlayer(url) {
             const box = document.getElementById('playerContainer');
             if (url.includes('youtube.com') || url.includes('youtu.be')) {
                 let vId = url.includes('/live/') ? url.split('/live/')[1].split('?')[0] : url.split('v=')[1].split('&')[0];
-                box.innerHTML = `<iframe src="https://www.youtube.com/embed/${vId}?autoplay=1&mute=0&rel=0&modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+                box.innerHTML = `<iframe src="https://www.youtube.com/embed/${vId}?autoplay=1&mute=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
             } else if (url.includes('.m3u8')) {
                 const vid = document.createElement('video');
                 vid.controls = true; vid.autoplay = true; vid.style.width="100%"; vid.style.height="100%";
@@ -185,16 +181,16 @@
         }
         initPlayer(streamLink);
 
+        // --- 4. UI LOGIC ---
         function openTab(id) {
             document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            event.target.classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
-        // Celebration Logic
         function triggerCelebration() {
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff0000', '#00ff00', '#0000ff'] });
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             triggerReaction('🎉');
         }
 
@@ -207,26 +203,21 @@
             setTimeout(() => el.remove(), 2000);
         }
 
-        // Chat Logic
-        const chats = ["India Jeetega!", "Kohli 🔥", "Sixer!", "Wicket!", "Full Support", "Maza aa gaya"];
-        function addFake() {
-            const c = document.getElementById('chatList');
-            const t = chats[Math.floor(Math.random()*chats.length)];
-            const d = document.createElement('div'); d.className='msg';
-            d.innerHTML = `<div class="av">${t[0]}</div><div class="txt">${t}</div>`;
-            c.prepend(d);
-        }
-        setInterval(addFake, 2000);
-
+        // --- 5. CHAT LOGIC (AUTOMATIC DISABLED) ---
         function sendMsg() {
             const inp = document.getElementById('chatInput');
-            if(!inp.value) return;
+            if(!inp.value.trim()) return;
             const c = document.getElementById('chatList');
             const d = document.createElement('div'); d.className='msg';
-            d.innerHTML = `<div class="av" style="background:var(--primary)">Y</div><div class="txt" style="background:#1a2e4d; border:1px solid var(--primary)">${inp.value}</div>`;
+            d.innerHTML = `<div class="av" style="background:var(--primary)">U</div><div class="txt" style="background:#1a2e4d; border:1px solid var(--primary)">${inp.value}</div>`;
             c.prepend(d);
             inp.value = "";
         }
+
+        // Enter key support for chat
+        document.getElementById("chatInput").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") sendMsg();
+        });
     </script>
 </body>
 </html>
