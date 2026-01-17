@@ -76,12 +76,12 @@
         .flag { font-size: 30px; display: block; margin-bottom: 4px; }
         .t-name { font-weight: 800; font-size: 13px; color: #fff; letter-spacing: 0.5px; }
         
-        /* 🔥 NEW VS CIRCLE DESIGN 🔥 */
+        /* Premium Circle VS Box */
         .vs-box { 
             width: 35px; height: 35px; 
-            background: #222; border: 2px solid #333; border-radius: 50%; /* Circle */
+            background: #222; border: 2px solid #333; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center;
-            font-size: 10px; font-weight: 900; color: #888; /* Grey Text */
+            font-size: 10px; font-weight: 900; color: #888;
             box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
         }
 
@@ -112,7 +112,7 @@
         <div class="video-box" id="playerContainer"></div>
         <div class="video-overlay-views">
             <div class="live-dot"></div>
-            <span class="view-count" id="viewers">12,500</span>
+            <span class="view-count" id="viewers">1,245</span>
         </div>
     </div>
 
@@ -146,9 +146,7 @@
             <span class="flag">🇮🇳</span>
             <div class="t-name">IND</div>
         </div>
-        
         <div class="vs-box">VS</div>
-        
         <div class="team">
             <span class="flag">🇳🇿</span>
             <div class="t-name">NZ</div>
@@ -211,12 +209,35 @@
             if(num === 3) initPlayer(server3);
         }
 
+        // 🔥 REALISTIC ORGANIC VIEWERS LOGIC 🔥
+        // Start with a realistic number between 1000 and 2000
+        let currentViewers = 1245; 
+
         function updateViewers() {
-            const min = 1000; const max = 2000;
-            let count = Math.floor(Math.random() * (max - min + 1)) + min;
-            document.getElementById("viewers").innerText = count.toLocaleString();
+            // Decide whether to add or subtract viewers (Randomly)
+            // 50-50 chance to go up or down
+            let isIncreasing = Math.random() > 0.5;
+            
+            // Change amount: Random number between 5 and 20
+            let change = Math.floor(Math.random() * 15) + 5; 
+
+            if (isIncreasing) {
+                currentViewers += change;
+            } else {
+                currentViewers -= change;
+            }
+
+            // Safety Check: Keep between 1000 and 2000
+            if (currentViewers < 1000) currentViewers = 1000 + Math.floor(Math.random() * 50);
+            if (currentViewers > 2000) currentViewers = 2000 - Math.floor(Math.random() * 50);
+
+            document.getElementById("viewers").innerText = currentViewers.toLocaleString();
         }
-        setInterval(updateViewers, 10);
+
+        // Update every 5 seconds
+        setInterval(updateViewers, 5000);
+        
+        // Initial call
         updateViewers();
     </script>
 </body>
