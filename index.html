@@ -41,50 +41,58 @@
         .video-box { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; overflow: hidden; }
         iframe, video { width: 100%; height: 100%; border: none; }
 
-        /* EMOJI BAR */
-        .reaction-bar { display: flex; justify-content: center; gap: 20px; padding: 15px 0; background: #0f0f0f; }
+        /* REACTION BAR */
+        .reaction-bar { display: flex; justify-content: center; gap: 20px; padding: 12px 0; background: #0f0f0f; border-bottom: 1px solid #222; }
         .react-btn {
-            background: #1f1f1f; border: 1px solid #333; width: 50px; height: 50px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer;
+            background: #1f1f1f; border: 1px solid #333; width: 45px; height: 45px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer;
             transition: transform 0.2s, background 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
         .react-btn:active { transform: scale(0.9); background: #333; }
         .floating-emoji { position: fixed; bottom: 20%; right: 20px; font-size: 30px; animation: floatUp 2s ease-out forwards; pointer-events: none; z-index: 100; }
 
-        /* MATCH BANNER */
-        .match-banner {
-            background: linear-gradient(90deg, #111, #1a1a1a); 
-            padding: 15px; margin: 10px 10px; border-radius: 12px;
-            display: flex; justify-content: space-around; align-items: center;
-            border: 1px solid #333;
+        /* MATCH BOARD (Integrated Views) */
+        .match-card {
+            background: linear-gradient(145deg, #151515, #0a0a0a);
+            margin: 15px 15px 5px 15px; /* Gap kam kiya */
+            padding: 15px; border-radius: 16px;
+            border: 1px solid #2a2a2a;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        .team-box { text-align: center; }
-        .flag { font-size: 32px; display: block; margin-bottom: 5px; }
-        .t-name { font-weight: 900; font-size: 16px; color: #fff; letter-spacing: 1px; }
-        .vs-tag { font-size: 12px; font-weight: bold; color: #888; background: #000; padding: 8px; border-radius: 50%; border: 1px solid #333; }
-
-        /* VIEWERS (Gap Fixed Here) */
-        .views-bar { text-align: center; padding: 5px; font-size: 13px; color: #aaa; font-weight: 500; margin-bottom: 5px; }
-        .views-bar span { color: var(--primary); font-weight: bold; }
-
-        /* BUTTONS (Gap Removed) */
-        .action-area {
-            padding: 10px 20px; /* Gap kam kar diya */
-            display: flex; flex-direction: column; gap: 15px;
-            /* margin-top: auto; <-- Ye line hata di taaki niche na bhage */
+        .team { text-align: center; width: 30%; }
+        .flag { font-size: 36px; display: block; margin-bottom: 5px; }
+        .t-name { font-weight: 800; font-size: 14px; color: #fff; letter-spacing: 0.5px; }
+        
+        /* Center Info (VS + Views) */
+        .center-info { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 40%; }
+        .vs-circle {
+            width: 35px; height: 35px; background: #222; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 900; color: #666; border: 2px solid #333;
         }
+        .live-count {
+            font-size: 11px; font-weight: 700; color: var(--primary);
+            background: rgba(230, 36, 41, 0.1); padding: 4px 10px;
+            border-radius: 10px; border: 1px solid rgba(230, 36, 41, 0.2);
+            display: flex; align-items: center; gap: 5px;
+        }
+        .live-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; animation: pulse 1s infinite; }
+
+        /* ACTION BUTTONS */
+        .action-area { padding: 10px 15px; display: flex; flex-direction: column; gap: 12px; }
         .big-btn {
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            padding: 16px; border-radius: 12px; text-decoration: none; color: white;
-            font-weight: 800; font-size: 16px; text-transform: uppercase;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            padding: 14px; border-radius: 12px; text-decoration: none; color: white;
+            font-weight: 800; font-size: 15px; text-transform: uppercase;
             transition: transform 0.2s; position: relative; overflow: hidden;
         }
         .big-btn:active { transform: scale(0.98); }
-        .btn-yt { background: linear-gradient(135deg, #ff0000, #cc0000); box-shadow: 0 8px 20px rgba(255, 0, 0, 0.3); border: 1px solid #ff4d4d; }
-        .btn-tg { background: linear-gradient(135deg, #0088cc, #005580); box-shadow: 0 8px 20px rgba(0, 136, 204, 0.3); border: 1px solid #4db8ff; }
-        .big-btn i { font-size: 22px; }
+        .btn-yt { background: linear-gradient(135deg, #ff0000, #b30000); box-shadow: 0 4px 15px rgba(255, 0, 0, 0.2); border: 1px solid #ff3333; }
+        .btn-tg { background: linear-gradient(135deg, #0088cc, #005580); box-shadow: 0 4px 15px rgba(0, 136, 204, 0.2); border: 1px solid #3399ff; }
+        .big-btn i { font-size: 20px; }
 
-        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.05); } 100% { opacity: 1; transform: scale(1); } }
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1); } 100% { opacity: 1; transform: scale(1); } }
         @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-200px) scale(1.5); opacity: 0; } }
     </style>
 </head>
@@ -92,7 +100,7 @@
 
     <div class="header">
         <div class="logo">MKS <span>SPORTS</span></div>
-        <div class="live-tag">● LIVE STREAM</div>
+        <div class="live-tag">● LIVE</div>
     </div>
 
     <div class="video-wrapper">
@@ -105,21 +113,24 @@
         <div class="react-btn" onclick="triggerCelebration()">🎉</div>
     </div>
 
-    <div class="match-banner">
-        <div class="team-box">
+    <div class="match-card">
+        <div class="team">
             <span class="flag">🏏</span>
             <div class="t-name">JSK</div>
         </div>
-        <div class="vs-tag">VS</div>
-        <div class="team-box">
+        
+        <div class="center-info">
+            <div class="vs-circle">VS</div>
+            <div class="live-count">
+                <div class="live-dot"></div>
+                <span id="viewers">1,200</span>
+            </div>
+        </div>
+
+        <div class="team">
             <span class="flag">🏏</span>
             <div class="t-name">PR</div>
         </div>
-    </div>
-
-    <div class="views-bar">
-        <i class="fas fa-user-friends"></i> 
-        <span id="viewers">12,500</span> Watching Now
     </div>
 
     <div class="action-area">
@@ -127,20 +138,22 @@
             <i class="fab fa-youtube"></i> Subscribe YouTube
         </a>
         <a href="https://t.me/MKSSports_3" target="_blank" class="big-btn btn-tg">
-            <i class="fab fa-telegram"></i> Join Telegram Channel
+            <i class="fab fa-telegram"></i> Join Telegram
         </a>
     </div>
 
     <script>
         const streamLink = "https://tgs1.myluck1.top:8088/mobile/stream5_240p/playlist.m3u8?vidictid=204707278658&id=18&pk=ae85b3ec0f635ab534b3b39a7e88b37f4fd9513ca22bc57b2206fec7a7a5e8f76f9db76673ebf3cb5670a5787da7d423d6cd49f84bd7dc4947eee8e805444206";
 
+        // --- NEW VIEW COUNT LOGIC (500 - 5000) ---
         function updateViewers() {
-            const min = 5000; const max = 25000;
+            const min = 500; 
+            const max = 5000;
             let count = Math.floor(Math.random() * (max - min + 1)) + min;
             document.getElementById("viewers").innerText = count.toLocaleString();
         }
         setInterval(updateViewers, 5000);
-        updateViewers();
+        updateViewers(); // Initial call
 
         function initPlayer(url) {
             const box = document.getElementById('playerContainer');
