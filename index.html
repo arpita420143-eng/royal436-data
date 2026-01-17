@@ -15,119 +15,94 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            margin: 0; 
-            background: linear-gradient(45deg, #050505, #1a0000, #050505);
-            background-size: 400% 400%;
-            animation: bgAnimation 15s ease infinite;
-            color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            margin: 0; background: linear-gradient(45deg, #050505, #1a0000, #050505); background-size: 400% 400%;
+            animation: bgAnimation 15s ease infinite; color: var(--text); 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; 
         }
 
-        /* HEADER (Compact) */
+        /* Compact Header */
         .header {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px);
-            padding: 10px 15px; /* Thoda chhota kiya */
-            border-bottom: 2px solid var(--primary); 
-            box-shadow: 0 4px 15px rgba(230, 36, 41, 0.2);
-            z-index: 50; position: sticky; top: 0;
+            padding: 8px 12px; border-bottom: 2px solid var(--primary); 
+            box-shadow: 0 4px 15px rgba(230, 36, 41, 0.2); z-index: 50; position: sticky; top: 0;
         }
-        .logo { font-weight: 900; font-size: 18px; letter-spacing: 1px; background: linear-gradient(45deg, #fff, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo { font-weight: 900; font-size: 16px; letter-spacing: 0.5px; background: linear-gradient(45deg, #fff, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .logo span { color: var(--primary); -webkit-text-fill-color: var(--primary); }
-        .live-tag { background: var(--primary); padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; text-transform: uppercase; box-shadow: 0 0 10px var(--primary); animation: pulse 1.5s infinite; }
+        .live-tag { background: var(--primary); padding: 2px 8px; border-radius: 20px; font-size: 9px; font-weight: bold; text-transform: uppercase; box-shadow: 0 0 10px var(--primary); animation: pulse 1.5s infinite; }
 
-        /* VIDEO PLAYER */
-        .video-wrapper { position: relative; width: 100%; background: #000; z-index: 40; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        /* Video */
+        .video-wrapper { position: relative; width: 100%; background: #000; z-index: 40; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .video-box { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; overflow: hidden; }
         iframe, video { width: 100%; height: 100%; border: none; }
-        
-        .video-overlay-views {
-            position: absolute; top: 10px; right: 10px;
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);
-            padding: 5px 10px; border-radius: 6px;
-            display: flex; align-items: center; gap: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.1); z-index: 100;
-        }
-        .view-count { font-size: 12px; font-weight: 800; color: #fff; }
-        .watching-text { font-size: 9px; font-weight: 600; color: #ddd; text-transform: uppercase; letter-spacing: 0.5px; }
-        .live-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary); animation: pulse 1s infinite; }
+        .video-overlay-views { position: absolute; top: 8px; right: 8px; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); padding: 4px 8px; border-radius: 4px; display: flex; align-items: center; gap: 5px; border: 1px solid rgba(255, 255, 255, 0.1); z-index: 100; pointer-events: none; }
+        .view-count { font-size: 11px; font-weight: 800; color: #fff; }
+        .watching-text { font-size: 8px; font-weight: 600; color: #ddd; text-transform: uppercase; }
+        .live-dot { width: 5px; height: 5px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 6px var(--primary); animation: pulse 1s infinite; }
 
-        /* NEWS TICKER */
-        .news-ticker {
-            background: var(--primary); color: white;
-            font-size: 11px; font-weight: 700; text-transform: uppercase;
-            padding: 6px 0; overflow: hidden; white-space: nowrap;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 35;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .ticker-content { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; }
-        
-        /* 🔥 REACTION SECTION (GAP REDUCED) 🔥 */
-        .reaction-container {
-            padding: 10px 10px; /* Padding Kam Ki */
-            background: linear-gradient(to bottom, #111, #050505);
-            display: flex; justify-content: center; gap: 20px; border-bottom: 1px solid #222;
-            box-shadow: inset 0 -10px 20px -10px rgba(230, 36, 41, 0.1);
-        }
-        .react-btn {
-            width: 45px; height: 45px; /* Size thoda chhota */
-            font-size: 22px; background: linear-gradient(145deg, #1f1f1f, #151515);
-            border: 1px solid #333; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: all 0.2s;
-        }
-        .react-btn:active { transform: scale(0.9); border-color: var(--primary); }
-        .floating-emoji { position: fixed; bottom: 30%; right: 30px; font-size: 40px; animation: floatUp 2s ease-out forwards; pointer-events: none; z-index: 100; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
-
-        /* 🔥 SCOREBOARD (MARGIN REDUCED) 🔥 */
-        .match-card-pro {
-            margin: 10px 15px 10px 15px; /* Margin Kam Ki (Upar/Niche) */
-            background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
-            border-radius: 16px; padding: 15px; /* Padding Kam Ki */
+        /* 🔥 NEW COMBINED CONTROL BAR (Servers + Emojis) 🔥 */
+        .control-bar {
+            background: linear-gradient(to bottom, #111, #080808); padding: 8px 10px;
             display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid #333; box-shadow: 0 5px 20px rgba(0,0,0,0.4); position: relative; overflow: hidden;
+            border-bottom: 1px solid #222; gap: 10px;
         }
-        .match-card-pro::before { content: ''; position: absolute; top: 0; left: -50%; width: 100%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.03), transparent); transform: skewX(-20deg); pointer-events: none; }
+        .server-group { display: flex; gap: 5px; }
+        .server-btn-mini {
+            background: #222; color: #aaa; border: 1px solid #333;
+            padding: 5px 10px; border-radius: 15px; font-size: 9px; font-weight: 700;
+            cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 3px;
+        }
+        .server-btn-mini.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .status-dot-mini { width: 4px; height: 4px; border-radius: 50%; background: #0f0; }
         
-        .team-pro { text-align: center; flex: 1; z-index: 2; }
-        .flag-pro { font-size: 32px; display: block; margin-bottom: 5px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3)); }
-        .t-name-pro { font-weight: 800; font-size: 14px; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        
-        .vs-center-pro { flex: 0.6; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; }
-        .vs-box { background: var(--primary); padding: 4px 12px; transform: skew(-10deg); box-shadow: 0 0 15px rgba(230, 36, 41, 0.4); border: 2px solid #fff; }
-        .vs-text { font-size: 16px; font-weight: 900; color: #fff; transform: skew(10deg); }
+        .reaction-group { display: flex; gap: 10px; }
+        .react-btn-mini {
+            width: 35px; height: 35px; font-size: 18px; background: linear-gradient(145deg, #1f1f1f, #151515);
+            border: 1px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: all 0.2s;
+        }
+        .react-btn-mini:active { transform: scale(0.9); border-color: var(--primary); }
 
-        /* 🔥 BUTTONS (COMPACT) 🔥 */
-        .action-area { 
-            padding: 5px 15px 15px 15px; /* Top padding kam ki */
-            display: flex; flex-direction: column; gap: 10px; /* Gap kam kiya */
-        }
-        .big-btn { 
-            display: flex; align-items: center; justify-content: center; gap: 10px; 
-            padding: 12px; /* Padding thodi kam ki */
-            border-radius: 10px; text-decoration: none; color: white; 
-            font-weight: 800; font-size: 13px; text-transform: uppercase; 
-            transition: transform 0.2s; position: relative; overflow: hidden; 
-        }
-        .big-btn:active { transform: scale(0.98); }
-        
-        .btn-yt { background: linear-gradient(135deg, #ff0000, #b30000); box-shadow: 0 4px 15px rgba(255, 0, 0, 0.2); border: 1px solid #ff3333; }
-        .btn-tg { background: linear-gradient(135deg, #0088cc, #005580); box-shadow: 0 4px 15px rgba(0, 136, 204, 0.2); border: 1px solid #3399ff; }
-        .btn-wa { background: linear-gradient(135deg, #25D366, #128C7E); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2); border: 1px solid #25D366; }
-        
-        .big-btn i { font-size: 18px; }
+        /* Slim News Ticker */
+        .news-ticker { background: var(--primary); color: white; font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 4px 0; overflow: hidden; white-space: nowrap; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .ticker-content { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; }
 
+        /* Compact Scoreboard */
+        .match-card-compact {
+            margin: 8px 10px; background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
+            border-radius: 12px; padding: 10px; display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid #333; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; overflow: hidden;
+        }
+        .match-card-compact::before { content: ''; position: absolute; top: 0; left: -50%; width: 100%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.03), transparent); transform: skewX(-20deg); pointer-events: none; }
+        .team-mini { text-align: center; flex: 1; z-index: 2; }
+        .flag-mini { font-size: 24px; display: block; margin-bottom: 2px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); }
+        .t-name-mini { font-weight: 800; font-size: 12px; color: #fff; letter-spacing: 1px; }
+        .vs-center-mini { flex: 0.6; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; }
+        .vs-box-mini { background: var(--primary); padding: 2px 10px; transform: skew(-10deg); border: 1px solid #fff; }
+        .vs-text-mini { font-size: 14px; font-weight: 900; color: #fff; transform: skew(10deg); }
+
+        /* Compact Buttons */
+        .action-area-compact { padding: 5px 10px 10px 10px; display: flex; flex-direction: column; gap: 8px; }
+        .big-btn-compact { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; border-radius: 8px; text-decoration: none; color: white; font-weight: 800; font-size: 12px; text-transform: uppercase; transition: transform 0.2s; position: relative; overflow: hidden; }
+        .big-btn-compact:active { transform: scale(0.98); }
+        .btn-yt { background: linear-gradient(135deg, #ff0000, #b30000); border: 1px solid #ff3333; }
+        .btn-tg { background: linear-gradient(135deg, #0088cc, #005580); border: 1px solid #3399ff; }
+        .btn-wa { background: linear-gradient(135deg, #25D366, #128C7E); border: 1px solid #25D366; }
+        .big-btn-compact i { font-size: 16px; }
+
+        .floating-emoji { position: fixed; bottom: 30%; right: 20px; font-size: 35px; animation: floatUp 2s ease-out forwards; pointer-events: none; z-index: 100; }
         @keyframes bgAnimation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
         @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1); } 100% { opacity: 1; transform: scale(1); } }
-        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-250px) scale(1.5); opacity: 0; } }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-200px) scale(1.5); opacity: 0; } }
     </style>
 </head>
 <body>
 
     <div class="header">
         <div class="logo">MKS <span>SPORTS</span></div>
-        <div class="live-tag">● LIVE STREAM</div>
+        <div class="live-tag">● LIVE</div>
     </div>
 
     <div class="video-wrapper">
@@ -141,59 +116,69 @@
 
     <div class="news-ticker">
         <div class="ticker-content">
-            📢 WELCOME TO MKS SPORTS LIVE • JOIN OUR TELEGRAM FOR MORE LINKS • SHARE THIS PAGE WITH YOUR FRIENDS • ENJOY THE MATCH! 📢
+            📢 WELCOME TO MKS SPORTS LIVE • SWITCH SERVERS IF LAG OCCURS • JOIN TELEGRAM FOR UPDATES • SHARE WITH FRIENDS! 📢
         </div>
     </div>
 
-    <div class="reaction-container">
-        <div class="react-btn" onclick="triggerReaction('❤️')">❤️</div>
-        <div class="react-btn" onclick="triggerReaction('🔥')">🔥</div>
-        <div class="react-btn" onclick="triggerCelebration()">🎉</div>
-    </div>
-
-    <div class="match-card-pro">
-        <div class="team-pro">
-            <span class="flag-pro">🏏</span>
-            <div class="t-name-pro">JSK</div>
-        </div>
-        <div class="vs-center-pro">
-            <div class="vs-box">
-                <div class="vs-text">VS</div>
+    <div class="control-bar">
+        <div class="server-group">
+            <div class="server-btn-mini active" onclick="changeServer(1, this)">
+                <div class="status-dot-mini"></div> S1(HD)
+            </div>
+            <div class="server-btn-mini" onclick="changeServer(2, this)">
+                <div class="status-dot-mini" style="background:#aaa"></div> S2(FAST)
+            </div>
+            <div class="server-btn-mini" onclick="changeServer(3, this)">
+                <div class="status-dot-mini" style="background:#aaa"></div> S3(BKUP)
             </div>
         </div>
-        <div class="team-pro">
-            <span class="flag-pro">🏏</span>
-            <div class="t-name-pro">PR</div>
+        <div class="reaction-group">
+            <div class="react-btn-mini" onclick="triggerReaction('❤️')">❤️</div>
+            <div class="react-btn-mini" onclick="triggerReaction('🔥')">🔥</div>
+            <div class="react-btn-mini" onclick="triggerCelebration()">🎉</div>
         </div>
     </div>
 
-    <div class="action-area">
-        <a href="https://youtube.com/@mkssports3" target="_blank" class="big-btn btn-yt">
+    <div class="match-card-compact">
+        <div class="team-mini">
+            <span class="flag-mini">🏏</span>
+            <div class="t-name-mini">JSK</div>
+        </div>
+        <div class="vs-center-mini">
+            <div class="vs-box-mini">
+                <div class="vs-text-mini">VS</div>
+            </div>
+        </div>
+        <div class="team-mini">
+            <span class="flag-mini">🏏</span>
+            <div class="t-name-mini">PR</div>
+        </div>
+    </div>
+
+    <div class="action-area-compact">
+        <a href="https://youtube.com/@mkssports3" target="_blank" class="big-btn-compact btn-yt">
             <i class="fab fa-youtube"></i> Subscribe YouTube
         </a>
-        <a href="https://t.me/MKSSports_3" target="_blank" class="big-btn btn-tg">
+        <a href="https://t.me/MKSSports_3" target="_blank" class="big-btn-compact btn-tg">
             <i class="fab fa-telegram"></i> Join Telegram
         </a>
-        <a href="whatsapp://send?text=Watch Live Cricket Match HD Free! 👇 Click Here: https://matchmanas.pages.dev" class="big-btn btn-wa">
+        <a href="whatsapp://send?text=Watch Live Cricket Match HD Free! 👇 Click Here: https://matchmanas.pages.dev" class="big-btn-compact btn-wa">
             <i class="fab fa-whatsapp"></i> Share with Friends
         </a>
     </div>
 
     <script>
-        const streamLink = "https://tgs1.myluck1.top:8088/mobile/stream5_240p/playlist.m3u8?vidictid=204707278658&id=18&pk=ae85b3ec0f635ab534b3b39a7e88b37f4fd9513ca22bc57b2206fec7a7a5e8f76f9db76673ebf3cb5670a5787da7d423d6cd49f84bd7dc4947eee8e805444206";
+        // 🔥 APNE LINKS YAHAN UPDATE KAREIN 🔥
+        const server1 = "https://tgs1.myluck1.top:8088/mobile/stream5_240p/playlist.m3u8?vidictid=204707278658&id=18&pk=ae85b3ec0f635ab534b3b39a7e88b37f4fd9513ca22bc57b2206fec7a7a5e8f76f9db76673ebf3cb5670a5787da7d423d6cd49f84bd7dc4947eee8e805444206";
+        const server2 = "Link2_Yahan_Dalein"; 
+        const server3 = "Link3_Yahan_Dalein";
 
-        function updateViewers() {
-            const min = 500; const max = 5000;
-            let count = Math.floor(Math.random() * (max - min + 1)) + min;
-            document.getElementById("viewers").innerText = count.toLocaleString();
-        }
-        setInterval(updateViewers, 5000);
-        updateViewers();
+        let currentUrl = server1;
 
         function initPlayer(url) {
             const box = document.getElementById('playerContainer');
             box.innerHTML = ''; 
-            if (url.includes('.m3u8')) {
+            if (url.includes('.m3u8') && url !== "Link2_Yahan_Dalein" && url !== "Link3_Yahan_Dalein") {
                 const vid = document.createElement('video');
                 vid.controls = true; vid.autoplay = true; vid.playsInline = true;
                 vid.style.width="100%"; vid.style.height="100%";
@@ -205,19 +190,41 @@
                 else if (vid.canPlayType('application/vnd.apple.mpegurl')) { 
                     vid.src = url; vid.addEventListener('loadedmetadata', function() { vid.play(); });
                 }
+            } else {
+                box.innerHTML = '<div style="color:white; text-align:center; padding:20px;">Link not available yet.</div>';
             }
         }
-        initPlayer(streamLink);
+        initPlayer(currentUrl);
 
-        function triggerCelebration() {
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-            triggerReaction('🎉');
+        function changeServer(num, btn) {
+            document.querySelectorAll('.server-btn-mini').forEach(b => {
+                b.classList.remove('active');
+                b.querySelector('.status-dot-mini').style.background = '#aaa';
+            });
+            btn.classList.add('active');
+            btn.querySelector('.status-dot-mini').style.background = '#0f0';
+
+            if(num === 1) initPlayer(server1);
+            if(num === 2) initPlayer(server2);
+            if(num === 3) initPlayer(server3);
         }
 
+        function updateViewers() {
+            const min = 500; const max = 5000;
+            let count = Math.floor(Math.random() * (max - min + 1)) + min;
+            document.getElementById("viewers").innerText = count.toLocaleString();
+        }
+        setInterval(updateViewers, 5000);
+        updateViewers();
+
+        function triggerCelebration() {
+            confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } }); // Thoda kam confetti taaki load kam pade
+            triggerReaction('🎉');
+        }
         function triggerReaction(emoji) {
             const el = document.createElement('div');
             el.innerText = emoji; el.className = 'floating-emoji';
-            el.style.right = (Math.floor(Math.random() * 80) + 10) + 'px';
+            el.style.right = (Math.floor(Math.random() * 60) + 10) + 'px';
             document.body.appendChild(el);
             setTimeout(() => el.remove(), 2000);
         }
