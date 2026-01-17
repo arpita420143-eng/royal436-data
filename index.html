@@ -2,222 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Match Manas Live</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Match - Star Sports</title>
     
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.16.3/controls.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.16.3/shaka-player.ui.min.js"></script>
+
     <style>
-        :root { --bg: #000; --surface: #121212; --primary: #3a86ff; --accent: #ff0055; --text: #fff; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; padding-bottom: 20px; }
-
-        /* HEADER */
-        .header {
-            display: flex; justify-content: space-between; align-items: center;
-            background: linear-gradient(180deg, rgba(0,0,0,0.9), transparent);
-            padding: 15px; position: absolute; top: 0; width: 100%; z-index: 50; pointer-events: none;
-        }
-        .logo { font-weight: 900; font-size: 16px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); pointer-events: auto; }
-        .live-tag { background: red; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; animation: pulse 1s infinite; pointer-events: auto; }
-
-        /* VIDEO PLAYER */
-        .video-wrapper { position: relative; width: 100%; background: #000; z-index: 40; }
-        .video-box {
-            position: relative; width: 100%; aspect-ratio: 16/9;
-            background: #000; border-bottom: 1px solid #333; overflow: hidden;
-        }
-        iframe, video { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; }
-
-        /* 🔥 REACTION BUTTONS 🔥 */
-        .reaction-layer {
-            position: absolute; bottom: 15px; right: 10px; z-index: 60;
-            display: flex; gap: 10px; flex-direction: column; pointer-events: auto;
-        }
-        .react-btn {
-            background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3);
-            width: 40px; height: 40px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; cursor: pointer; backdrop-filter: blur(4px);
-            transition: transform 0.1s; color: white;
-        }
-        .react-btn:active { transform: scale(0.8); background: rgba(255,255,255,0.2); }
-        
-        .floating-emoji {
-            position: absolute; bottom: 50px; right: 20px; font-size: 30px;
-            animation: floatUp 2s ease-out forwards; pointer-events: none; z-index: 55;
-        }
-        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-150px) scale(1.5); opacity: 0; } }
-
-        /* 🔥 MATCH BANNER 🔥 */
-        .match-banner {
-            background: #1a1a1a; padding: 15px; 
-            display: flex; justify-content: space-around; align-items: center;
-            border-bottom: 1px solid #333;
-        }
-        .team-box { text-align: center; }
-        .flag { font-size: 28px; display: block; margin-bottom: 4px; }
-        .t-name { font-weight: 900; font-size: 14px; color: #fff; letter-spacing: 1px; }
-        .vs-tag { font-size: 12px; font-weight: bold; color: #555; background: #111; padding: 6px; border-radius: 50%; border: 1px solid #333; }
-
-        /* 🔥 VIEW COUNTER 🔥 */
-        .views-bar {
-            background: #111; text-align: center; padding: 8px;
-            font-size: 12px; color: #aaa; font-weight: bold;
-            border-bottom: 1px solid #222;
-        }
-        .views-bar span { color: #fff; }
-
-        /* TABS */
-        .tabs { display: flex; background: #000; border-bottom: 1px solid #222; margin-top: 0; }
-        .tab { flex: 1; padding: 14px; text-align: center; font-size: 13px; font-weight: 600; color: #777; cursor: pointer; }
-        .tab.active { color: white; border-bottom: 3px solid var(--primary); }
-
-        .content { display: none; padding: 15px; }
-        .content.active { display: block; }
-
-        /* SOCIAL BUTTONS */
-        .social-row { display: flex; gap: 10px; margin-bottom: 20px; }
-        .s-btn { flex: 1; padding: 12px; border-radius: 10px; text-decoration: none; color: white; font-weight: bold; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .yt { background: linear-gradient(135deg, #ff0000, #990000); }
-        .tg { background: linear-gradient(135deg, #0088cc, #005580); }
-
-        /* CHAT */
-        .chat-box { height: 250px; overflow-y: auto; display: flex; flex-direction: column-reverse; padding-right: 5px; }
-        .msg { display: flex; gap: 10px; margin-bottom: 10px; font-size: 13px; }
-        .av { width: 30px; height: 30px; background: #333; border-radius: 50%; display:flex; align-items:center; justify-content:center; font-weight:bold; color:#aaa; flex-shrink: 0; }
-        .txt { background: #222; padding: 8px 12px; border-radius: 0 12px 12px 12px; color: #ddd; }
-
-        .input-area { display: flex; gap: 10px; margin-top: 10px; }
-        .inp { flex: 1; background: #1a1a1a; border: 1px solid #333; padding: 12px; border-radius: 25px; color: white; outline: none; }
-        .send-btn { width: 45px; height: 45px; border-radius: 50%; background: var(--primary); border: none; color: white; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        body { margin: 0; background-color: #000; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .video-container { width: 100%; max-width: 800px; aspect-ratio: 16/9; background: #000; }
+        video { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="logo">MATCH <span style="color:var(--primary)">MANAS</span></div>
-        <div class="live-tag">● LIVE</div>
-    </div>
-
-    <div class="video-wrapper">
-        <div class="video-box" id="playerContainer"></div>
-
-        <div class="reaction-layer">
-            <div class="react-btn" onclick="triggerReaction('❤️')">❤️</div>
-            <div class="react-btn" onclick="triggerReaction('🔥')">🔥</div>
-            <div class="react-btn" onclick="triggerCelebration()">🎉</div>
-        </div>
-    </div>
-
-    <div class="match-banner">
-        <div class="team-box">
-            <span class="flag">🇮🇳</span>
-            <div class="t-name">IND</div>
-        </div>
-        <div class="vs-tag">VS</div>
-        <div class="team-box">
-            <span class="flag">🇳🇿</span>
-            <div class="t-name">NZ</div>
-        </div>
-    </div>
-
-    <div class="views-bar">
-        <i class="fas fa-eye" style="color:red;"></i> 
-        <span id="viewers">12,500</span> Watching Now
-    </div>
-
-    <div class="tabs">
-        <div class="tab active" onclick="openTab('chat')">Live Chat</div>
-        <div class="tab" onclick="openTab('links')">Links</div>
-    </div>
-
-    <div id="chat" class="content active">
-        <div class="chat-box" id="chatList"></div>
-        <div class="input-area">
-            <input type="text" id="chatInput" class="inp" placeholder="Type a message...">
-            <button class="send-btn" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <div id="links" class="content">
-        <div class="social-row">
-            <a href="https://youtube.com/@mkssports3" class="s-btn yt"><i class="fab fa-youtube"></i> YouTube</a>
-            <a href="https://t.me/MKSSports_3" class="s-btn tg"><i class="fab fa-telegram"></i> Telegram</a>
-        </div>
-        <p style="text-align:center; color:#555; font-size:12px;">Enjoy Ad-free Streaming!</p>
+    <div class="video-container" data-shaka-player-container>
+        <video autoplay data-shaka-player id="video" style="width:100%;height:100%"></video>
     </div>
 
     <script>
-        // --- 1. CONFIGURATION ---
-        const streamLink = "https://jan.player0003.com/hls/star2eng.m3u8?md6=-lpdEzzUysdx2T5Bx56mAw&expires=1768673897&s=MmEwMjo2ZWEwOmRhMDg6MzAyOTo6MTI=";
+        // --- AAPKA NAYA LINK YAHAN HAI ---
+        const manifestUri = 'https://jan.player0003.com/hls/star2eng.m3u8?md6=-lpdEzzUysdx2T5Bx56mAw&expires=1768673897&s=MmEwMjo2ZWEwOmRhMDg6MzAyOTo6MTI='; 
+        // ---------------------------------
 
-        // --- 2. VIEW COUNTER ---
-        function updateViewers() {
-            const min = 5000; const max = 25000;
-            let count = Math.floor(Math.random() * (max - min + 1)) + min;
-            document.getElementById("viewers").innerText = count.toLocaleString();
-        }
-        setInterval(updateViewers, 5000);
-        updateViewers();
+        async function init() {
+            const video = document.getElementById('video');
+            const ui = video['ui'];
+            const controls = ui.getControls();
+            const player = controls.getPlayer();
 
-        // --- 3. PLAYER LOGIC ---
-        function initPlayer(url) {
-            const box = document.getElementById('playerContainer');
-            if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                let vId = url.includes('/live/') ? url.split('/live/')[1].split('?')[0] : url.split('v=')[1].split('&')[0];
-                box.innerHTML = `<iframe src="https://www.youtube.com/embed/${vId}?autoplay=1&mute=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-            } else if (url.includes('.m3u8')) {
-                const vid = document.createElement('video');
-                vid.controls = true; vid.autoplay = true; vid.style.width="100%"; vid.style.height="100%";
-                box.appendChild(vid);
-                if (Hls.isSupported()) { const hls = new Hls(); hls.loadSource(url); hls.attachMedia(vid); }
-                else { vid.src = url; }
-            } else { box.innerHTML = `<iframe src="${url}" allowfullscreen></iframe>`; }
-        }
-        initPlayer(streamLink);
-
-        // --- 4. UI LOGIC ---
-        function openTab(id) {
-            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            event.currentTarget.classList.add('active');
+            try {
+                await player.load(manifestUri);
+                console.log('Match chal gaya!');
+            } catch (error) {
+                console.error('Error code', error.code, 'object', error);
+            }
         }
 
-        function triggerCelebration() {
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-            triggerReaction('🎉');
-        }
-
-        function triggerReaction(emoji) {
-            const container = document.querySelector('.video-wrapper');
-            const el = document.createElement('div');
-            el.innerText = emoji; el.className = 'floating-emoji';
-            el.style.right = (Math.floor(Math.random() * 50) + 10) + 'px';
-            container.appendChild(el);
-            setTimeout(() => el.remove(), 2000);
-        }
-
-        // --- 5. CHAT LOGIC (AUTOMATIC DISABLED) ---
-        function sendMsg() {
-            const inp = document.getElementById('chatInput');
-            if(!inp.value.trim()) return;
-            const c = document.getElementById('chatList');
-            const d = document.createElement('div'); d.className='msg';
-            d.innerHTML = `<div class="av" style="background:var(--primary)">U</div><div class="txt" style="background:#1a2e4d; border:1px solid var(--primary)">${inp.value}</div>`;
-            c.prepend(d);
-            inp.value = "";
-        }
-
-        // Enter key support for chat
-        document.getElementById("chatInput").addEventListener("keypress", function(e) {
-            if (e.key === "Enter") sendMsg();
-        });
+        document.addEventListener('shaka-ui-loaded', init);
+        document.addEventListener('shaka-ui-load-failed', init);
     </script>
 </body>
 </html>
