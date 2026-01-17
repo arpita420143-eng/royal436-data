@@ -6,7 +6,7 @@
     
     <meta name="referrer" content="no-referrer">
     
-    <title>Live Match - Fixed</title>
+    <title>Live Match - 240p Test</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.16.3/controls.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.16.3/shaka-player.ui.min.js"></script>
@@ -24,8 +24,9 @@
     </div>
 
     <script>
-        // Aapka Link (VPN ON rakhna pad sakta hai)
-        const manifestUri = 'https://jan.player0003.com/hls/star2eng.m3u8?md6=-lpdEzzUysdx2T5Bx56mAw&expires=1768673897&s=MmEwMjo2ZWEwOmRhMDg6MzAyOTo6MTI='; 
+        // --- AAPKA NAYA LINK ---
+        const manifestUri = 'https://tgs1.myluck1.top:8088/mobile/stream5_240p/playlist.m3u8?vidictid=204707278658&id=18&pk=ae85b3ec0f635ab534b3b39a7e88b37f4fd9513ca22bc57b2206fec7a7a5e8f76f9db76673ebf3cb5670a5787da7d423d6cd49f84bd7dc4947eee8e805444206'; 
+        // -----------------------
 
         async function init() {
             const video = document.getElementById('video');
@@ -33,10 +34,8 @@
             const controls = ui.getControls();
             const player = controls.getPlayer();
 
-            // Error dikhane ke liye (Console check karna)
             player.addEventListener('error', (event) => {
                 console.error('Error code', event.detail.code, 'object', event.detail);
-                alert("Error: Video play nahi ho rahi. Console check karein.");
             });
 
             try {
