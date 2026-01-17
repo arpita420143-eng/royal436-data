@@ -11,108 +11,133 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        :root { --bg: #000; --surface: #121212; --primary: #e62429; --accent: #ff0055; --text: #fff; }
+        :root { --bg: #050505; --surface: #121212; --primary: #e62429; --telegram: #0088cc; --text: #fff; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; padding-bottom: 20px; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
 
-        /* HEADER */
+        /* 🔥 PRO HEADER DESIGN 🔥 */
         .header {
             display: flex; justify-content: space-between; align-items: center;
-            background: linear-gradient(180deg, rgba(0,0,0,0.9), transparent);
-            padding: 15px; position: absolute; top: 0; width: 100%; z-index: 50; pointer-events: none;
+            background: linear-gradient(180deg, #1a1a1a, #000);
+            padding: 15px 20px;
+            border-bottom: 2px solid var(--primary);
+            box-shadow: 0 4px 15px rgba(230, 36, 41, 0.3);
         }
-        .logo { font-weight: 900; font-size: 16px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); pointer-events: auto; }
-        .live-tag { background: red; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; animation: pulse 1s infinite; pointer-events: auto; }
+        .logo { 
+            font-weight: 900; font-size: 20px; letter-spacing: 1px;
+            background: linear-gradient(45deg, #fff, #ccc);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .logo span { color: var(--primary); -webkit-text-fill-color: var(--primary); }
+        .live-tag { 
+            background: var(--primary); padding: 4px 12px; border-radius: 20px; 
+            font-size: 11px; font-weight: bold; text-transform: uppercase;
+            box-shadow: 0 0 10px var(--primary);
+            animation: pulse 1.5s infinite; 
+        }
 
         /* VIDEO PLAYER */
-        .video-wrapper { position: relative; width: 100%; background: #000; z-index: 40; }
+        .video-wrapper { position: relative; width: 100%; background: #000; z-index: 40; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .video-box {
             position: relative; width: 100%; aspect-ratio: 16/9;
-            background: #000; border-bottom: 1px solid #333; overflow: hidden;
+            background: #000; overflow: hidden;
         }
-        iframe, video { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; }
+        iframe, video { width: 100%; height: 100%; border: none; }
 
-        /* 🔥 REACTION BUTTONS 🔥 */
-        .reaction-layer {
-            position: absolute; bottom: 15px; right: 10px; z-index: 60;
-            display: flex; gap: 10px; flex-direction: column; pointer-events: auto;
+        /* 🔥 EMOJI BAR (Video ke Niche) 🔥 */
+        .reaction-bar {
+            display: flex; justify-content: center; gap: 20px;
+            padding: 15px 0;
+            background: #0f0f0f;
         }
         .react-btn {
-            background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3);
-            width: 40px; height: 40px; border-radius: 50%;
+            background: #1f1f1f; border: 1px solid #333;
+            width: 50px; height: 50px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 20px; cursor: pointer; backdrop-filter: blur(4px);
-            transition: transform 0.1s; color: white;
+            font-size: 24px; cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
-        .react-btn:active { transform: scale(0.8); background: rgba(255,255,255,0.2); }
+        .react-btn:active { transform: scale(0.9); background: #333; }
         
+        /* Floating Animation Elements */
         .floating-emoji {
-            position: absolute; bottom: 50px; right: 20px; font-size: 30px;
-            animation: floatUp 2s ease-out forwards; pointer-events: none; z-index: 55;
+            position: fixed; bottom: 20%; right: 20px; font-size: 30px;
+            animation: floatUp 2s ease-out forwards; pointer-events: none; z-index: 100;
         }
-        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-150px) scale(1.5); opacity: 0; } }
 
-        /* 🔥 MATCH BANNER 🔥 */
+        /* 🏏 MATCH SCORE BANNER (Emoji ke Niche) 🏏 */
         .match-banner {
-            background: #1a1a1a; padding: 15px; 
+            background: linear-gradient(90deg, #111, #1a1a1a); 
+            padding: 15px; margin: 10px 10px; border-radius: 12px;
             display: flex; justify-content: space-around; align-items: center;
-            border-bottom: 1px solid #333;
+            border: 1px solid #333;
         }
         .team-box { text-align: center; }
-        .flag { font-size: 28px; display: block; margin-bottom: 4px; }
-        .t-name { font-weight: 900; font-size: 14px; color: #fff; letter-spacing: 1px; }
-        .vs-tag { font-size: 12px; font-weight: bold; color: #555; background: #111; padding: 6px; border-radius: 50%; border: 1px solid #333; }
-
-        /* 🔥 VIEW COUNTER 🔥 */
-        .views-bar {
-            background: #111; text-align: center; padding: 8px;
-            font-size: 12px; color: #aaa; font-weight: bold;
-            border-bottom: 1px solid #222;
+        .flag { font-size: 32px; display: block; margin-bottom: 5px; }
+        .t-name { font-weight: 900; font-size: 16px; color: #fff; letter-spacing: 1px; }
+        .vs-tag { 
+            font-size: 12px; font-weight: bold; color: #888; 
+            background: #000; padding: 8px; border-radius: 50%; 
+            border: 1px solid #333; 
         }
-        .views-bar span { color: #fff; }
 
-        /* TABS */
-        .tabs { display: flex; background: #000; border-bottom: 1px solid #222; margin-top: 0; }
-        .tab { flex: 1; padding: 14px; text-align: center; font-size: 13px; font-weight: 600; color: #777; cursor: pointer; }
-        .tab.active { color: white; border-bottom: 3px solid var(--primary); }
+        /* VIEW COUNTER */
+        .views-bar {
+            text-align: center; padding: 5px;
+            font-size: 13px; color: #aaa; font-weight: 500;
+        }
+        .views-bar span { color: var(--primary); font-weight: bold; }
 
-        .content { display: none; padding: 15px; }
-        .content.active { display: block; }
+        /* 🔥 BIG ACTION BUTTONS 🔥 */
+        .action-area {
+            padding: 20px; display: flex; flex-direction: column; gap: 15px;
+            margin-top: auto; /* Push to bottom if space allows */
+        }
+        .big-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 16px; border-radius: 12px;
+            text-decoration: none; color: white;
+            font-weight: 800; font-size: 16px; text-transform: uppercase;
+            transition: transform 0.2s;
+            position: relative; overflow: hidden;
+        }
+        .big-btn:active { transform: scale(0.98); }
+        
+        /* YouTube Style */
+        .btn-yt { 
+            background: linear-gradient(135deg, #ff0000, #cc0000); 
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.3);
+            border: 1px solid #ff4d4d;
+        }
+        /* Telegram Style */
+        .btn-tg { 
+            background: linear-gradient(135deg, #0088cc, #005580); 
+            box-shadow: 0 8px 20px rgba(0, 136, 204, 0.3);
+            border: 1px solid #4db8ff;
+        }
+        
+        .big-btn i { font-size: 22px; }
 
-        /* SOCIAL BUTTONS */
-        .social-row { display: flex; gap: 10px; margin-bottom: 20px; }
-        .s-btn { flex: 1; padding: 12px; border-radius: 10px; text-decoration: none; color: white; font-weight: bold; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .yt { background: linear-gradient(135deg, #ff0000, #cc0000); }
-        .tg { background: linear-gradient(135deg, #0088cc, #005580); }
-
-        /* CHAT */
-        .chat-box { height: 250px; overflow-y: auto; display: flex; flex-direction: column-reverse; padding-right: 5px; }
-        .msg { display: flex; gap: 10px; margin-bottom: 10px; font-size: 13px; }
-        .av { width: 30px; height: 30px; background: #333; border-radius: 50%; display:flex; align-items:center; justify-content:center; font-weight:bold; color:#aaa; flex-shrink: 0; }
-        .txt { background: #222; padding: 8px 12px; border-radius: 0 12px 12px 12px; color: #ddd; }
-
-        .input-area { display: flex; gap: 10px; margin-top: 10px; }
-        .inp { flex: 1; background: #1a1a1a; border: 1px solid #333; padding: 12px; border-radius: 25px; color: white; outline: none; }
-        .send-btn { width: 45px; height: 45px; border-radius: 50%; background: var(--primary); border: none; color: white; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.05); } 100% { opacity: 1; transform: scale(1); } }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-200px) scale(1.5); opacity: 0; } }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="logo">MKS <span style="color:var(--primary)">SPORTS</span></div>
-        <div class="live-tag">● LIVE</div>
+        <div class="logo">MKS <span>SPORTS</span></div>
+        <div class="live-tag">● LIVE STREAM</div>
     </div>
 
     <div class="video-wrapper">
         <div class="video-box" id="playerContainer"></div>
+    </div>
 
-        <div class="reaction-layer">
-            <div class="react-btn" onclick="triggerReaction('❤️')">❤️</div>
-            <div class="react-btn" onclick="triggerReaction('🔥')">🔥</div>
-            <div class="react-btn" onclick="triggerCelebration()">🎉</div>
-        </div>
+    <div class="reaction-bar">
+        <div class="react-btn" onclick="triggerReaction('❤️')">❤️</div>
+        <div class="react-btn" onclick="triggerReaction('🔥')">🔥</div>
+        <div class="react-btn" onclick="triggerCelebration()">🎉</div>
     </div>
 
     <div class="match-banner">
@@ -128,42 +153,24 @@
     </div>
 
     <div class="views-bar">
-        <i class="fas fa-eye" style="color:red;"></i> 
+        <i class="fas fa-user-friends"></i> 
         <span id="viewers">12,500</span> Watching Now
     </div>
 
-    <div class="tabs">
-        <div class="tab active" onclick="openTab('chat')">Live Chat</div>
-        <div class="tab" onclick="openTab('links')">Links & Join</div>
-    </div>
-
-    <div id="chat" class="content active">
-        <div class="chat-box" id="chatList"></div>
-        <div class="input-area">
-            <input type="text" id="chatInput" class="inp" placeholder="Type a message...">
-            <button class="send-btn" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <div id="links" class="content">
-        <div class="social-row">
-            <a href="https://youtube.com/@mkssports3" target="_blank" class="s-btn yt">
-                <i class="fab fa-youtube"></i> Subscribe YT
-            </a>
-            <a href="https://t.me/MKSSports_3" target="_blank" class="s-btn tg">
-                <i class="fab fa-telegram"></i> Join Telegram
-            </a>
-        </div>
-        <p style="text-align:center; color:#555; font-size:12px; margin-top:20px;">
-            Official Stream by MKS Sports
-        </p>
+    <div class="action-area">
+        <a href="https://youtube.com/@mkssports3" target="_blank" class="big-btn btn-yt">
+            <i class="fab fa-youtube"></i> Subscribe YouTube
+        </a>
+        <a href="https://t.me/MKSSports_3" target="_blank" class="big-btn btn-tg">
+            <i class="fab fa-telegram"></i> Join Telegram Channel
+        </a>
     </div>
 
     <script>
-        // --- 1. CONFIGURATION (Naya Link Updated) ---
+        // --- CONFIGURATION ---
         const streamLink = "https://tgs1.myluck1.top:8088/mobile/stream5_240p/playlist.m3u8?vidictid=204707278658&id=18&pk=ae85b3ec0f635ab534b3b39a7e88b37f4fd9513ca22bc57b2206fec7a7a5e8f76f9db76673ebf3cb5670a5787da7d423d6cd49f84bd7dc4947eee8e805444206";
 
-        // --- 2. VIEW COUNTER ---
+        // --- VIEWER COUNT LOGIC ---
         function updateViewers() {
             const min = 5000; const max = 25000;
             let count = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -172,19 +179,16 @@
         setInterval(updateViewers, 5000);
         updateViewers();
 
-        // --- 3. PLAYER LOGIC ---
+        // --- PLAYER LOGIC ---
         function initPlayer(url) {
             const box = document.getElementById('playerContainer');
-            box.innerHTML = ''; // Clear previous
+            box.innerHTML = ''; 
             
-            if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                let vId = url.includes('/live/') ? url.split('/live/')[1].split('?')[0] : url.split('v=')[1].split('&')[0];
-                box.innerHTML = `<iframe src="https://www.youtube.com/embed/${vId}?autoplay=1&mute=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-            } else if (url.includes('.m3u8')) {
+            if (url.includes('.m3u8')) {
                 const vid = document.createElement('video');
                 vid.controls = true; 
                 vid.autoplay = true; 
-                vid.playsInline = true; // Mobile ke liye zaroori
+                vid.playsInline = true;
                 vid.style.width="100%"; 
                 vid.style.height="100%";
                 box.appendChild(vid);
@@ -193,52 +197,29 @@
                     const hls = new Hls(); 
                     hls.loadSource(url); 
                     hls.attachMedia(vid);
-                    hls.on(Hls.Events.MANIFEST_PARSED, function() { vid.play(); });
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() { vid.play().catch(e => console.log(e)); });
                 }
                 else if (vid.canPlayType('application/vnd.apple.mpegurl')) { 
                     vid.src = url; 
                     vid.addEventListener('loadedmetadata', function() { vid.play(); });
                 }
-            } else { box.innerHTML = `<iframe src="${url}" allowfullscreen></iframe>`; }
+            }
         }
         initPlayer(streamLink);
 
-        // --- 4. UI LOGIC ---
-        function openTab(id) {
-            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
+        // --- REACTION LOGIC ---
         function triggerCelebration() {
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             triggerReaction('🎉');
         }
 
         function triggerReaction(emoji) {
-            const container = document.querySelector('.video-wrapper');
             const el = document.createElement('div');
             el.innerText = emoji; el.className = 'floating-emoji';
-            el.style.right = (Math.floor(Math.random() * 50) + 10) + 'px';
-            container.appendChild(el);
+            el.style.right = (Math.floor(Math.random() * 80) + 10) + 'px'; // Random horizontal position
+            document.body.appendChild(el);
             setTimeout(() => el.remove(), 2000);
         }
-
-        // --- 5. CHAT LOGIC ---
-        function sendMsg() {
-            const inp = document.getElementById('chatInput');
-            if(!inp.value.trim()) return;
-            const c = document.getElementById('chatList');
-            const d = document.createElement('div'); d.className='msg';
-            d.innerHTML = `<div class="av" style="background:var(--primary)">U</div><div class="txt" style="background:#1a2e4d; border:1px solid var(--primary)">${inp.value}</div>`;
-            c.prepend(d);
-            inp.value = "";
-        }
-
-        document.getElementById("chatInput").addEventListener("keypress", function(e) {
-            if (e.key === "Enter") sendMsg();
-        });
     </script>
 </body>
 </html>
