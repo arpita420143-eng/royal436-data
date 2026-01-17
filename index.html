@@ -11,16 +11,26 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        :root { --bg: #050505; --surface: #121212; --primary: #e62429; --telegram: #0088cc; --text: #fff; }
+        :root { --bg: #050505; --surface: #121212; --primary: #e62429; --telegram: #0088cc; --whatsapp: #25D366; --text: #fff; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* 🔥 ANIMATED BACKGROUND 🔥 */
+        body { 
+            margin: 0; 
+            background: linear-gradient(45deg, #050505, #1a0000, #050505);
+            background-size: 400% 400%;
+            animation: bgAnimation 15s ease infinite;
+            color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; 
+        }
 
         /* HEADER */
         .header {
             display: flex; justify-content: space-between; align-items: center;
-            background: linear-gradient(180deg, #1a1a1a, #000); padding: 15px 20px;
-            border-bottom: 2px solid var(--primary); box-shadow: 0 4px 15px rgba(230, 36, 41, 0.3);
-            z-index: 50; position: relative;
+            background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px);
+            padding: 15px 20px; border-bottom: 2px solid var(--primary); 
+            box-shadow: 0 4px 15px rgba(230, 36, 41, 0.2);
+            z-index: 50; position: sticky; top: 0;
         }
         .logo { font-weight: 900; font-size: 20px; letter-spacing: 1px; background: linear-gradient(45deg, #fff, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .logo span { color: var(--primary); -webkit-text-fill-color: var(--primary); }
@@ -33,16 +43,16 @@
         
         .video-overlay-views {
             position: absolute; top: 15px; right: 15px;
-            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);
             padding: 6px 12px; border-radius: 8px;
             display: flex; align-items: center; gap: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.15); z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.1); z-index: 100;
         }
         .view-count { font-size: 13px; font-weight: 800; color: #fff; }
         .watching-text { font-size: 10px; font-weight: 600; color: #ddd; text-transform: uppercase; letter-spacing: 0.5px; }
         .live-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary); animation: pulse 1s infinite; }
 
-        /* 🔥 NEWS TICKER (Chalti hui patti) 🔥 */
+        /* NEWS TICKER */
         .news-ticker {
             background: var(--primary); color: white;
             font-size: 12px; font-weight: 700; text-transform: uppercase;
@@ -55,41 +65,45 @@
         /* REACTION SECTION */
         .reaction-container {
             padding: 20px 15px; background: linear-gradient(to bottom, #111, #050505);
-            display: flex; justify-content: center; gap: 30px; border-bottom: 1px solid #222;
+            display: flex; justify-content: center; gap: 25px; border-bottom: 1px solid #222;
             box-shadow: inset 0 -15px 30px -15px rgba(230, 36, 41, 0.15);
         }
         .react-btn {
-            width: 60px; height: 60px; font-size: 28px; background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
-            border: 2px solid rgba(230, 36, 41, 0.5); border-radius: 50%;
+            width: 55px; height: 55px; font-size: 26px; background: linear-gradient(145deg, #1f1f1f, #151515);
+            border: 1px solid #333; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; cursor: pointer;
-            box-shadow: 0 0 15px rgba(230, 36, 41, 0.2), inset 0 0 10px rgba(0,0,0,0.5);
-            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .react-btn:active { transform: scale(0.9); box-shadow: 0 0 5px rgba(230, 36, 41, 0.5); }
+        .react-btn:active { transform: scale(0.9); border-color: var(--primary); }
         .floating-emoji { position: fixed; bottom: 30%; right: 30px; font-size: 40px; animation: floatUp 2s ease-out forwards; pointer-events: none; z-index: 100; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
 
         /* SCOREBOARD */
         .match-card-pro {
             margin: 5px 15px 20px 15px; background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
             border-radius: 20px; padding: 20px; display: flex; justify-content: space-between; align-items: center;
-            border: 2px solid rgba(230, 36, 41, 0.3); box-shadow: 0 10px 25px rgba(0,0,0,0.5); position: relative; overflow: hidden;
+            border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; overflow: hidden;
         }
-        .match-card-pro::before { content: ''; position: absolute; top: 0; left: -50%; width: 100%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent); transform: skewX(-20deg); pointer-events: none; }
+        .match-card-pro::before { content: ''; position: absolute; top: 0; left: -50%; width: 100%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.03), transparent); transform: skewX(-20deg); pointer-events: none; }
         .team-pro { text-align: center; flex: 1; z-index: 2; }
-        .flag-pro { font-size: 42px; display: block; margin-bottom: 8px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3)); }
-        .t-name-pro { font-weight: 900; font-size: 18px; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        .vs-center-pro { flex: 0.8; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; }
-        .vs-box { background: var(--primary); padding: 8px 20px; transform: skew(-12deg); box-shadow: 0 0 20px rgba(230, 36, 41, 0.6); border: 3px solid #fff; }
-        .vs-text { font-size: 22px; font-weight: 900; color: #fff; transform: skew(12deg); }
+        .flag-pro { font-size: 40px; display: block; margin-bottom: 8px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3)); }
+        .t-name-pro { font-weight: 800; font-size: 16px; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .vs-center-pro { flex: 0.6; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; }
+        .vs-box { background: var(--primary); padding: 6px 16px; transform: skew(-10deg); box-shadow: 0 0 15px rgba(230, 36, 41, 0.4); border: 2px solid #fff; }
+        .vs-text { font-size: 18px; font-weight: 900; color: #fff; transform: skew(10deg); }
 
         /* BUTTONS */
         .action-area { padding: 10px 15px; display: flex; flex-direction: column; gap: 12px; }
-        .big-btn { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 14px; border-radius: 12px; text-decoration: none; color: white; font-weight: 800; font-size: 15px; text-transform: uppercase; transition: transform 0.2s; position: relative; overflow: hidden; }
+        .big-btn { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 14px; border-radius: 12px; text-decoration: none; color: white; font-weight: 800; font-size: 14px; text-transform: uppercase; transition: transform 0.2s; position: relative; overflow: hidden; }
         .big-btn:active { transform: scale(0.98); }
+        
         .btn-yt { background: linear-gradient(135deg, #ff0000, #b30000); box-shadow: 0 4px 15px rgba(255, 0, 0, 0.2); border: 1px solid #ff3333; }
         .btn-tg { background: linear-gradient(135deg, #0088cc, #005580); box-shadow: 0 4px 15px rgba(0, 136, 204, 0.2); border: 1px solid #3399ff; }
+        /* 🔥 NEW: WHATSAPP BUTTON 🔥 */
+        .btn-wa { background: linear-gradient(135deg, #25D366, #128C7E); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2); border: 1px solid #25D366; }
+        
         .big-btn i { font-size: 20px; }
 
+        @keyframes bgAnimation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
         @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1); } 100% { opacity: 1; transform: scale(1); } }
         @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-250px) scale(1.5); opacity: 0; } }
@@ -113,7 +127,7 @@
 
     <div class="news-ticker">
         <div class="ticker-content">
-            📢 WELCOME TO MKS SPORTS LIVE • WATCH HD CRICKET STREAM FREE • JOIN OUR TELEGRAM CHANNEL FOR MORE LINKS • DON'T FORGET TO SUBSCRIBE YOUTUBE • ENJOY THE MATCH! 📢
+            📢 WELCOME TO MKS SPORTS LIVE • JOIN OUR TELEGRAM FOR MORE LINKS • SHARE THIS PAGE WITH YOUR FRIENDS • ENJOY THE MATCH! 📢
         </div>
     </div>
 
@@ -145,6 +159,9 @@
         </a>
         <a href="https://t.me/MKSSports_3" target="_blank" class="big-btn btn-tg">
             <i class="fab fa-telegram"></i> Join Telegram
+        </a>
+        <a href="whatsapp://send?text=Watch Live Cricket Match HD Free! 👇 Click Here: https://matchmanas.pages.dev" class="big-btn btn-wa">
+            <i class="fab fa-whatsapp"></i> Share with Friends
         </a>
     </div>
 
