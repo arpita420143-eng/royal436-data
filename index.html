@@ -15,83 +15,97 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            margin: 0; background: #050505; /* Simple black background for better performance */
+            margin: 0; background: #050505;
             color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; 
         }
 
-        /* 1. Header (Ultra Slim) */
+        /* 1. Header (Standard Size) */
         .header {
             display: flex; justify-content: space-between; align-items: center;
-            background: #111; padding: 5px 10px; border-bottom: 2px solid var(--primary); 
-            z-index: 50; position: sticky; top: 0;
+            background: #111; padding: 12px 15px; border-bottom: 2px solid var(--primary); 
+            z-index: 50; position: sticky; top: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
-        .logo { font-weight: 900; font-size: 14px; letter-spacing: 0.5px; color: #fff; }
+        .logo { font-weight: 900; font-size: 18px; letter-spacing: 0.5px; color: #fff; }
         .logo span { color: var(--primary); }
-        .live-tag { background: var(--primary); padding: 2px 6px; border-radius: 10px; font-size: 9px; font-weight: bold; }
+        .live-tag { background: var(--primary); padding: 4px 10px; border-radius: 15px; font-size: 11px; font-weight: bold; }
 
-        /* 2. Video (Fixed Ratio) */
+        /* 2. Video Player */
         .video-wrapper { position: relative; width: 100%; background: #000; }
         .video-box { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; }
         iframe, video { width: 100%; height: 100%; border: none; }
         
         /* Overlay Views */
-        .video-overlay-views { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.6); padding: 3px 6px; border-radius: 4px; display: flex; align-items: center; gap: 4px; pointer-events: none; }
-        .view-count { font-size: 10px; font-weight: 800; color: #fff; }
-        .live-dot { width: 5px; height: 5px; background: red; border-radius: 50%; }
+        .video-overlay-views { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); padding: 5px 10px; border-radius: 6px; display: flex; align-items: center; gap: 6px; pointer-events: none; }
+        .view-count { font-size: 12px; font-weight: 800; color: #fff; }
+        .live-dot { width: 8px; height: 8px; background: red; border-radius: 50%; box-shadow: 0 0 5px red; }
 
-        /* 3. News Ticker (Very Thin) */
-        .news-ticker { background: var(--primary); color: white; font-size: 9px; font-weight: 700; padding: 3px 0; white-space: nowrap; overflow: hidden; }
+        /* 3. News Ticker */
+        .news-ticker { background: var(--primary); color: white; font-size: 12px; font-weight: 700; padding: 8px 0; white-space: nowrap; overflow: hidden; border-bottom: 1px solid #333; }
         .ticker-content { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; }
 
-        /* 4. Control Bar (Servers + Emojis) - Compact */
-        .control-bar {
-            background: #0f0f0f; padding: 5px 8px;
-            display: flex; justify-content: space-between; align-items: center;
+        /* 4. Reaction Section (Separate) */
+        .reaction-bar {
+            background: #111; padding: 15px; display: flex; justify-content: center; gap: 25px;
             border-bottom: 1px solid #222;
         }
-        .server-group { display: flex; gap: 4px; }
-        .server-btn-mini {
-            background: #222; color: #aaa; border: 1px solid #333;
-            padding: 4px 8px; border-radius: 4px; font-size: 9px; font-weight: 700; cursor: pointer;
+        .react-btn {
+            width: 45px; height: 45px; font-size: 22px; background: #222; border: 1px solid #333;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; transition: transform 0.1s; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
-        .server-btn-mini.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .react-btn:active { transform: scale(0.9); border-color: var(--primary); }
+
+        /* 🔥 5. NEW SERVER STACK (Vertical) 🔥 */
+        .server-section {
+            padding: 15px; display: flex; flex-direction: column; gap: 10px;
+            background: #0a0a0a; border-bottom: 1px solid #222;
+        }
+        .server-label { font-size: 12px; color: #aaa; font-weight: 700; margin-bottom: 5px; text-transform: uppercase; }
         
-        .reaction-group { display: flex; gap: 8px; }
-        .react-btn-mini {
-            width: 30px; height: 30px; font-size: 16px; background: #1a1a1a;
-            border: 1px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
-        }
-
-        /* 5. Scoreboard (Very Tight) */
-        .match-card-compact {
-            margin: 5px 8px; /* Gap Kam kiya */
-            background: #111; border-radius: 8px; padding: 5px; 
+        .server-btn-large {
+            width: 100%; padding: 14px 15px;
+            background: #1a1a1a; border: 1px solid #333; border-radius: 10px;
+            color: white; font-size: 14px; font-weight: 700;
             display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid #222;
+            cursor: pointer; transition: all 0.2s;
         }
-        .team-mini { text-align: center; flex: 1; }
-        .flag-mini { font-size: 20px; display: block; }
-        .t-name-mini { font-weight: 800; font-size: 11px; color: #fff; }
-        .vs-box-mini { background: var(--primary); padding: 2px 8px; transform: skew(-10deg); font-size: 12px; font-weight: 900; color:white; }
+        .server-btn-large i { font-size: 16px; color: #666; }
+        
+        .server-btn-large.active { 
+            background: linear-gradient(90deg, #222, #1a1a1a); 
+            border-color: var(--primary); 
+            box-shadow: 0 0 10px rgba(230, 36, 41, 0.2);
+        }
+        .server-btn-large.active i { color: var(--primary); }
+        .server-name { display: flex; align-items: center; gap: 10px; }
+        .status-dot { width: 8px; height: 8px; background: #444; border-radius: 50%; }
+        .server-btn-large.active .status-dot { background: #0f0; box-shadow: 0 0 5px #0f0; }
 
-        /* 6. Buttons (No Gap) */
-        .action-area-compact { 
-            padding: 0 8px 10px 8px; /* Top padding 0 kar di */
-            display: flex; flex-direction: column; gap: 6px; /* Buttons ke beech ka gap kam kiya */
+        /* 6. Scoreboard (Standard Size) */
+        .match-card {
+            margin: 15px; background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
+            border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid #333; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        .big-btn-compact { 
-            display: flex; align-items: center; justify-content: center; gap: 6px; 
-            padding: 8px; /* Button patle kiye */
-            border-radius: 6px; text-decoration: none; color: white; 
-            font-weight: 700; font-size: 11px; text-transform: uppercase; 
-        }
-        .btn-yt { background: #cc0000; }
-        .btn-tg { background: #0088cc; }
-        .btn-wa { background: #25D366; }
-        .big-btn-compact i { font-size: 14px; }
+        .team { text-align: center; flex: 1; }
+        .flag { font-size: 30px; display: block; margin-bottom: 5px; }
+        .t-name { font-weight: 800; font-size: 14px; color: #fff; letter-spacing: 0.5px; }
+        .vs-box { background: var(--primary); padding: 5px 15px; transform: skew(-10deg); font-size: 14px; font-weight: 900; color:white; border-radius: 4px; }
 
-        /* Animations */
+        /* 7. Action Buttons (Big & Stacked) */
+        .action-area { padding: 0 15px 30px 15px; display: flex; flex-direction: column; gap: 12px; }
+        .big-btn { 
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            padding: 14px; border-radius: 10px; text-decoration: none; color: white; 
+            font-weight: 800; font-size: 14px; text-transform: uppercase; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .btn-yt { background: #cc0000; border: 1px solid #ff3333; }
+        .btn-tg { background: #0088cc; border: 1px solid #3399ff; }
+        .btn-wa { background: #25D366; border: 1px solid #4cd980; }
+        .big-btn i { font-size: 18px; }
+
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
         .floating-emoji { position: fixed; bottom: 30%; right: 20px; font-size: 30px; animation: floatUp 2s ease-out forwards; pointer-events: none; z-index: 100; }
         @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-150px); opacity: 0; } }
@@ -101,7 +115,7 @@
 
     <div class="header">
         <div class="logo">MKS <span>SPORTS</span></div>
-        <div class="live-tag">● LIVE</div>
+        <div class="live-tag">● LIVE STREAM</div>
     </div>
 
     <div class="video-wrapper">
@@ -114,49 +128,61 @@
 
     <div class="news-ticker">
         <div class="ticker-content">
-            📢 WELCOME TO MKS SPORTS LIVE • JOIN TELEGRAM FOR UPDATES • SHARE WITH FRIENDS! 📢
+            📢 WELCOME TO MKS SPORTS LIVE • JOIN TELEGRAM FOR FAST UPDATES • SHARE WITH FRIENDS TO SUPPORT US! 📢
         </div>
     </div>
 
-    <div class="control-bar">
-        <div class="server-group">
-            <div class="server-btn-mini active" onclick="changeServer(1, this)">S1 (HD)</div>
-            <div class="server-btn-mini" onclick="changeServer(2, this)">S2 (Fast)</div>
-            <div class="server-btn-mini" onclick="changeServer(3, this)">S3 (Backup)</div>
+    <div class="reaction-bar">
+        <div class="react-btn" onclick="triggerReaction('❤️')">❤️</div>
+        <div class="react-btn" onclick="triggerReaction('🔥')">🔥</div>
+        <div class="react-btn" onclick="triggerCelebration()">🎉</div>
+    </div>
+
+    <div class="server-section">
+        <div class="server-label">Select Stream Server</div>
+        
+        <div class="server-btn-large active" onclick="changeServer(1, this)">
+            <div class="server-name"><div class="status-dot"></div> SERVER 1 (HD)</div>
+            <i class="fas fa-play-circle"></i>
         </div>
-        <div class="reaction-group">
-            <div class="react-btn-mini" onclick="triggerReaction('❤️')">❤️</div>
-            <div class="react-btn-mini" onclick="triggerReaction('🔥')">🔥</div>
-            <div class="react-btn-mini" onclick="triggerCelebration()">🎉</div>
+        
+        <div class="server-btn-large" onclick="changeServer(2, this)">
+            <div class="server-name"><div class="status-dot"></div> SERVER 2 (FAST)</div>
+            <i class="fas fa-bolt"></i>
+        </div>
+        
+        <div class="server-btn-large" onclick="changeServer(3, this)">
+            <div class="server-name"><div class="status-dot"></div> SERVER 3 (BACKUP)</div>
+            <i class="fas fa-shield-alt"></i>
         </div>
     </div>
 
-    <div class="match-card-compact">
-        <div class="team-mini">
-            <span class="flag-mini">🏏</span>
-            <div class="t-name-mini">JSK</div>
+    <div class="match-card">
+        <div class="team">
+            <span class="flag">🏏</span>
+            <div class="t-name">JSK</div>
         </div>
-        <div class="vs-box-mini">VS</div>
-        <div class="team-mini">
-            <span class="flag-mini">🏏</span>
-            <div class="t-name-mini">PR</div>
+        <div class="vs-box">VS</div>
+        <div class="team">
+            <span class="flag">🏏</span>
+            <div class="t-name">PR</div>
         </div>
     </div>
 
-    <div class="action-area-compact">
-        <a href="https://youtube.com/@mkssports3" target="_blank" class="big-btn-compact btn-yt">
+    <div class="action-area">
+        <a href="https://youtube.com/@mkssports3" target="_blank" class="big-btn btn-yt">
             <i class="fab fa-youtube"></i> Subscribe YouTube
         </a>
-        <a href="https://t.me/MKSSports_3" target="_blank" class="big-btn-compact btn-tg">
+        <a href="https://t.me/MKSSports_3" target="_blank" class="big-btn btn-tg">
             <i class="fab fa-telegram"></i> Join Telegram
         </a>
-        <a href="whatsapp://send?text=Watch Live Cricket Match HD Free! 👇 Click Here: https://matchmanas.pages.dev" class="big-btn-compact btn-wa">
+        <a href="whatsapp://send?text=Watch Live Cricket Match HD Free! 👇 Click Here: https://matchmanas.pages.dev" class="big-btn btn-wa">
             <i class="fab fa-whatsapp"></i> Share with Friends
         </a>
     </div>
 
     <script>
-        // 🔥 LINKS YAHAN UPDATE KAREIN 🔥
+        // 🔥 LINKS UPDATE KAREIN 🔥
         const server1 = "https://tgs1.myluck1.top:8088/mobile/stream5_240p/playlist.m3u8?vidictid=204707278658&id=18&pk=ae85b3ec0f635ab534b3b39a7e88b37f4fd9513ca22bc57b2206fec7a7a5e8f76f9db76673ebf3cb5670a5787da7d423d6cd49f84bd7dc4947eee8e805444206";
         const server2 = "Link_2"; 
         const server3 = "Link_3";
@@ -179,14 +205,21 @@
                     vid.src = url; vid.addEventListener('loadedmetadata', function() { vid.play(); });
                 }
             } else {
-                box.innerHTML = '<div style="color:white;text-align:center;padding:20px;font-size:12px;">Link Loading...</div>';
+                box.innerHTML = '<div style="color:white;text-align:center;padding:50px;font-size:14px;">Link Loading / Not Available</div>';
             }
         }
         initPlayer(currentUrl);
 
         function changeServer(num, btn) {
-            document.querySelectorAll('.server-btn-mini').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.server-btn-large').forEach(b => {
+                b.classList.remove('active');
+                b.querySelector('.status-dot').style.background = '#444';
+                b.querySelector('i').style.color = '#666';
+            });
             btn.classList.add('active');
+            btn.querySelector('.status-dot').style.background = '#0f0';
+            btn.querySelector('i').style.color = '#e62429';
+
             if(num === 1) initPlayer(server1);
             if(num === 2) initPlayer(server2);
             if(num === 3) initPlayer(server3);
@@ -200,7 +233,7 @@
         setInterval(updateViewers, 5000);
         updateViewers();
 
-        function triggerCelebration() { confetti({ particleCount: 50, spread: 50, origin: { y: 0.6 } }); triggerReaction('🎉'); }
+        function triggerCelebration() { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); triggerReaction('🎉'); }
         function triggerReaction(emoji) {
             const el = document.createElement('div'); el.innerText = emoji; el.className = 'floating-emoji';
             el.style.right = (Math.floor(Math.random() * 50) + 10) + 'px';
