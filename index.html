@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Match - Star Sports</title>
+    
+    <meta name="referrer" content="no-referrer">
+    
+    <title>Live Match - Fixed</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.16.3/controls.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.16.3/shaka-player.ui.min.js"></script>
@@ -21,9 +24,8 @@
     </div>
 
     <script>
-        // --- AAPKA NAYA LINK YAHAN HAI ---
+        // Aapka Link (VPN ON rakhna pad sakta hai)
         const manifestUri = 'https://jan.player0003.com/hls/star2eng.m3u8?md6=-lpdEzzUysdx2T5Bx56mAw&expires=1768673897&s=MmEwMjo2ZWEwOmRhMDg6MzAyOTo6MTI='; 
-        // ---------------------------------
 
         async function init() {
             const video = document.getElementById('video');
@@ -31,16 +33,21 @@
             const controls = ui.getControls();
             const player = controls.getPlayer();
 
+            // Error dikhane ke liye (Console check karna)
+            player.addEventListener('error', (event) => {
+                console.error('Error code', event.detail.code, 'object', event.detail);
+                alert("Error: Video play nahi ho rahi. Console check karein.");
+            });
+
             try {
                 await player.load(manifestUri);
-                console.log('Match chal gaya!');
+                console.log('Video chal gayi!');
             } catch (error) {
                 console.error('Error code', error.code, 'object', error);
             }
         }
 
         document.addEventListener('shaka-ui-loaded', init);
-        document.addEventListener('shaka-ui-load-failed', init);
     </script>
 </body>
 </html>
