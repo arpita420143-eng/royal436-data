@@ -14,7 +14,6 @@
         :root { --bg: #050505; --surface: #121212; --primary: #e62429; --telegram: #0088cc; --whatsapp: #25D366; --text: #fff; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        /* 🔥 ANIMATED BACKGROUND 🔥 */
         body { 
             margin: 0; 
             background: linear-gradient(45deg, #050505, #1a0000, #050505);
@@ -24,17 +23,18 @@
             overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; 
         }
 
-        /* HEADER */
+        /* HEADER (Compact) */
         .header {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px);
-            padding: 15px 20px; border-bottom: 2px solid var(--primary); 
+            padding: 10px 15px; /* Thoda chhota kiya */
+            border-bottom: 2px solid var(--primary); 
             box-shadow: 0 4px 15px rgba(230, 36, 41, 0.2);
             z-index: 50; position: sticky; top: 0;
         }
-        .logo { font-weight: 900; font-size: 20px; letter-spacing: 1px; background: linear-gradient(45deg, #fff, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo { font-weight: 900; font-size: 18px; letter-spacing: 1px; background: linear-gradient(45deg, #fff, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .logo span { color: var(--primary); -webkit-text-fill-color: var(--primary); }
-        .live-tag { background: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; box-shadow: 0 0 10px var(--primary); animation: pulse 1.5s infinite; }
+        .live-tag { background: var(--primary); padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; text-transform: uppercase; box-shadow: 0 0 10px var(--primary); animation: pulse 1.5s infinite; }
 
         /* VIDEO PLAYER */
         .video-wrapper { position: relative; width: 100%; background: #000; z-index: 40; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
@@ -42,66 +42,80 @@
         iframe, video { width: 100%; height: 100%; border: none; }
         
         .video-overlay-views {
-            position: absolute; top: 15px; right: 15px;
+            position: absolute; top: 10px; right: 10px;
             background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);
-            padding: 6px 12px; border-radius: 8px;
-            display: flex; align-items: center; gap: 8px;
+            padding: 5px 10px; border-radius: 6px;
+            display: flex; align-items: center; gap: 6px;
             border: 1px solid rgba(255, 255, 255, 0.1); z-index: 100;
         }
-        .view-count { font-size: 13px; font-weight: 800; color: #fff; }
-        .watching-text { font-size: 10px; font-weight: 600; color: #ddd; text-transform: uppercase; letter-spacing: 0.5px; }
-        .live-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary); animation: pulse 1s infinite; }
+        .view-count { font-size: 12px; font-weight: 800; color: #fff; }
+        .watching-text { font-size: 9px; font-weight: 600; color: #ddd; text-transform: uppercase; letter-spacing: 0.5px; }
+        .live-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary); animation: pulse 1s infinite; }
 
         /* NEWS TICKER */
         .news-ticker {
             background: var(--primary); color: white;
-            font-size: 12px; font-weight: 700; text-transform: uppercase;
-            padding: 8px 0; overflow: hidden; white-space: nowrap;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            padding: 6px 0; overflow: hidden; white-space: nowrap;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 35;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         .ticker-content { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; }
         
-        /* REACTION SECTION */
+        /* 🔥 REACTION SECTION (GAP REDUCED) 🔥 */
         .reaction-container {
-            padding: 20px 15px; background: linear-gradient(to bottom, #111, #050505);
-            display: flex; justify-content: center; gap: 25px; border-bottom: 1px solid #222;
-            box-shadow: inset 0 -15px 30px -15px rgba(230, 36, 41, 0.15);
+            padding: 10px 10px; /* Padding Kam Ki */
+            background: linear-gradient(to bottom, #111, #050505);
+            display: flex; justify-content: center; gap: 20px; border-bottom: 1px solid #222;
+            box-shadow: inset 0 -10px 20px -10px rgba(230, 36, 41, 0.1);
         }
         .react-btn {
-            width: 55px; height: 55px; font-size: 26px; background: linear-gradient(145deg, #1f1f1f, #151515);
+            width: 45px; height: 45px; /* Size thoda chhota */
+            font-size: 22px; background: linear-gradient(145deg, #1f1f1f, #151515);
             border: 1px solid #333; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: all 0.2s;
         }
         .react-btn:active { transform: scale(0.9); border-color: var(--primary); }
         .floating-emoji { position: fixed; bottom: 30%; right: 30px; font-size: 40px; animation: floatUp 2s ease-out forwards; pointer-events: none; z-index: 100; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
 
-        /* SCOREBOARD */
+        /* 🔥 SCOREBOARD (MARGIN REDUCED) 🔥 */
         .match-card-pro {
-            margin: 5px 15px 20px 15px; background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
-            border-radius: 20px; padding: 20px; display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; overflow: hidden;
+            margin: 10px 15px 10px 15px; /* Margin Kam Ki (Upar/Niche) */
+            background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
+            border-radius: 16px; padding: 15px; /* Padding Kam Ki */
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid #333; box-shadow: 0 5px 20px rgba(0,0,0,0.4); position: relative; overflow: hidden;
         }
         .match-card-pro::before { content: ''; position: absolute; top: 0; left: -50%; width: 100%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.03), transparent); transform: skewX(-20deg); pointer-events: none; }
+        
         .team-pro { text-align: center; flex: 1; z-index: 2; }
-        .flag-pro { font-size: 40px; display: block; margin-bottom: 8px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3)); }
-        .t-name-pro { font-weight: 800; font-size: 16px; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .flag-pro { font-size: 32px; display: block; margin-bottom: 5px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3)); }
+        .t-name-pro { font-weight: 800; font-size: 14px; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        
         .vs-center-pro { flex: 0.6; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; }
-        .vs-box { background: var(--primary); padding: 6px 16px; transform: skew(-10deg); box-shadow: 0 0 15px rgba(230, 36, 41, 0.4); border: 2px solid #fff; }
-        .vs-text { font-size: 18px; font-weight: 900; color: #fff; transform: skew(10deg); }
+        .vs-box { background: var(--primary); padding: 4px 12px; transform: skew(-10deg); box-shadow: 0 0 15px rgba(230, 36, 41, 0.4); border: 2px solid #fff; }
+        .vs-text { font-size: 16px; font-weight: 900; color: #fff; transform: skew(10deg); }
 
-        /* BUTTONS */
-        .action-area { padding: 10px 15px; display: flex; flex-direction: column; gap: 12px; }
-        .big-btn { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 14px; border-radius: 12px; text-decoration: none; color: white; font-weight: 800; font-size: 14px; text-transform: uppercase; transition: transform 0.2s; position: relative; overflow: hidden; }
+        /* 🔥 BUTTONS (COMPACT) 🔥 */
+        .action-area { 
+            padding: 5px 15px 15px 15px; /* Top padding kam ki */
+            display: flex; flex-direction: column; gap: 10px; /* Gap kam kiya */
+        }
+        .big-btn { 
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            padding: 12px; /* Padding thodi kam ki */
+            border-radius: 10px; text-decoration: none; color: white; 
+            font-weight: 800; font-size: 13px; text-transform: uppercase; 
+            transition: transform 0.2s; position: relative; overflow: hidden; 
+        }
         .big-btn:active { transform: scale(0.98); }
         
         .btn-yt { background: linear-gradient(135deg, #ff0000, #b30000); box-shadow: 0 4px 15px rgba(255, 0, 0, 0.2); border: 1px solid #ff3333; }
         .btn-tg { background: linear-gradient(135deg, #0088cc, #005580); box-shadow: 0 4px 15px rgba(0, 136, 204, 0.2); border: 1px solid #3399ff; }
-        /* 🔥 NEW: WHATSAPP BUTTON 🔥 */
         .btn-wa { background: linear-gradient(135deg, #25D366, #128C7E); box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2); border: 1px solid #25D366; }
         
-        .big-btn i { font-size: 20px; }
+        .big-btn i { font-size: 18px; }
 
         @keyframes bgAnimation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
