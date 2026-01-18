@@ -2,251 +2,312 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="referrer" content="no-referrer">
-    <title>MKS Sports Live - IND vs NZ</title>
-    
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Manas Pro Live</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
     
     <style>
-        :root { --bg: #050505; --surface: #121212; --primary: #0078FF; --telegram: #0088cc; --whatsapp: #25D366; --text: #fff; --warning: #ffcc00; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            margin: 0; background: #050505;
-            color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; 
+        /* --- SK STAR STYLE DARK THEME --- */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0b0f19; /* Dark Navy Background */
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
         }
 
-        /* 1. Header */
+        /* Gradient Header */
         .header {
-            display: flex; justify-content: space-between; align-items: center;
-            background: #111; padding: 10px 15px; border-bottom: 2px solid var(--primary); 
-            z-index: 50; position: sticky; top: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        }
-        .logo { font-weight: 900; font-size: 16px; letter-spacing: 0.5px; color: #fff; }
-        .logo span { color: var(--primary); }
-        .live-tag { background: #e62429; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; }
-
-        /* 2. Video Player */
-        .video-wrapper { position: relative; width: 100%; background: #000; }
-        .video-box { position: relative; width: 100%; padding-bottom: 56.25%; /* 16:9 Aspect Ratio */ height: 0; background: #000; overflow: hidden; }
-        
-        .video-box iframe { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; 
+            background: linear-gradient(135deg, #ff4757, #2f3542);
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
         }
         
-        .video-overlay-views { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 5px; pointer-events: none; z-index: 10; }
-        .view-count { font-size: 11px; font-weight: 800; color: #fff; }
-        .live-dot { width: 6px; height: 6px; background: red; border-radius: 50%; box-shadow: 0 0 5px red; }
-
-        /* 3. News Ticker */
-        .news-ticker { background: var(--primary); color: white; font-size: 11px; font-weight: 700; padding: 6px 0; white-space: nowrap; overflow: hidden; border-bottom: 1px solid #333; }
-        .ticker-content { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; }
-
-        /* REFRESH BUTTON AREA */
-        .refresh-area { padding: 10px 15px 0 15px; }
-        .btn-refresh {
-            width: 100%; padding: 8px; background: #222; border: 1px solid #444; border-radius: 6px;
-            color: var(--warning); font-size: 12px; font-weight: 800; text-transform: uppercase;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: 0.2s;
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            font-weight: 800;
         }
-        .btn-refresh:active { background: #333; transform: scale(0.98); }
-        .btn-refresh i { font-size: 14px; }
+        .header span { color: #ffeaa7; }
 
-        /* 4. SERVER LIST */
-        .server-section {
-            padding: 10px 15px; display: flex; flex-direction: column; gap: 8px;
-            background: #0a0a0a; border-bottom: 1px solid #222;
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 10px;
         }
-        .server-label { font-size: 10px; color: #aaa; font-weight: 700; margin-bottom: 2px; text-transform: uppercase; }
+
+        /* Player Box */
+        .player-box {
+            background: #1e272e;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #4b6584;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative; /* For positioning Live badge */
+        }
+
+        /* 🔴 LIVE BLINKING BADGE & CONTROLS */
+        .live-info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 5px;
+        }
+
+        .live-badge {
+            background-color: #ff0000;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+            animation: blink 2s infinite; /* Blinking Animation */
+        }
         
-        .server-btn-large {
-            width: 100%; padding: 10px 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px;
-            color: white; font-size: 12px; font-weight: 700;
-            display: flex; justify-content: space-between; align-items: center;
-            cursor: pointer; transition: all 0.2s;
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 50%;
         }
-        .server-btn-large i { font-size: 14px; color: #666; }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* RIGHT SIDE CONTROLS (Quality + Viewers) */
+        .right-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 🔥 Quality Dropdown Style 🔥 */
+        .quality-select {
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 11px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* 👁 Viewer Count Style */
+        .viewer-count {
+            color: #ccc;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .eye-icon { font-size: 16px; }
+
+        /* Video Area */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Ratio */
+            height: 0;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        .video-wrapper video, 
+        .video-wrapper iframe,
+        .no-signal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border: none;
+        }
         
-        .server-btn-large.active { 
-            background: linear-gradient(90deg, #222, #1a1a1a); border-color: var(--primary); 
-            box-shadow: 0 0 8px rgba(0, 120, 255, 0.2);
-        }
-        .server-btn-large.active i { color: var(--primary); }
-        .server-name { display: flex; align-items: center; gap: 8px; }
-        .status-dot { width: 6px; height: 6px; background: #444; border-radius: 50%; }
-        .server-btn-large.active .status-dot { background: #0f0; box-shadow: 0 0 5px #0f0; }
-
-        /* 5. Scoreboard */
-        .match-card {
-            margin: 10px 15px; background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
-            border-radius: 10px; padding: 12px; display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        .team { text-align: center; flex: 1; }
-        .flag { font-size: 30px; display: block; margin-bottom: 4px; }
-        .t-name { font-weight: 800; font-size: 13px; color: #fff; letter-spacing: 0.5px; }
-        .vs-box { 
-            width: 35px; height: 35px; 
-            background: #222; border: 2px solid #333; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center;
-            font-size: 10px; font-weight: 900; color: #888;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+        .no-signal {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            font-weight: bold;
+            font-size: 18px;
         }
 
-        /* 6. Buttons */
-        .action-area { padding: 0 15px 25px 15px; display: flex; flex-direction: column; gap: 10px; }
-        .big-btn { 
-            display: flex; align-items: center; justify-content: center; gap: 8px; 
-            padding: 12px; border-radius: 8px; text-decoration: none; color: white; 
-            font-weight: 800; font-size: 13px; text-transform: uppercase; 
-            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+        /* Buttons Section */
+        .btn-container {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
         }
-        .btn-yt { background: #cc0000; border: 1px solid #ff3333; }
-        .btn-tg { background: #0088cc; border: 1px solid #3399ff; }
-        .btn-wa { background: #25D366; border: 1px solid #4cd980; }
-        .big-btn i { font-size: 16px; }
 
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        .btn {
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            color: white;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        
+        .btn-yt { background: #ff0000; } 
+        .btn-tg { background: #0088cc; } 
+        
+        .btn:hover { transform: scale(1.05); }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="logo">MKS <span>SPORTS</span></div>
-        <div class="live-tag">● LIVE</div>
+        <h1>🔥 Match Manas <span>Live</span> 🔥</h1>
+        <p style="font-size: 12px; margin-top: 5px; opacity: 0.8;">Your Ultimate Live Streaming Destination</p>
     </div>
 
-    <div class="video-wrapper">
-        <div class="video-box" id="playerContainer">
+    <div class="container">
+        <div class="player-box">
+            
+            <div class="live-info-bar">
+                <div class="live-badge">
+                    <div class="live-dot"></div> LIVE
+                </div>
+                
+                <div class="right-controls">
+                    <select id="qualitySelect" class="quality-select" style="display:none;">
+                        <option value="-1">Auto</option>
+                    </select>
+
+                    <div class="viewer-count">
+                        <span class="eye-icon">👁</span> 
+                        <span id="viewers">12,450</span> Watching
+                    </div>
+                </div>
             </div>
-        <div class="video-overlay-views">
-            <div class="live-dot"></div>
-            <span class="view-count" id="viewers">1,245</span>
-        </div>
-    </div>
 
-    <div class="news-ticker">
-        <div class="ticker-content">
-            📢 LIVE: INDIA VS NEW ZEALAND • WATCH HD STREAM FREE • JOIN TELEGRAM FOR UPDATES • SHARE WITH FRIENDS! 📢
+            <div class="video-wrapper" id="singleVideoBox"></div>
         </div>
-    </div>
 
-    <div class="refresh-area">
-        <div class="btn-refresh" onclick="refreshPlayer()">
-            <i class="fas fa-sync-alt"></i> Refresh Stream / Fix Loading
+        <div class="btn-container">
+            <a href="https://youtube.com/@mkssports3" class="btn btn-yt">📺 YouTube</a>
+            <a href="https://t.me/MKSSports_3" class="btn btn-tg">✈ Telegram</a>
         </div>
-    </div>
-
-    <div class="server-section">
-        <div class="server-label">Select Stream Server</div>
-        
-        <div class="server-btn-large active" onclick="changeServer(1, this)">
-            <div class="server-name"><div class="status-dot"></div> SERVER 1 (Main)</div>
-            <i class="fas fa-play-circle"></i>
-        </div>
-        
-        <div class="server-btn-large" onclick="changeServer(2, this)">
-            <div class="server-name"><div class="status-dot"></div> SERVER 2 (Backup 1)</div>
-            <i class="fas fa-bolt"></i>
-        </div>
-        
-        <div class="server-btn-large" onclick="changeServer(3, this)">
-            <div class="server-name"><div class="status-dot"></div> SERVER 3 (Backup 2)</div>
-            <i class="fas fa-shield-alt"></i>
-        </div>
-    </div>
-
-    <div class="match-card">
-        <div class="team">
-            <span class="flag">🇮🇳</span>
-            <div class="t-name">IND</div>
-        </div>
-        <div class="vs-box">VS</div>
-        <div class="team">
-            <span class="flag">🇳🇿</span>
-            <div class="t-name">NZ</div>
-        </div>
-    </div>
-
-    <div class="action-area">
-        <a href="https://youtube.com/@mkssports3" target="_blank" class="big-btn btn-yt">
-            <i class="fab fa-youtube"></i> Subscribe YouTube
-        </a>
-        <a href="https://t.me/MKSSports_3" target="_blank" class="big-btn btn-tg">
-            <i class="fab fa-telegram"></i> Join Telegram
-        </a>
-        <a href="whatsapp://send?text=Watch IND vs NZ Live Match HD Free! 👇 Click Here: https://matchmanas.pages.dev" class="big-btn btn-wa">
-            <i class="fab fa-whatsapp"></i> Share with Friends
-        </a>
     </div>
 
     <script>
-        // 🔥 LINKS 🔥
-        const server1 = "https://dlhd.link/stream/stream-589.php";
-        const server2 = "https://dlhd.link/stream/stream-370.php"; 
-        const server3 = "https://dlhd.link/stream/stream-34.php"; 
+        // ==========================================
+        // 🔥 LINK YAHAN UPDATE KARO 🔥
+        // ==========================================
+        const liveLink = "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/cb403e1a7b7b6f8a9a9f3d6cd1f341f2d15560d2513adc356faa5e9d57612e24daf6a89fb11af06d429f0fc61d533314156cdb6880284398872eb85031770716e7f0b77bd99d027bf781537e35d6017f50e00c16d124532a97b94a59cc7d9469151fed3e6b541984a946a87555db830c9b6752f3c9a01d256d0606c4084d92f50df8a0f84d36802efeec4957942b46f9825cced015b29ed55f9853fb29a34dc1c7e0e88246d3c4c87cac54b57a5a0e60399f832cc2c80ae38ad76c3c987465174f53b6eecba74a6ccb45150dfcaa9abd63ad40978d17ab0a58d3964762fe52a345e86c8eef4aa9acc9b028231897b490e5bac29fc4abe83c32c706b1c2bb9f1b78e86b826dc7350c8c0252f2014fe616a4f035dcda0296bd685213cf9d4e9a89b3b93dd1e7bafd08c5ddfd94314301364a52c6158e9363ce31863889c01733534440edcb009fc6eb7308371fd6d41ef60612b5dfc4b6f43f6a8432480bb9308115553c9d7d2c5df53df59f0b698b0d03917a68a80f7bd314bcf007dd93f6c94a7bb9d7cc47bf48eab601ddbf428a652e560fb6bd7d0b16022d9eb9325469379211b293e7ee75000ce9b7feffc6522a0e7642015bc5b1b102f6e4a7081312d35c2f64067246c37eb82bb32d460227c51b939c017b8b032b4fb3f3df3cab817863d79ef9588e112d8e0f56a685099b2bb585/54/384x216_734654/index.m3u8";
+        // ==========================================
 
-        let currentUrl = server1;
 
-        function initPlayer(url) {
-            const box = document.getElementById('playerContainer');
-            // Clear only if needed, but here we rebuild to force refresh
-            box.innerHTML = ''; 
+        // --- FAKE VIEWER COUNT ---
+        function updateViewers() {
+            const minViewers = 15000;
+            const maxViewers = 25000;
+            let count = Math.floor(Math.random() * (maxViewers - minViewers + 1)) + minViewers;
+            document.getElementById("viewers").innerText = count.toLocaleString();
+        }
+        setInterval(updateViewers, 3000);
+        updateViewers();
 
-            if (url) {
+
+        // --- PLAYER LOGIC (With Quality Control) ---
+        function initSinglePlayer(url) {
+            const container = document.getElementById('singleVideoBox');
+            const qualitySelect = document.getElementById('qualitySelect');
+            container.innerHTML = ""; 
+
+            if (!url) {
+                container.innerHTML = '<div class="no-signal">Waiting for Signal...</div>';
+                qualitySelect.style.display = 'none';
+                return;
+            }
+
+            if (url.includes('.mpd')) {
+                const video = document.createElement('video');
+                video.controls = true; video.autoplay = true; video.muted = false; video.playsInline = true;
+                container.appendChild(video);
+                var player = dashjs.MediaPlayer().create();
+                player.initialize(video, url, true);
+                qualitySelect.style.display = 'none'; // Dashjs auto handles quality usually
+            }
+            else if (url.includes('.m3u8')) {
+                const video = document.createElement('video');
+                video.controls = true; video.autoplay = true; video.muted = false; video.playsInline = true;
+                container.appendChild(video);
+
+                if (Hls.isSupported()) {
+                    var hls = new Hls();
+                    hls.loadSource(url);
+                    hls.attachMedia(video);
+
+                    // 🔥 LOGIC: Populate Quality Dropdown 🔥
+                    hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                        const levels = hls.levels;
+                        
+                        // Agar 1 se zyada quality options hain, tabhi dropdown dikhao
+                        if (levels.length > 1) {
+                            qualitySelect.style.display = 'block';
+                            qualitySelect.innerHTML = '<option value="-1">Auto</option>';
+                            
+                            levels.forEach((level, index) => {
+                                const height = level.height;
+                                // Label example: "720p" or "Level 2"
+                                const label = height ? `${height}p` : `Quality ${index}`;
+                                qualitySelect.innerHTML += `<option value="${index}">${label}</option>`;
+                            });
+
+                            // Jab user select kare, quality change karo
+                            qualitySelect.onchange = function() {
+                                hls.currentLevel = parseInt(this.value);
+                            };
+                        } else {
+                            qualitySelect.style.display = 'none';
+                        }
+                    });
+
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    // Apple devices (iPhone/Safari) handle quality natively
+                    video.src = url;
+                    qualitySelect.style.display = 'none';
+                }
+            } 
+            else {
+                // Iframe/YouTube
                 const iframe = document.createElement('iframe');
                 iframe.src = url;
                 iframe.setAttribute('allowfullscreen', 'true');
-                iframe.setAttribute('scrolling', 'no');
-                iframe.style.border = "0";
-                box.appendChild(iframe);
+                iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+                container.appendChild(iframe);
+                qualitySelect.style.display = 'none';
             }
         }
-        
-        // Load default
-        initPlayer(currentUrl);
-
-        // 🔥 REFRESH FUNCTION 🔥
-        function refreshPlayer() {
-            const box = document.getElementById('playerContainer');
-            box.innerHTML = '<div style="color:white;display:flex;justify-content:center;align-items:center;height:100%;font-size:12px;">Refreshing...</div>';
-            
-            // Thoda delay taaki user ko lage refresh hua
-            setTimeout(() => {
-                initPlayer(currentUrl);
-            }, 500);
-        }
-
-        function changeServer(num, btn) {
-            document.querySelectorAll('.server-btn-large').forEach(b => {
-                b.classList.remove('active');
-                b.querySelector('.status-dot').style.background = '#444';
-                b.querySelector('i').style.color = '#666';
-            });
-            btn.classList.add('active');
-            btn.querySelector('.status-dot').style.background = '#0f0';
-            btn.querySelector('i').style.color = '#0078FF';
-
-            if(num === 1) { currentUrl = server1; initPlayer(server1); }
-            if(num === 2) { currentUrl = server2; initPlayer(server2); }
-            if(num === 3) { currentUrl = server3; initPlayer(server3); }
-        }
-
-        let currentViewers = 1245; 
-        function updateViewers() {
-            let isIncreasing = Math.random() > 0.5;
-            let change = Math.floor(Math.random() * 15) + 5; 
-            if (isIncreasing) currentViewers += change;
-            else currentViewers -= change;
-            if (currentViewers < 10000) currentViewers = 10000;
-            if (currentViewers > 30000) currentViewers = 30000;
-            document.getElementById("viewers").innerText = currentViewers.toLocaleString();
-        }
-        setInterval(updateViewers, 5000);
-        updateViewers();
+        initSinglePlayer(liveLink);
     </script>
 </body>
 </html>
