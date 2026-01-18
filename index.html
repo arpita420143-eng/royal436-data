@@ -9,7 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        :root { --bg: #050505; --surface: #121212; --primary: #0078FF; --telegram: #0088cc; --whatsapp: #25D366; --text: #fff; }
+        :root { --bg: #050505; --surface: #121212; --primary: #0078FF; --telegram: #0088cc; --whatsapp: #25D366; --text: #fff; --warning: #ffcc00; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
@@ -43,6 +43,17 @@
         /* 3. News Ticker */
         .news-ticker { background: var(--primary); color: white; font-size: 11px; font-weight: 700; padding: 6px 0; white-space: nowrap; overflow: hidden; border-bottom: 1px solid #333; }
         .ticker-content { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; }
+
+        /* REFRESH BUTTON AREA */
+        .refresh-area { padding: 10px 15px 0 15px; }
+        .btn-refresh {
+            width: 100%; padding: 8px; background: #222; border: 1px solid #444; border-radius: 6px;
+            color: var(--warning); font-size: 12px; font-weight: 800; text-transform: uppercase;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: 0.2s;
+        }
+        .btn-refresh:active { background: #333; transform: scale(0.98); }
+        .btn-refresh i { font-size: 14px; }
 
         /* 4. SERVER LIST */
         .server-section {
@@ -123,6 +134,12 @@
         </div>
     </div>
 
+    <div class="refresh-area">
+        <div class="btn-refresh" onclick="refreshPlayer()">
+            <i class="fas fa-sync-alt"></i> Refresh Stream / Fix Loading
+        </div>
+    </div>
+
     <div class="server-section">
         <div class="server-label">Select Stream Server</div>
         
@@ -167,7 +184,7 @@
     </div>
 
     <script>
-        // 🔥 LINKS UPDATED HERE 🔥
+        // 🔥 LINKS 🔥
         const server1 = "https://dlhd.link/stream/stream-589.php";
         const server2 = "https://dlhd.link/stream/stream-370.php"; 
         const server3 = "https://dlhd.link/stream/stream-34.php"; 
@@ -176,6 +193,7 @@
 
         function initPlayer(url) {
             const box = document.getElementById('playerContainer');
+            // Clear only if needed, but here we rebuild to force refresh
             box.innerHTML = ''; 
 
             if (url) {
@@ -188,7 +206,19 @@
             }
         }
         
+        // Load default
         initPlayer(currentUrl);
+
+        // 🔥 REFRESH FUNCTION 🔥
+        function refreshPlayer() {
+            const box = document.getElementById('playerContainer');
+            box.innerHTML = '<div style="color:white;display:flex;justify-content:center;align-items:center;height:100%;font-size:12px;">Refreshing...</div>';
+            
+            // Thoda delay taaki user ko lage refresh hua
+            setTimeout(() => {
+                initPlayer(currentUrl);
+            }, 500);
+        }
 
         function changeServer(num, btn) {
             document.querySelectorAll('.server-btn-large').forEach(b => {
@@ -200,9 +230,9 @@
             btn.querySelector('.status-dot').style.background = '#0f0';
             btn.querySelector('i').style.color = '#0078FF';
 
-            if(num === 1) initPlayer(server1);
-            if(num === 2) initPlayer(server2);
-            if(num === 3) initPlayer(server3);
+            if(num === 1) { currentUrl = server1; initPlayer(server1); }
+            if(num === 2) { currentUrl = server2; initPlayer(server2); }
+            if(num === 3) { currentUrl = server3; initPlayer(server3); }
         }
 
         let currentViewers = 1245; 
@@ -211,8 +241,8 @@
             let change = Math.floor(Math.random() * 15) + 5; 
             if (isIncreasing) currentViewers += change;
             else currentViewers -= change;
-            if (currentViewers < 1000) currentViewers = 1000;
-            if (currentViewers > 3000) currentViewers = 3000;
+            if (currentViewers < 10000) currentViewers = 10000;
+            if (currentViewers > 30000) currentViewers = 30000;
             document.getElementById("viewers").innerText = currentViewers.toLocaleString();
         }
         setInterval(updateViewers, 5000);
