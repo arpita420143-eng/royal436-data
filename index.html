@@ -3,38 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKS Sports Live - Premium Cricket</title>
+    <title>MKS Sports Live</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --main: #0b0c10; --card: #1f2833; --accent: #66fcf1; --yt: #FF0000; --tg: #229ED9; }
-        body { margin: 0; background: var(--main); color: white; font-family: 'Segoe UI', sans-serif; text-align: center; }
+        body { margin: 0; background: var(--main); color: white; font-family: sans-serif; text-align: center; }
         
-        /* HEADER / LOGO SECTION */
-        .header { background: linear-gradient(180deg, #1f2833, var(--main)); padding: 15px; border-bottom: 2px solid var(--accent); }
-        .logo-box { font-size: 28px; font-weight: 900; color: var(--accent); text-transform: uppercase; letter-spacing: 3px; }
-
-        /* BANNER SECTION */
-        .banner { width: 100%; max-width: 800px; height: 100px; margin: 10px auto; background: #333; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px dashed var(--accent); }
-        .banner img { width: 100%; height: 100%; object-fit: cover; }
+        /* Clean Header */
+        .header { padding: 15px; border-bottom: 2px solid var(--accent); }
+        .title { font-size: 24px; font-weight: bold; color: var(--accent); margin: 0; }
 
         .container { max-width: 800px; margin: auto; padding: 10px; }
         
-        /* VIEWERS & LIVE TAG */
-        .info-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 5px; }
-        .live-tag { background: red; padding: 3px 10px; border-radius: 4px; font-weight: bold; font-size: 12px; animation: blink 1.5s infinite; }
-        @keyframes blink { 50% { opacity: 0.6; } }
-        .v-count { font-size: 13px; color: #ced4da; }
+        /* Info Bar */
+        .info-bar { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; }
+        .live-tag { background: red; padding: 3px 10px; border-radius: 4px; font-weight: bold; font-size: 12px; }
+        .v-count { font-size: 13px; color: #aaa; }
 
-        /* VIDEO BOX */
-        .player-box { background: var(--card); padding: 12px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        /* Video Box */
+        .player-box { background: var(--card); padding: 10px; border-radius: 12px; }
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; border-radius: 8px; overflow: hidden; }
         video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-        /* BUTTONS */
-        .refresh-btn { margin-top: 15px; background: var(--accent); color: #000; border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; }
-        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
-        .btn { text-decoration: none; padding: 12px; border-radius: 8px; color: white; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        /* Buttons */
+        .refresh-btn { margin-top: 15px; background: var(--accent); color: #000; border: none; padding: 10px 20px; border-radius: 30px; font-weight: bold; cursor: pointer; }
+        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .btn { text-decoration: none; padding: 12px; border-radius: 8px; color: white; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-yt { background: var(--yt); }
         .btn-tg { background: var(--tg); }
     </style>
@@ -42,14 +37,10 @@
 <body>
 
     <div class="header">
-        <div class="logo-box">MKS SPORTS</div>
+        <div class="title">MKS SPORTS LIVE</div>
     </div>
 
     <div class="container">
-        <div class="banner">
-            <p style="font-size:12px; color:#aaa;">BANNER IMAGE YAHAN LAGAYEIN (800x100)</p>
-            </div>
-
         <div class="info-bar">
             <div class="live-tag">● LIVE</div>
             <div class="v-count"><i class="fa fa-eye"></i> <span id="viewers">125.4K</span> Watching</div>
@@ -59,23 +50,17 @@
             <div class="video-wrapper">
                 <video id="video" controls autoplay playsinline></video>
             </div>
-            <button class="refresh-btn" onclick="startStream()">
-                <i class="fas fa-sync-alt"></i> REFRESH MATCH
-            </button>
+            <button class="refresh-btn" onclick="startStream()">REFRESH MATCH</button>
         </div>
 
         <div class="social-grid">
-            <a href="https://youtube.com/@mkssports3" class="btn btn-yt">
-                <i class="fab fa-youtube"></i> SUBSCRIBE
-            </a>
-            <a href="https://t.me/MKSSports_3" class="btn btn-tg">
-                <i class="fab fa-telegram"></i> JOIN CHANNEL
-            </a>
+            <a href="https://youtube.com/@mkssports3" class="btn btn-yt">SUBSCRIBE</a>
+            <a href="https://t.me/MKSSports_3" class="btn btn-tg">TELEGRAM</a>
         </div>
     </div>
 
     <script>
-        // AAPKA NAYA LINK YAHAN HAI
+        // Willow TV Link provided by you
         const streamUrl = "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/cb403e1a7b7b6f8a9a9f3d6cd1f341f2d15560d2513adc356faa5e9d57612e24daf6a89fb11af06d429f0fc61d533314156cdb6880284398872eb85031770716e7f0b77bd99d027bf781537e35d6017f50e00c16d124532a97b94a59cc7d9469151fed3e6b541984a946a87555db830c9b6752f3c9a01d256d0606c4084d92f50df8a0f84d36802efeec4957942b46f9825cced015b29ed55f9853fb29a34dc1c7e0e88246d3c4c87cac54b57a5a0e60399f832cc2c80ae38ad76c3c987465174f53b6eecba74a6ccb45150dfcaa9abd63ad40978d17ab0a58d3964762fe52a345e86c8eef4aa9acc9b028231897b490e5bac29fc4abe83c32c706b1c2bb9f1b78e86b826dc7350c8c0252f2014fe616a4f035dcda0296bd685213cf9d4e9a89b3b93dd1e7bafd08c5ddfd94314301364a52c6158e9363ce31863889c01733534440edcb009fc6eb7308371fd6d41ef60612b5dfc4b6f43f6a8432480bb9308115553c9d7d2c5df53df59f0b698b0d03917a68a80f7bd314bcf007dd93f6c94a7bb9d7cc47bf48eab601ddbf428a652e560fb6bd7d0b16022d9eb9325469379211b293e7ee75000ce9b7feffc6522a0e7642015bc5b1b102f6e4a7081312d35c2f64067246c37eb82bb32d460227c51b939c017b8b032b4fb3f3df3cab817863d79ef9588e112d8e0f56a685099b2bb585/54/384x216_734654/index.m3u8";
 
         function startStream() {
@@ -90,12 +75,12 @@
             }
         }
 
-        // Viewers Simulation
+        // Viewers Effect
         let vCount = 125400;
         setInterval(() => {
-            vCount += Math.floor(Math.random() * 300) - 150;
+            vCount += Math.floor(Math.random() * 200) - 100;
             document.getElementById('viewers').innerText = (vCount / 1000).toFixed(1) + "K";
-        }, 3000);
+        }, 4000);
 
         window.onload = startStream;
     </script>
