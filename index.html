@@ -2,197 +2,207 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Match Manas TV - All Channels</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Match Manas TV - Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-dark: #090b10;
-            --primary-gradient: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
-            --glass-bg: rgba(21, 24, 35, 0.95);
-            --border-glow: rgba(255, 75, 43, 0.3);
-            --text-muted: #a0a3b1;
+            --bg-color: #0f1014; /* Deep Black/Blue */
+            --card-color: #1c1f26;
+            --accent: #e50914; /* Netflix Red */
+            --text-main: #ffffff;
+            --text-sec: #b3b3b3;
+            --gradient: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
         }
 
-        body { 
-            margin: 0; background-color: var(--bg-dark); color: white; 
-            font-family: 'Segoe UI', sans-serif; overflow-x: hidden;
-            background-image: radial-gradient(circle at top right, rgba(255, 65, 108, 0.15), transparent 40%);
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: var(--bg-color); color: var(--text-main); font-family: 'Netflix Sans', 'Segoe UI', sans-serif; }
 
-        /* Header */
-        .app-header {
+        /* 🔥 APP HEADER 🔥 */
+        .header {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(15, 16, 20, 0.95);
+            backdrop-filter: blur(10px);
             padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
-            background: var(--glass-bg); backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
-        .brand { font-size: 22px; font-weight: 900; }
-        .brand span { background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .tg-btn { 
-            background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 50px; 
-            text-decoration: none; color: white; font-size: 12px; font-weight: 700; border: 1px solid rgba(255,255,255,0.1);
-        }
+        .logo { font-size: 24px; font-weight: 900; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; }
+        .search-btn { font-size: 20px; color: white; background: none; border: none; cursor: pointer; }
 
-        /* Search */
-        .search-section { padding: 20px; text-align: center; }
-        .search-input {
-            width: 100%; max-width: 600px; padding: 15px 20px; border-radius: 12px;
-            background: #1c1f2e; border: 1px solid rgba(255,255,255,0.1); color: white; outline: none;
+        /* 🔥 CATEGORY TABS 🔥 */
+        .categories {
+            display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto;
+            scrollbar-width: none;
         }
-        .search-input:focus { border-color: #FF4B2B; box-shadow: 0 0 15px var(--border-glow); }
+        .categories::-webkit-scrollbar { display: none; }
+        .cat-btn {
+            background: var(--card-color); color: white; border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap;
+            transition: 0.3s;
+        }
+        .cat-btn.active { background: white; color: black; border-color: white; }
 
-        /* Categories */
-        .filter-section { padding: 0 20px 20px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
-        .filter-section::-webkit-scrollbar { display: none; }
-        .filter-btn {
-            display: inline-block; padding: 10px 20px; margin-right: 10px; border-radius: 12px;
-            background: #1c1f2e; color: var(--text-muted); font-size: 13px; font-weight: 700; cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
-        }
-        .filter-btn.active { background: var(--primary-gradient); color: white; border-color: transparent; }
-
-        /* Grid */
-        .channel-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 15px; padding: 0 20px 80px;
-        }
-        .channel-card {
-            background: linear-gradient(145deg, #1e2230, #161822); border-radius: 16px; padding: 15px 10px;
-            text-align: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); position: relative;
-        }
-        .channel-card:hover { transform: translateY(-5px); border-color: rgba(255, 75, 43, 0.5); }
+        /* 🔥 CHANNEL GRID (NETFLIX STYLE) 🔥 */
+        .grid-area { padding: 10px 15px 80px; }
+        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; padding-left: 5px; border-left: 4px solid var(--accent); }
         
-        .ch-logo { 
-            width: 50px; height: 50px; background: #252836; border-radius: 50%; margin: 0 auto 10px; 
-            display: flex; align-items: center; justify-content: center; font-weight: 900; color: white; font-size: 18px;
+        .channel-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
         }
-        .ch-name { font-size: 12px; font-weight: 600; color: #e1e1e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .live-tag {
-            position: absolute; top: 8px; right: 8px; font-size: 8px; font-weight: bold;
-            color: #ff4d4d; background: rgba(255, 0, 0, 0.1); padding: 2px 4px; border-radius: 4px;
+        .card {
+            background: var(--card-color); border-radius: 8px; overflow: hidden;
+            position: relative; aspect-ratio: 1/1; cursor: pointer;
+            transition: transform 0.2s; border: 1px solid rgba(255,255,255,0.05);
         }
+        .card:active { transform: scale(0.95); }
+        
+        .card-logo {
+            width: 100%; height: 100%; object-fit: contain; padding: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; font-weight: bold; color: var(--text-sec);
+            background: radial-gradient(circle, #2b303b 0%, #1c1f26 100%);
+        }
+        .card-info {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: linear-gradient(0deg, black 0%, transparent 100%);
+            padding: 20px 5px 5px; text-align: center;
+        }
+        .ch-name { font-size: 12px; font-weight: 600; text-shadow: 0 1px 3px black; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Player Overlay */
+        /* 🔥 PRO PLAYER OVERLAY 🔥 */
         #player-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 200; display: none; flex-direction: column;
+            background: black; z-index: 9999; display: none; flex-direction: column;
         }
-        .player-header { padding: 15px; display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.1); }
-        .back-btn { font-size: 20px; cursor: pointer; color: white; }
-        .video-container { width: 100%; aspect-ratio: 16/9; background: #000; margin: auto 0; }
-        video { width: 100%; height: 100%; }
+        .player-nav {
+            position: absolute; top: 0; left: 0; width: 100%; padding: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 10; background: linear-gradient(180deg, rgba(0,0,0,0.8), transparent);
+        }
+        .back-icon { font-size: 22px; color: white; cursor: pointer; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        
+        /* Video Container */
+        .video-box {
+            width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative;
+        }
+        video { width: 100%; max-height: 100%; }
+
+        /* 🔥 QUALITY CONTROLS 🔥 */
+        .controls-layer {
+            position: absolute; bottom: 20px; right: 20px; z-index: 20;
+        }
+        .quality-btn {
+            background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3);
+            padding: 5px 12px; border-radius: 4px; font-size: 12px; font-weight: bold;
+            display: flex; align-items: center; gap: 5px; cursor: pointer; backdrop-filter: blur(5px);
+        }
+        
+        /* Quality Dropdown Menu */
+        #quality-menu {
+            position: absolute; bottom: 50px; right: 0;
+            background: rgba(20, 20, 20, 0.95); border: 1px solid #333;
+            border-radius: 8px; overflow: hidden; display: none; width: 120px;
+            backdrop-filter: blur(10px);
+        }
+        .q-item {
+            padding: 10px; font-size: 13px; color: #ccc; border-bottom: 1px solid #333; cursor: pointer; text-align: left;
+        }
+        .q-item:hover, .q-item.active { background: var(--accent); color: white; }
+        .q-item:last-child { border-bottom: none; }
+
+        /* Search Overlay */
+        #search-overlay {
+            position: fixed; top: 60px; left: 0; width: 100%; background: var(--bg-color);
+            padding: 10px; display: none; z-index: 90; border-bottom: 1px solid #333;
+        }
+        #searchInput { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #333; color: white; outline: none;}
+
     </style>
 </head>
 <body>
 
-    <div class="app-header">
-        <div class="brand">MATCH <span>MANAS</span></div>
-        <a href="https://t.me/MKSSports_3" class="tg-btn">Join Telegram</a>
+    <div class="header">
+        <div class="logo">MATCH MANAS</div>
+        <button class="search-btn" onclick="toggleSearch()"><i class="fas fa-search"></i></button>
     </div>
 
-    <div class="search-section">
-        <input type="text" id="searchInput" class="search-input" placeholder="Search 100+ Channels..." onkeyup="filterChannels()">
+    <div id="search-overlay">
+        <input type="text" id="searchInput" placeholder="Search Channels..." onkeyup="filterChannels()">
     </div>
 
-    <div class="filter-section">
-        <div class="filter-btn active" onclick="filterCat('all', this)">All</div>
-        <div class="filter-btn" onclick="filterCat('sports', this)">Sports</div>
-        <div class="filter-btn" onclick="filterCat('news', this)">News</div>
-        <div class="filter-btn" onclick="filterCat('entertainment', this)">Entertainment</div>
-        <div class="filter-btn" onclick="filterCat('movies', this)">Movies</div>
-        <div class="filter-btn" onclick="filterCat('music', this)">Music</div>
-        <div class="filter-btn" onclick="filterCat('devotional', this)">Devotional</div>
+    <div class="categories">
+        <div class="cat-btn active" onclick="filterCat('all', this)">All</div>
+        <div class="cat-btn" onclick="filterCat('sports', this)">Sports</div>
+        <div class="cat-btn" onclick="filterCat('news', this)">News</div>
+        <div class="cat-btn" onclick="filterCat('movies', this)">Movies</div>
+        <div class="cat-btn" onclick="filterCat('music', this)">Music</div>
     </div>
 
-    <div id="grid-container" class="channel-grid"></div>
+    <div class="grid-area">
+        <div class="section-title">Live Channels</div>
+        <div id="channel-grid" class="channel-grid"></div>
+    </div>
 
     <div id="player-overlay">
-        <div class="player-header">
-            <div class="back-btn" onclick="closePlayer()"><i class="fas fa-arrow-left"></i></div>
-            <div style="font-weight:bold; color:white;" id="player-title">Channel Name</div>
+        <div class="player-nav">
+            <div class="back-icon" onclick="closePlayer()"><i class="fas fa-arrow-left"></i></div>
+            <div style="font-weight:bold; font-size:14px;" id="playing-title">Channel Name</div>
         </div>
-        <div class="video-container">
-            <video id="main-video" controls autoplay playsinline></video>
+
+        <div class="video-box">
+            <video id="video" controls autoplay playsinline></video>
+            
+            <div class="controls-layer">
+                <div class="quality-btn" onclick="toggleQualityMenu()">
+                    <i class="fas fa-cog"></i> <span id="current-quality">Auto</span>
+                </div>
+                <div id="quality-menu">
+                    </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // 🔥 MASSIVE CHANNEL LIST (Processed from your request) 🔥
+        // 🔥 YOUR CHANNEL LIST (Parsed from your M3U) 🔥
         const channels = [
-            // --- NEWS ---
-            { name: "Aaj Tak HD", cat: "news", logo: "A", url: "https://livehub-voidnet.onrender.com/cluster/streamcore/in/AAJTAK_REDIS.m3u8" },
-            { name: "ABP News", cat: "news", logo: "A", url: "https://d2l4ar6y3mrs4k.cloudfront.net/live-streaming/abpnews-livetv/master.m3u8" },
-            { name: "ABP Ananda", cat: "news", logo: "A", url: "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/abp-ananda/master.m3u8" },
-            { name: "ABP Asmita", cat: "news", logo: "A", url: "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/abp-asmita/master.m3u8" },
-            { name: "ABP Ganga", cat: "news", logo: "A", url: "https://abplivetv.akamaized.net/hls/live/2043013/ganga/master.m3u8" },
-            { name: "CNBC TV18", cat: "news", logo: "C", url: "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/cnbc-tv18/master.m3u8" },
-            { name: "CNBC Awaaz", cat: "news", logo: "C", url: "https://n18syndication.akamaized.net/bpk-tv/CNBC_Awaaz_NW18_MOB/output01/master.m3u8" },
-            { name: "DD News", cat: "news", logo: "D", url: "https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/0811cd8c37ca4c409d5385a6cd2fa18b/index.m3u8" },
-            { name: "Asianet News", cat: "news", logo: "A", url: "https://asianetnews.vgcdn.net/ptnr-Embed/v1/manifest/611d79b11b77e2f571934fd80ca1413453772ac7/1c19363c-e4a0-4e4d-ba28-771d5615b88e/9bd4a057-456d-43de-b887-7b87b021f1cc/3.m3u8" },
-            { name: "Bharat24", cat: "news", logo: "B", url: "https://cdn.ottlive.co.in/bharat24/index.fmp4.m3u8" },
-            { name: "4TV News", cat: "news", logo: "4", url: "https://cdn-4.pishow.tv/live/1007/master.m3u8" },
-            { name: "10TV News", cat: "news", logo: "1", url: "https://cdn-1.pishow.tv/live/391/master.m3u8" },
-
-            // --- SPORTS ---
-            { name: "DD Sports", cat: "sports", logo: "S", url: "https://cdn-6.pishow.tv/live/13/master.m3u8" },
-            { name: "Willow HD", cat: "sports", logo: "W", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
-            
-            // --- ENTERTAINMENT & MOVIES ---
-            { name: "Dangal TV", cat: "entertainment", logo: "D", url: "https://live-dangal.akamaized.net/liveabr/playlist.m3u8" },
-            { name: "B4U Movies", cat: "movies", logo: "B", url: "https://cdnb4u.wiseplayout.com/B4U_Movies/master.m3u8" },
-            { name: "B4U Kadak", cat: "movies", logo: "B", url: "https://cdnb4u.wiseplayout.com/B4U_Kadak/master.m3u8" },
-            { name: "B4U Bhojpuri", cat: "movies", logo: "B", url: "https://cdnb4u.wiseplayout.com/B4U_Bhojpuri/master.m3u8" },
-            { name: "Abzy Movies", cat: "movies", logo: "A", url: "https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/db8d4eca72d64748a00d0631debf542d/index.m3u8" },
-            { name: "Abzy Dhakad", cat: "movies", logo: "A", url: "https://d2lk5u59tns74c.cloudfront.net/out/v1/4fe6ab07a13543d6bdb2ec63b3e2df44/index.m3u8" },
-            { name: "Colors Cineplex", cat: "movies", logo: "C", url: "http://163.61.227.29:8000/play/a04c/index.m3u8" },
-            { name: "&flix", cat: "movies", logo: "&", url: "https://edge3-moblive.yuppcdn.net/drm/smil:nflixdrm.smil/index.m3u8" },
-            { name: "Bhojpuri Cinema", cat: "movies", logo: "B", url: "https://live-bhojpuri.akamaized.net/liveabr/playlist.m3u8" },
-
-            // --- MUSIC ---
-            { name: "9XM", cat: "music", logo: "9", url: "https://9xjio.wiseplayout.com/9XM/master.m3u8" },
-            { name: "9X Jalwa", cat: "music", logo: "9", url: "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/9x-jalwa/master.m3u8" },
-            { name: "9X Tashan", cat: "music", logo: "9", url: "https://9xjio.wiseplayout.com/9X_Tashan/master.m3u8" },
-            { name: "9X Jhakaas", cat: "music", logo: "9", url: "https://9xjio.wiseplayout.com/9X_Jhakaas/master.m3u8" },
-            { name: "B4U Music", cat: "music", logo: "B", url: "https://cdnb4u.wiseplayout.com/B4U_Music/master.m3u8" },
-            { name: "Dhoom Music", cat: "music", logo: "D", url: "https://cdn-1.pishow.tv/live/1456/master.m3u8" },
-            { name: "Balle Balle", cat: "music", logo: "B", url: "https://mcncdndigital.com/balleballetv/index.m3u8" },
-
-            // --- DEVOTIONAL ---
-            { name: "Aastha", cat: "devotional", logo: "A", url: "https://aasthaott.akamaized.net/110923/smil:aasthatv.smil/index.m3u8" },
-            { name: "Aastha Bhajan", cat: "devotional", logo: "A", url: "https://aasthaott.akamaized.net/110923/smil:bhajan.smil/playlist.m3u8" },
-            { name: "Angel TV", cat: "devotional", logo: "A", url: "https://janya-digimix.akamaized.net/vglive-sk-394914/india/ngrp:angelindia_all/playlist.m3u8" },
-            { name: "Bhakthi TV", cat: "devotional", logo: "B", url: "https://cdn-1.pishow.tv/live/397/master.m3u8" },
-            { name: "Darshan TV", cat: "devotional", logo: "D", url: "https://galaxyott.live/hls/dharshantv.m3u8" },
-            
-            // --- DD REGIONAL (Mixed) ---
-            { name: "DD National", cat: "entertainment", logo: "D", url: "https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/40492a64c1db4a1385ba1a397d357d3a/index.m3u8" },
-            { name: "DD Bharati", cat: "entertainment", logo: "D", url: "https://cdn-1.pishow.tv/live/10/master.m3u8" },
-            { name: "DD Kisan", cat: "entertainment", logo: "D", url: "https://cdn-6.pishow.tv/live/9/master.m3u8" },
-            { name: "DD Urdu", cat: "entertainment", logo: "D", url: "https://cdn-4.pishow.tv/live/8/master.m3u8" },
-            { name: "DD Bangla", cat: "entertainment", logo: "D", url: "https://d3eyhgoylams0m.cloudfront.net/v1/manifest/93ce20f0f52760bf38be911ff4c91ed02aa2fd92/ed7bd2c7-8d10-4051-b397-2f6b90f99acb/2e9e32a4-c4f7-49c3-96d6-c4e3660c7e3f/2.m3u8" },
-            { name: "DD Punjabi", cat: "entertainment", logo: "D", url: "https://d3eyhgoylams0m.cloudfront.net/v1/manifest/93ce20f0f52760bf38be911ff4c91ed02aa2fd92/ed7bd2c7-8d10-4051-b397-2f6b90f99acb/20c8ad14-a158-4a42-8889-e032d070856e/2.m3u8" },
-            { name: "DD Tamil", cat: "entertainment", logo: "D", url: "https://d2lk5u59tns74c.cloudfront.net/out/v1/abf46b14847e45499f4a47f3a9afe93d/index.m3u8" },
+            { name: "Willow HD", cat: "sports", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
+            { name: "DD Sports", cat: "sports", url: "https://cdn-6.pishow.tv/live/13/master.m3u8" },
+            { name: "Aaj Tak HD", cat: "news", url: "https://livehub-voidnet.onrender.com/cluster/streamcore/in/AAJTAK_REDIS.m3u8" },
+            { name: "ABP News", cat: "news", url: "https://d2l4ar6y3mrs4k.cloudfront.net/live-streaming/abpnews-livetv/master.m3u8" },
+            { name: "Sony Ten 1", cat: "sports", url: "https://skysports-cricket.amagi.tv/playlist.m3u8" },
+            { name: "Star Sports", cat: "sports", url: "https://foxsports-cricket.amagi.tv/index.m3u8" },
+            { name: "9XM Music", cat: "music", url: "https://9xjio.wiseplayout.com/9XM/master.m3u8" },
+            { name: "B4U Movies", cat: "movies", url: "https://cdnb4u.wiseplayout.com/B4U_Movies/master.m3u8" },
+            { name: "Dangal TV", cat: "movies", url: "https://live-dangal.akamaized.net/liveabr/playlist.m3u8" },
+            { name: "Colors Cineplex", cat: "movies", url: "http://163.61.227.29:8000/play/a04c/index.m3u8" },
+            { name: "Zee News", cat: "news", url: "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/zee-news/master.m3u8" }
         ];
 
-        const grid = document.getElementById('grid-container');
+        const grid = document.getElementById('channel-grid');
+        const searchOverlay = document.getElementById('search-overlay');
         let hls = null;
 
-        // Render Cards
-        function renderChannels(filter = 'all', search = '') {
+        // 1. Render Channels
+        function renderChannels(filter = 'all', searchTerm = '') {
             grid.innerHTML = '';
             channels.forEach(ch => {
-                const matchesCat = filter === 'all' || ch.cat === filter;
-                const matchesSearch = ch.name.toLowerCase().includes(search.toLowerCase());
-
-                if (matchesCat && matchesSearch) {
+                if ((filter === 'all' || ch.cat === filter) && 
+                    ch.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                    
                     const card = document.createElement('div');
-                    card.className = 'channel-card';
+                    card.className = 'card';
+                    // Logo generation based on First Letter
+                    const color = getColor(ch.name);
                     card.innerHTML = `
-                        <div class="live-tag">LIVE</div>
-                        <div class="ch-logo" style="background:${getColor(ch.name)}">${ch.logo}</div>
-                        <div class="ch-name">${ch.name}</div>
+                        <div class="card-logo" style="color:${color}; border-bottom:2px solid ${color}">
+                            ${ch.name.substring(0,2).toUpperCase()}
+                        </div>
+                        <div class="card-info">
+                            <div class="ch-name">${ch.name}</div>
+                        </div>
                     `;
                     card.onclick = () => openPlayer(ch);
                     grid.appendChild(card);
@@ -200,62 +210,103 @@
             });
         }
 
+        // Helper Color Generator
         function getColor(name) {
-            const colors = ['#FF416C', '#4facfe', '#43e97b', '#fa709a', '#fee140', '#667eea'];
+            const colors = ['#e50914', '#46d369', '#2386e1', '#ffc107', '#ff4757'];
             return colors[name.length % colors.length];
         }
 
-        // Filtering
+        // 2. Filter Functions
         function filterCat(cat, btn) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            const search = document.getElementById('searchInput').value;
-            renderChannels(cat, search);
+            renderChannels(cat, document.getElementById('searchInput').value);
         }
 
         function filterChannels() {
-            const activeBtn = document.querySelector('.filter-btn.active');
-            const cat = activeBtn.innerText.toLowerCase();
-            const search = document.getElementById('searchInput').value;
-            renderChannels(cat === 'all' ? 'all' : cat, search);
+            const activeCat = document.querySelector('.cat-btn.active').innerText.toLowerCase();
+            const cat = activeCat === 'all' ? 'all' : activeCat;
+            renderChannels(cat, document.getElementById('searchInput').value);
         }
 
-        // Player Logic with Proxy
+        function toggleSearch() {
+            searchOverlay.style.display = searchOverlay.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // 🔥 3. PLAYER WITH QUALITY LOGIC (CRUCIAL) 🔥
         function openPlayer(channel) {
             const overlay = document.getElementById('player-overlay');
-            const video = document.getElementById('main-video');
-            const title = document.getElementById('player-title');
-            
+            const video = document.getElementById('video');
+            const title = document.getElementById('playing-title');
+            const qualityMenu = document.getElementById('quality-menu');
+            const qualityLabel = document.getElementById('current-quality');
+            const qualityBtn = document.querySelector('.quality-btn');
+
             overlay.style.display = 'flex';
             title.innerText = channel.name;
+            qualityMenu.innerHTML = ''; // Reset menu
+            qualityBtn.style.display = 'none'; // Hide until qualities found
 
-            // Master Proxy Logic (Added as requested)
-            let finalUrl = channel.url;
-            if (finalUrl.startsWith("http://")) {
-                // HTTP links need proxy on HTTPS sites
-                finalUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(finalUrl);
-            }
+            // Proxy Logic
+            const finalUrl = channel.url.startsWith("http") ? 
+                (channel.url.includes("https") ? channel.url : "https://api.allorigins.win/raw?url=" + encodeURIComponent(channel.url)) 
+                : channel.url;
 
             if (Hls.isSupported()) {
-                if(hls) hls.destroy();
+                if (hls) hls.destroy();
                 hls = new Hls();
                 hls.loadSource(finalUrl);
                 hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+
+                hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                    const levels = hls.levels;
+                    
+                    // ✅ Agar qualities hain (144p, 360p, etc.) tabhi button dikhao
+                    if (levels.length > 1) {
+                        qualityBtn.style.display = 'flex';
+                        qualityMenu.innerHTML = `<div class="q-item active" onclick="setQuality(-1, 'Auto')">Auto</div>`;
+                        
+                        // Loop through levels to create buttons (Reverse for High to Low)
+                        levels.forEach((level, index) => {
+                            const resolution = level.height + 'p';
+                            qualityMenu.innerHTML += `<div class="q-item" onclick="setQuality(${index}, '${resolution}')">${resolution}</div>`;
+                        });
+                    }
+                    video.play();
+                });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = finalUrl;
                 video.play();
             }
         }
 
-        function closePlayer() {
-            document.getElementById('player-overlay').style.display = 'none';
-            document.getElementById('main-video').pause();
-            if(hls) hls.destroy();
+        // Quality Selection Function
+        window.setQuality = function(levelIndex, label) {
+            if (hls) {
+                hls.currentLevel = levelIndex;
+                document.getElementById('current-quality').innerText = label;
+                toggleQualityMenu(); // Close menu
+                
+                // Update UI active state
+                document.querySelectorAll('.q-item').forEach(item => item.classList.remove('active'));
+                event.target.classList.add('active');
+            }
         }
 
-        // Start
+        function toggleQualityMenu() {
+            const menu = document.getElementById('quality-menu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function closePlayer() {
+            document.getElementById('player-overlay').style.display = 'none';
+            document.getElementById('video').pause();
+            if (hls) hls.destroy();
+        }
+
+        // Initial Load
         renderChannels();
+
     </script>
 </body>
 </html>
