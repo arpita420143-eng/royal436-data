@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Match Manas - Secure Live</title>
+    <title>Match Manas - Direct Live</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -93,8 +93,8 @@
             transition: 0.2s; text-transform: uppercase;
         }
         .action-btn:active { transform: scale(0.98); }
-        .tg { background: var(--accent-blue); }
-        .yt { background: var(--accent-red); }
+        .tg { background: var(--accent-blue); box-shadow: 0 4px 15px rgba(0,136,204,0.3); }
+        .yt { background: var(--accent-red); box-shadow: 0 4px 15px rgba(229,9,20,0.3); }
 
         #loader {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -105,7 +105,7 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        /* 🔥 SECRET MENU (Initially Hidden) 🔥 */
+        /* 🔥 SECRET MENU 🔥 */
         #secret-menu {
             display: none; width: 100%; max-width: 800px; margin-top: 20px;
             background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #333;
@@ -151,7 +151,7 @@
 
         <div id="secret-menu">
             <div style="margin-bottom:10px; color:#aaa; font-size:12px; border-bottom:1px solid #333; padding-bottom:5px;">
-                ADMIN PANEL (Tap to Switch)
+                ADMIN PANEL - CHANGE CHANNEL
             </div>
             <div id="secret-grid" class="secret-grid"></div>
         </div>
@@ -159,6 +159,7 @@
     </div>
 
     <script>
+        // YOUR CHANNELS (DIRECT LINKS ONLY)
         const channels = [
             { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
             { id: "sky", name: "Sky Cricket", url: "https://skysports-cricket.amagi.tv/playlist.m3u8" },
@@ -175,7 +176,6 @@
         let clickCount = 0;
 
         function init() {
-            // URL Logic
             const urlParams = new URLSearchParams(window.location.search);
             const channelId = urlParams.get('id');
 
@@ -183,20 +183,17 @@
                 const found = channels.find(c => c.id === channelId);
                 activeCh = found ? found : channels[0];
             } else {
-                activeCh = channels[0]; // Default Channel
+                activeCh = channels[0]; // Default
             }
             loadPlayer(activeCh);
             renderSecretMenu();
         }
 
-        // 🔥 PASSWORD PROTECTED SECRET 🔥
         function unlockSecret() {
             clickCount++;
             if (clickCount === 5) {
-                clickCount = 0; // Reset counter
+                clickCount = 0;
                 let password = prompt("Enter Admin Password:");
-                
-                // 👇 PASSWORD IS HERE 👇
                 if (password === "manas") { 
                     document.getElementById('secret-menu').style.display = 'block';
                 } else {
@@ -213,10 +210,8 @@
                 btn.innerText = ch.name;
                 btn.onclick = () => {
                     loadPlayer(ch);
-                    // Update URL silently
                     const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?id=' + ch.id;
                     window.history.pushState({path:newUrl}, '', newUrl);
-                    // Hide menu after selection to keep it clean
                     document.getElementById('secret-menu').style.display = 'none';
                 };
                 grid.appendChild(btn);
@@ -232,11 +227,9 @@
         function playStream() {
             const video = document.getElementById('video');
             const loader = document.getElementById('loader');
-            let url = activeCh.url;
-
-            if (activeCh.name.includes("TNT") || activeCh.name.includes("DD")) {
-                url = "https://corsproxy.io/?" + encodeURIComponent(activeCh.url);
-            }
+            
+            // 🔥 DIRECT URL ONLY (NO PROXY) 🔥
+            let url = activeCh.url; 
 
             loader.style.display = 'block';
             
