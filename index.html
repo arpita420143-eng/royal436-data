@@ -3,189 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Match Manas TV - Pro</title>
+    <title>Match Manas TV - Sports Hub</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-color: #0f1014; /* Deep Black/Blue */
-            --card-color: #1c1f26;
+            --bg-color: #050505;
+            --card-color: #161616;
             --accent: #e50914; /* Netflix Red */
+            --accent-glow: rgba(229, 9, 20, 0.4);
             --text-main: #ffffff;
             --text-sec: #b3b3b3;
-            --gradient: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg-color); color: var(--text-main); font-family: 'Netflix Sans', 'Segoe UI', sans-serif; }
+        body { margin: 0; background: var(--bg-color); color: var(--text-main); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
 
         /* 🔥 APP HEADER 🔥 */
         .header {
             position: sticky; top: 0; z-index: 100;
-            background: rgba(15, 16, 20, 0.95);
+            background: rgba(5, 5, 5, 0.95);
             backdrop-filter: blur(10px);
             padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            border-bottom: 1px solid #222;
         }
-        .logo { font-size: 24px; font-weight: 900; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; }
+        .logo { font-size: 22px; font-weight: 900; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; }
+        .logo span { color: white; }
         .search-btn { font-size: 20px; color: white; background: none; border: none; cursor: pointer; }
 
-        /* 🔥 CATEGORY TABS 🔥 */
+        /* 🔥 CATEGORY TABS (Scrollable) 🔥 */
         .categories {
-            display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto;
-            scrollbar-width: none;
+            display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto; scrollbar-width: none;
         }
         .categories::-webkit-scrollbar { display: none; }
         .cat-btn {
-            background: var(--card-color); color: white; border: 1px solid rgba(255,255,255,0.1);
-            padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap;
+            background: #222; color: #fff; border: 1px solid #333;
+            padding: 8px 18px; border-radius: 50px; font-size: 13px; font-weight: 600; white-space: nowrap;
             transition: 0.3s;
         }
-        .cat-btn.active { background: white; color: black; border-color: white; }
+        .cat-btn.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 4px 15px var(--accent-glow); }
 
-        /* 🔥 CHANNEL GRID (NETFLIX STYLE) 🔥 */
+        /* 🔥 CHANNEL GRID 🔥 */
         .grid-area { padding: 10px 15px 80px; }
-        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; padding-left: 5px; border-left: 4px solid var(--accent); }
+        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .section-title::before { content: ''; width: 4px; height: 18px; background: var(--accent); border-radius: 2px; }
         
         .channel-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
             gap: 12px;
         }
         .card {
-            background: var(--card-color); border-radius: 8px; overflow: hidden;
-            position: relative; aspect-ratio: 1/1; cursor: pointer;
-            transition: transform 0.2s; border: 1px solid rgba(255,255,255,0.05);
+            background: var(--card-color); border-radius: 10px; overflow: hidden;
+            position: relative; aspect-ratio: 16/10; cursor: pointer;
+            transition: transform 0.2s; border: 1px solid #222;
         }
         .card:active { transform: scale(0.95); }
         
+        /* Dynamic Logo Styling */
         .card-logo {
-            width: 100%; height: 100%; object-fit: contain; padding: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; font-weight: bold; color: var(--text-sec);
-            background: radial-gradient(circle, #2b303b 0%, #1c1f26 100%);
+            width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+            font-size: 28px; font-weight: 900; color: rgba(255,255,255,0.1);
+            background: linear-gradient(45deg, #1a1a1a, #0d0d0d);
+            position: relative; z-index: 1;
+        }
+        .card-initial {
+            position: absolute; font-size: 40px; font-weight: bold; opacity: 0.3;
         }
         .card-info {
             position: absolute; bottom: 0; left: 0; width: 100%;
             background: linear-gradient(0deg, black 0%, transparent 100%);
-            padding: 20px 5px 5px; text-align: center;
+            padding: 25px 8px 8px; text-align: center; z-index: 2;
         }
-        .ch-name { font-size: 12px; font-weight: 600; text-shadow: 0 1px 3px black; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ch-name { font-size: 12px; font-weight: 600; text-shadow: 0 1px 3px black; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
+        .live-badge {
+            position: absolute; top: 6px; right: 6px; background: red; color: white;
+            font-size: 8px; font-weight: bold; padding: 2px 5px; border-radius: 3px; z-index: 3;
+        }
 
-        /* 🔥 PRO PLAYER OVERLAY 🔥 */
+        /* 🔥 PLAYER OVERLAY 🔥 */
         #player-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: black; z-index: 9999; display: none; flex-direction: column;
         }
         .player-nav {
-            position: absolute; top: 0; left: 0; width: 100%; padding: 20px;
+            position: absolute; top: 0; left: 0; width: 100%; padding: 15px 20px;
             display: flex; justify-content: space-between; align-items: center;
-            z-index: 10; background: linear-gradient(180deg, rgba(0,0,0,0.8), transparent);
+            z-index: 10; background: linear-gradient(180deg, rgba(0,0,0,0.9), transparent);
         }
-        .back-icon { font-size: 22px; color: white; cursor: pointer; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .back-icon { font-size: 22px; color: white; cursor: pointer; padding: 10px; }
         
-        /* Video Container */
-        .video-box {
-            width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative;
-        }
+        .video-box { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
         video { width: 100%; max-height: 100%; }
 
-        /* 🔥 QUALITY CONTROLS 🔥 */
-        .controls-layer {
-            position: absolute; bottom: 20px; right: 20px; z-index: 20;
-        }
-        .quality-btn {
-            background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3);
-            padding: 5px 12px; border-radius: 4px; font-size: 12px; font-weight: bold;
-            display: flex; align-items: center; gap: 5px; cursor: pointer; backdrop-filter: blur(5px);
-        }
-        
-        /* Quality Dropdown Menu */
+        /* 🔥 QUALITY MENU 🔥 */
+        .settings-icon { font-size: 20px; color: white; cursor: pointer; padding: 10px; }
         #quality-menu {
-            position: absolute; bottom: 50px; right: 0;
+            position: absolute; top: 60px; right: 20px;
             background: rgba(20, 20, 20, 0.95); border: 1px solid #333;
-            border-radius: 8px; overflow: hidden; display: none; width: 120px;
-            backdrop-filter: blur(10px);
+            border-radius: 8px; overflow: hidden; display: none; width: 140px;
+            backdrop-filter: blur(10px); z-index: 20;
         }
-        .q-item {
-            padding: 10px; font-size: 13px; color: #ccc; border-bottom: 1px solid #333; cursor: pointer; text-align: left;
-        }
+        .q-item { padding: 12px 15px; font-size: 13px; color: #ccc; border-bottom: 1px solid #333; cursor: pointer; display: flex; justify-content: space-between; }
         .q-item:hover, .q-item.active { background: var(--accent); color: white; }
         .q-item:last-child { border-bottom: none; }
 
         /* Search Overlay */
         #search-overlay {
-            position: fixed; top: 60px; left: 0; width: 100%; background: var(--bg-color);
-            padding: 10px; display: none; z-index: 90; border-bottom: 1px solid #333;
+            position: fixed; top: 61px; left: 0; width: 100%; background: var(--bg-color);
+            padding: 15px; display: none; z-index: 90; border-bottom: 1px solid #333;
         }
-        #searchInput { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #333; color: white; outline: none;}
-
+        #searchInput { width: 100%; padding: 12px 15px; border-radius: 8px; border: none; background: #222; color: white; outline: none; font-size: 14px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="logo">MATCH MANAS</div>
+        <div class="logo">MATCH <span>MANAS</span></div>
         <button class="search-btn" onclick="toggleSearch()"><i class="fas fa-search"></i></button>
     </div>
 
     <div id="search-overlay">
-        <input type="text" id="searchInput" placeholder="Search Channels..." onkeyup="filterChannels()">
+        <input type="text" id="searchInput" placeholder="Search Sports Channels..." onkeyup="filterChannels()">
     </div>
 
     <div class="categories">
         <div class="cat-btn active" onclick="filterCat('all', this)">All</div>
-        <div class="cat-btn" onclick="filterCat('sports', this)">Sports</div>
-        <div class="cat-btn" onclick="filterCat('news', this)">News</div>
-        <div class="cat-btn" onclick="filterCat('movies', this)">Movies</div>
-        <div class="cat-btn" onclick="filterCat('music', this)">Music</div>
+        <div class="cat-btn" onclick="filterCat('sports', this)">🏏 Sports</div>
+        <div class="cat-btn" onclick="filterCat('news', this)">📰 News</div>
+        <div class="cat-btn" onclick="filterCat('movies', this)">🎬 Movies</div>
+        <div class="cat-btn" onclick="filterCat('music', this)">🎵 Music</div>
     </div>
 
     <div class="grid-area">
-        <div class="section-title">Live Channels</div>
+        <div class="section-title">Live TV Channels</div>
         <div id="channel-grid" class="channel-grid"></div>
     </div>
 
     <div id="player-overlay">
         <div class="player-nav">
             <div class="back-icon" onclick="closePlayer()"><i class="fas fa-arrow-left"></i></div>
-            <div style="font-weight:bold; font-size:14px;" id="playing-title">Channel Name</div>
+            <div style="font-weight:bold; font-size:15px; color:#ddd;" id="playing-title">Channel</div>
+            <div class="settings-icon" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></div>
         </div>
+        
+        <div id="quality-menu">
+            </div>
 
         <div class="video-box">
             <video id="video" controls autoplay playsinline></video>
-            
-            <div class="controls-layer">
-                <div class="quality-btn" onclick="toggleQualityMenu()">
-                    <i class="fas fa-cog"></i> <span id="current-quality">Auto</span>
-                </div>
-                <div id="quality-menu">
-                    </div>
-            </div>
         </div>
     </div>
 
     <script>
-        // 🔥 YOUR CHANNEL LIST (Parsed from your M3U) 🔥
+        // 🔥 BIG SPORTS CHANNEL LIST 🔥
         const channels = [
-            { name: "Willow HD", cat: "sports", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
-            { name: "DD Sports", cat: "sports", url: "https://cdn-6.pishow.tv/live/13/master.m3u8" },
-            { name: "Aaj Tak HD", cat: "news", url: "https://livehub-voidnet.onrender.com/cluster/streamcore/in/AAJTAK_REDIS.m3u8" },
-            { name: "ABP News", cat: "news", url: "https://d2l4ar6y3mrs4k.cloudfront.net/live-streaming/abpnews-livetv/master.m3u8" },
-            { name: "Sony Ten 1", cat: "sports", url: "https://skysports-cricket.amagi.tv/playlist.m3u8" },
-            { name: "Star Sports", cat: "sports", url: "https://foxsports-cricket.amagi.tv/index.m3u8" },
-            { name: "9XM Music", cat: "music", url: "https://9xjio.wiseplayout.com/9XM/master.m3u8" },
-            { name: "B4U Movies", cat: "movies", url: "https://cdnb4u.wiseplayout.com/B4U_Movies/master.m3u8" },
-            { name: "Dangal TV", cat: "movies", url: "https://live-dangal.akamaized.net/liveabr/playlist.m3u8" },
-            { name: "Colors Cineplex", cat: "movies", url: "http://163.61.227.29:8000/play/a04c/index.m3u8" },
-            { name: "Zee News", cat: "news", url: "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/zee-news/master.m3u8" }
+            // --- TOP SPORTS ---
+            { name: "Willow HD", cat: "sports", color: "#e50914", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
+            { name: "DD Sports", cat: "sports", color: "#2980b9", url: "https://cdn-6.pishow.tv/live/13/master.m3u8" },
+            { name: "Sports Tribal", cat: "sports", color: "#e67e22", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/index.m3u8" },
+            { name: "Sky Cricket", cat: "sports", color: "#1abc9c", url: "https://skysports-cricket.amagi.tv/playlist.m3u8" },
+            { name: "Fox Sports", cat: "sports", color: "#2c3e50", url: "https://foxsports-cricket.amagi.tv/index.m3u8" },
+            { name: "TNT Sports 1", cat: "sports", color: "#8e44ad", url: "https://tnt-sports-1.amagi.tv/playlist.m3u8" },
+            { name: "TNT Sports 2", cat: "sports", color: "#8e44ad", url: "https://tnt-sports-2.amagi.tv/index.m3u8" },
+            { name: "Pac 12", cat: "sports", color: "#27ae60", url: "https://pac12-insider.amagi.tv/playlist.m3u8" },
+            { name: "Red Bull TV", cat: "sports", color: "#c0392b", url: "https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8" },
+            { name: "Trace Sports", cat: "sports", color: "#d35400", url: "https://trace-sports-stars-samsung.amagi.tv/playlist.m3u8" },
+            
+            // --- NEWS ---
+            { name: "Aaj Tak", cat: "news", color: "#e74c3c", url: "https://livehub-voidnet.onrender.com/cluster/streamcore/in/AAJTAK_REDIS.m3u8" },
+            { name: "ABP News", cat: "news", color: "#e67e22", url: "https://d2l4ar6y3mrs4k.cloudfront.net/live-streaming/abpnews-livetv/master.m3u8" },
+            { name: "DD News", cat: "news", color: "#3498db", url: "https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/0811cd8c37ca4c409d5385a6cd2fa18b/index.m3u8" },
+            { name: "Zee News", cat: "news", color: "#f1c40f", url: "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/zee-news/master.m3u8" },
+            { name: "Fox News", cat: "news", color: "#2c3e50", url: "https://foxsports-news.amagi.tv/index.m3u8" },
+            
+            // --- MOVIES & ENTERTAINMENT ---
+            { name: "B4U Movies", cat: "movies", color: "#9b59b6", url: "https://cdnb4u.wiseplayout.com/B4U_Movies/master.m3u8" },
+            { name: "Colors Cineplex", cat: "movies", color: "#e056fd", url: "http://163.61.227.29:8000/play/a04c/index.m3u8" },
+            { name: "Dangal TV", cat: "movies", color: "#2ecc71", url: "https://live-dangal.akamaized.net/liveabr/playlist.m3u8" },
+            { name: "Abzy Movies", cat: "movies", color: "#34495e", url: "https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/db8d4eca72d64748a00d0631debf542d/index.m3u8" },
+            { name: "&flix", cat: "movies", color: "#e50914", url: "https://edge3-moblive.yuppcdn.net/drm/smil:nflixdrm.smil/index.m3u8" },
+
+            // --- MUSIC ---
+            { name: "9XM", cat: "music", color: "#f39c12", url: "https://9xjio.wiseplayout.com/9XM/master.m3u8" },
+            { name: "B4U Music", cat: "music", color: "#16a085", url: "https://cdnb4u.wiseplayout.com/B4U_Music/master.m3u8" }
         ];
 
         const grid = document.getElementById('channel-grid');
-        const searchOverlay = document.getElementById('search-overlay');
         let hls = null;
 
-        // 1. Render Channels
+        // Render Channels
         function renderChannels(filter = 'all', searchTerm = '') {
             grid.innerHTML = '';
             channels.forEach(ch => {
@@ -194,11 +201,11 @@
                     
                     const card = document.createElement('div');
                     card.className = 'card';
-                    // Logo generation based on First Letter
-                    const color = getColor(ch.name);
                     card.innerHTML = `
-                        <div class="card-logo" style="color:${color}; border-bottom:2px solid ${color}">
-                            ${ch.name.substring(0,2).toUpperCase()}
+                        <div class="live-badge">LIVE</div>
+                        <div class="card-logo" style="color:${ch.color};">
+                            <span class="card-initial">${ch.name.charAt(0)}</span>
+                            <i class="fas fa-play-circle" style="font-size:30px; z-index:2; opacity:0.9;"></i>
                         </div>
                         <div class="card-info">
                             <div class="ch-name">${ch.name}</div>
@@ -210,13 +217,6 @@
             });
         }
 
-        // Helper Color Generator
-        function getColor(name) {
-            const colors = ['#e50914', '#46d369', '#2386e1', '#ffc107', '#ff4757'];
-            return colors[name.length % colors.length];
-        }
-
-        // 2. Filter Functions
         function filterCat(cat, btn) {
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -225,51 +225,52 @@
 
         function filterChannels() {
             const activeCat = document.querySelector('.cat-btn.active').innerText.toLowerCase();
-            const cat = activeCat === 'all' ? 'all' : activeCat;
+            const cat = activeCat.includes('sports') ? 'sports' : 
+                        activeCat.includes('news') ? 'news' : 
+                        activeCat.includes('movies') ? 'movies' : 
+                        activeCat.includes('music') ? 'music' : 'all';
             renderChannels(cat, document.getElementById('searchInput').value);
         }
 
         function toggleSearch() {
-            searchOverlay.style.display = searchOverlay.style.display === 'block' ? 'none' : 'block';
+            const el = document.getElementById('search-overlay');
+            el.style.display = el.style.display === 'block' ? 'none' : 'block';
         }
 
-        // 🔥 3. PLAYER WITH QUALITY LOGIC (CRUCIAL) 🔥
+        function toggleQualityMenu() {
+            const el = document.getElementById('quality-menu');
+            el.style.display = el.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // 🔥 PRO PLAYER LOGIC 🔥
         function openPlayer(channel) {
             const overlay = document.getElementById('player-overlay');
             const video = document.getElementById('video');
             const title = document.getElementById('playing-title');
             const qualityMenu = document.getElementById('quality-menu');
-            const qualityLabel = document.getElementById('current-quality');
-            const qualityBtn = document.querySelector('.quality-btn');
 
             overlay.style.display = 'flex';
             title.innerText = channel.name;
-            qualityMenu.innerHTML = ''; // Reset menu
-            qualityBtn.style.display = 'none'; // Hide until qualities found
+            qualityMenu.innerHTML = ''; // Reset Menu
 
-            // Proxy Logic
+            // Master Proxy Logic
             const finalUrl = channel.url.startsWith("http") ? 
                 (channel.url.includes("https") ? channel.url : "https://api.allorigins.win/raw?url=" + encodeURIComponent(channel.url)) 
                 : channel.url;
 
             if (Hls.isSupported()) {
-                if (hls) hls.destroy();
+                if(hls) hls.destroy();
                 hls = new Hls();
                 hls.loadSource(finalUrl);
                 hls.attachMedia(video);
 
-                hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                hls.on(Hls.Events.MANIFEST_PARSED, (e, data) => {
                     const levels = hls.levels;
+                    qualityMenu.innerHTML = `<div class="q-item active" onclick="setQuality(-1)"><span>Auto</span> <i class="fas fa-check"></i></div>`;
                     
-                    // ✅ Agar qualities hain (144p, 360p, etc.) tabhi button dikhao
-                    if (levels.length > 1) {
-                        qualityBtn.style.display = 'flex';
-                        qualityMenu.innerHTML = `<div class="q-item active" onclick="setQuality(-1, 'Auto')">Auto</div>`;
-                        
-                        // Loop through levels to create buttons (Reverse for High to Low)
-                        levels.forEach((level, index) => {
-                            const resolution = level.height + 'p';
-                            qualityMenu.innerHTML += `<div class="q-item" onclick="setQuality(${index}, '${resolution}')">${resolution}</div>`;
+                    if(levels.length > 1) {
+                        levels.forEach((lvl, i) => {
+                            qualityMenu.innerHTML += `<div class="q-item" onclick="setQuality(${i})"><span>${lvl.height}p</span></div>`;
                         });
                     }
                     video.play();
@@ -280,33 +281,22 @@
             }
         }
 
-        // Quality Selection Function
-        window.setQuality = function(levelIndex, label) {
-            if (hls) {
-                hls.currentLevel = levelIndex;
-                document.getElementById('current-quality').innerText = label;
-                toggleQualityMenu(); // Close menu
-                
-                // Update UI active state
-                document.querySelectorAll('.q-item').forEach(item => item.classList.remove('active'));
-                event.target.classList.add('active');
+        window.setQuality = function(index) {
+            if(hls) {
+                hls.currentLevel = index;
+                toggleQualityMenu();
+                // Update Checkmark logic here if needed
             }
-        }
-
-        function toggleQualityMenu() {
-            const menu = document.getElementById('quality-menu');
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         }
 
         function closePlayer() {
             document.getElementById('player-overlay').style.display = 'none';
             document.getElementById('video').pause();
-            if (hls) hls.destroy();
+            if(hls) hls.destroy();
         }
 
-        // Initial Load
+        // Init
         renderChannels();
-
     </script>
 </body>
 </html>
