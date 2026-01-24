@@ -3,147 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IND vs NZ Live - Match Manas</title>
+    <title>Match Manas TV - All Channels</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-color: #0f1016;
-            --card-bg: #1e2130;
-            --yt-color: #FF0000;
-            --tg-color: #229ED9;
-            --wa-color: #25D366;
-            --accent: #4fc3f7;
+            --bg-dark: #090b10;
+            --primary-gradient: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
+            --glass-bg: rgba(21, 24, 35, 0.95);
+            --border-glow: rgba(255, 75, 43, 0.3);
+            --text-muted: #a0a3b1;
         }
 
-        body {
-            margin: 0; padding: 0; background-color: var(--bg-color); color: white;
-            font-family: 'Segoe UI', sans-serif; text-align: center;
+        body { 
+            margin: 0; background-color: var(--bg-dark); color: white; 
+            font-family: 'Segoe UI', sans-serif; overflow-x: hidden;
+            background-image: radial-gradient(circle at top right, rgba(255, 65, 108, 0.15), transparent 40%);
         }
 
-        .header {
-            background: linear-gradient(180deg, #1a237e 0%, #0f1016 100%);
-            padding: 25px 15px; border-bottom: 1px solid rgba(255,255,255,0.1);
+        /* Header */
+        .app-header {
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            background: var(--glass-bg); backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 100;
         }
-        .logo-text { font-size: 26px; font-weight: 900; text-transform: uppercase; color: white; margin: 0; }
-        .match-info { color: var(--accent); font-size: 14px; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
+        .brand { font-size: 22px; font-weight: 900; }
+        .brand span { background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .tg-btn { 
+            background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 50px; 
+            text-decoration: none; color: white; font-size: 12px; font-weight: 700; border: 1px solid rgba(255,255,255,0.1);
+        }
 
-        .news-ticker { background: #d32f2f; color: white; font-size: 13px; font-weight: 600; padding: 8px 0; overflow: hidden; }
-        .ticker-content { display: inline-block; animation: scroll 20s linear infinite; }
-        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        /* Search */
+        .search-section { padding: 20px; text-align: center; }
+        .search-input {
+            width: 100%; max-width: 600px; padding: 15px 20px; border-radius: 12px;
+            background: #1c1f2e; border: 1px solid rgba(255,255,255,0.1); color: white; outline: none;
+        }
+        .search-input:focus { border-color: #FF4B2B; box-shadow: 0 0 15px var(--border-glow); }
 
-        .container { max-width: 800px; margin: 20px auto; padding: 10px; }
+        /* Categories */
+        .filter-section { padding: 0 20px 20px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+        .filter-section::-webkit-scrollbar { display: none; }
+        .filter-btn {
+            display: inline-block; padding: 10px 20px; margin-right: 10px; border-radius: 12px;
+            background: #1c1f2e; color: var(--text-muted); font-size: 13px; font-weight: 700; cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
+        }
+        .filter-btn.active { background: var(--primary-gradient); color: white; border-color: transparent; }
 
-        .player-box { background: var(--card-bg); padding: 10px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
-
-        .live-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .quality-btn { background: #0f1016; color: var(--accent); border: 1px solid var(--accent); border-radius: 4px; padding: 4px 8px; font-size: 11px; font-weight: bold; cursor: pointer; }
-
-        .live-badge { background: red; color: white; padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        /* Grid */
+        .channel-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 15px; padding: 0 20px 80px;
+        }
+        .channel-card {
+            background: linear-gradient(145deg, #1e2230, #161822); border-radius: 16px; padding: 15px 10px;
+            text-align: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); position: relative;
+        }
+        .channel-card:hover { transform: translateY(-5px); border-color: rgba(255, 75, 43, 0.5); }
         
-        .video-wrapper { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; border-radius: 8px; overflow: hidden; border: 1px solid #333; }
-        video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-
-        /* 🔥 Error Message Style 🔥 */
-        #error-msg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); display: none; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 10; color: var(--accent);
-            font-weight: bold; padding: 20px; text-align: center;
+        .ch-logo { 
+            width: 50px; height: 50px; background: #252836; border-radius: 50%; margin: 0 auto 10px; 
+            display: flex; align-items: center; justify-content: center; font-weight: 900; color: white; font-size: 18px;
+        }
+        .ch-name { font-size: 12px; font-weight: 600; color: #e1e1e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .live-tag {
+            position: absolute; top: 8px; right: 8px; font-size: 8px; font-weight: bold;
+            color: #ff4d4d; background: rgba(255, 0, 0, 0.1); padding: 2px 4px; border-radius: 4px;
         }
 
-        .btn-container { margin-top: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .btn { text-decoration: none; padding: 14px 0; border-radius: 50px; font-size: 15px; font-weight: bold; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-yt { background-color: var(--yt-color); }
-        .btn-tg { background-color: var(--tg-color); }
-        .btn-wa-full { grid-column: span 2; background-color: var(--wa-color); margin-top: 5px; }
+        /* Player Overlay */
+        #player-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 200; display: none; flex-direction: column;
+        }
+        .player-header { padding: 15px; display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.1); }
+        .back-btn { font-size: 20px; cursor: pointer; color: white; }
+        .video-container { width: 100%; aspect-ratio: 16/9; background: #000; margin: auto 0; }
+        video { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1 class="logo-text">Match Manas Live</h1>
-        <div class="match-info">🇮🇳 India vs New Zealand 🇳🇿</div>
+    <div class="app-header">
+        <div class="brand">MATCH <span>MANAS</span></div>
+        <a href="https://t.me/MKSSports_3" class="tg-btn">Join Telegram</a>
     </div>
 
-    <div class="news-ticker">
-        <div class="ticker-content">🔥 LIVE: Watch India vs New Zealand HD Free • Join Telegram @MKSSports_3 for Updates!</div>
+    <div class="search-section">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search 100+ Channels..." onkeyup="filterChannels()">
     </div>
 
-    <div class="container">
-        <div class="player-box">
-            <div class="live-bar">
-                <div class="live-badge">● LIVE</div>
-                <div class="controls-right">
-                    <select id="qualitySelect" class="quality-btn" style="display:none;">
-                        <option value="-1">Auto</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="video-wrapper">
-                <video id="video" controls autoplay playsinline></video>
-                <div id="error-msg">
-                    <i class="fas fa-exclamation-triangle" style="font-size:30px; margin-bottom:10px;"></i>
-                    <p>Stream Down or Link Expired.</p>
-                    <p style="font-size:12px; color:white;">Admin is updating the link, please refresh in 2 minutes.</p>
-                    <button onclick="location.reload()" style="margin-top:15px; padding:8px 20px; background:var(--accent); border:none; border-radius:5px; font-weight:bold; cursor:pointer;">Refresh Page</button>
-                </div>
-            </div>
+    <div class="filter-section">
+        <div class="filter-btn active" onclick="filterCat('all', this)">All</div>
+        <div class="filter-btn" onclick="filterCat('sports', this)">Sports</div>
+        <div class="filter-btn" onclick="filterCat('news', this)">News</div>
+        <div class="filter-btn" onclick="filterCat('entertainment', this)">Entertainment</div>
+        <div class="filter-btn" onclick="filterCat('movies', this)">Movies</div>
+        <div class="filter-btn" onclick="filterCat('music', this)">Music</div>
+        <div class="filter-btn" onclick="filterCat('devotional', this)">Devotional</div>
+    </div>
+
+    <div id="grid-container" class="channel-grid"></div>
+
+    <div id="player-overlay">
+        <div class="player-header">
+            <div class="back-btn" onclick="closePlayer()"><i class="fas fa-arrow-left"></i></div>
+            <div style="font-weight:bold; color:white;" id="player-title">Channel Name</div>
         </div>
-
-        <div class="btn-container">
-            <a href="https://youtube.com/@mkssports3" class="btn btn-yt"><i class="fab fa-youtube"></i> Subscribe</a>
-            <a href="https://t.me/MKSSports_3" class="btn btn-tg"><i class="fab fa-telegram-plane"></i> Join Channel</a>
-            <a href="whatsapp://send?text=Match Dekho Free: https://matchmanas.pages.dev" class="btn btn-wa-full btn"><i class="fab fa-whatsapp"></i> Share with Friends</a>
+        <div class="video-container">
+            <video id="main-video" controls autoplay playsinline></video>
         </div>
     </div>
 
     <script>
-        // Bas yahan apna link update karein
-        const rawUrl = "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8";
-        
-        // Master Proxy Logic
-        const finalUrl = rawUrl.startsWith("https://") ? rawUrl : "https://api.allorigins.win/raw?url=" + encodeURIComponent(rawUrl);
+        // 🔥 MASSIVE CHANNEL LIST (Processed from your request) 🔥
+        const channels = [
+            // --- NEWS ---
+            { name: "Aaj Tak HD", cat: "news", logo: "A", url: "https://livehub-voidnet.onrender.com/cluster/streamcore/in/AAJTAK_REDIS.m3u8" },
+            { name: "ABP News", cat: "news", logo: "A", url: "https://d2l4ar6y3mrs4k.cloudfront.net/live-streaming/abpnews-livetv/master.m3u8" },
+            { name: "ABP Ananda", cat: "news", logo: "A", url: "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/abp-ananda/master.m3u8" },
+            { name: "ABP Asmita", cat: "news", logo: "A", url: "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/abp-asmita/master.m3u8" },
+            { name: "ABP Ganga", cat: "news", logo: "A", url: "https://abplivetv.akamaized.net/hls/live/2043013/ganga/master.m3u8" },
+            { name: "CNBC TV18", cat: "news", logo: "C", url: "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/cnbc-tv18/master.m3u8" },
+            { name: "CNBC Awaaz", cat: "news", logo: "C", url: "https://n18syndication.akamaized.net/bpk-tv/CNBC_Awaaz_NW18_MOB/output01/master.m3u8" },
+            { name: "DD News", cat: "news", logo: "D", url: "https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/0811cd8c37ca4c409d5385a6cd2fa18b/index.m3u8" },
+            { name: "Asianet News", cat: "news", logo: "A", url: "https://asianetnews.vgcdn.net/ptnr-Embed/v1/manifest/611d79b11b77e2f571934fd80ca1413453772ac7/1c19363c-e4a0-4e4d-ba28-771d5615b88e/9bd4a057-456d-43de-b887-7b87b021f1cc/3.m3u8" },
+            { name: "Bharat24", cat: "news", logo: "B", url: "https://cdn.ottlive.co.in/bharat24/index.fmp4.m3u8" },
+            { name: "4TV News", cat: "news", logo: "4", url: "https://cdn-4.pishow.tv/live/1007/master.m3u8" },
+            { name: "10TV News", cat: "news", logo: "1", url: "https://cdn-1.pishow.tv/live/391/master.m3u8" },
 
-        function startStream() {
-            const video = document.getElementById('video');
-            const qualitySelect = document.getElementById('qualitySelect');
-            const errorMsg = document.getElementById('error-msg');
+            // --- SPORTS ---
+            { name: "DD Sports", cat: "sports", logo: "S", url: "https://cdn-6.pishow.tv/live/13/master.m3u8" },
+            { name: "Willow HD", cat: "sports", logo: "W", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
+            
+            // --- ENTERTAINMENT & MOVIES ---
+            { name: "Dangal TV", cat: "entertainment", logo: "D", url: "https://live-dangal.akamaized.net/liveabr/playlist.m3u8" },
+            { name: "B4U Movies", cat: "movies", logo: "B", url: "https://cdnb4u.wiseplayout.com/B4U_Movies/master.m3u8" },
+            { name: "B4U Kadak", cat: "movies", logo: "B", url: "https://cdnb4u.wiseplayout.com/B4U_Kadak/master.m3u8" },
+            { name: "B4U Bhojpuri", cat: "movies", logo: "B", url: "https://cdnb4u.wiseplayout.com/B4U_Bhojpuri/master.m3u8" },
+            { name: "Abzy Movies", cat: "movies", logo: "A", url: "https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/db8d4eca72d64748a00d0631debf542d/index.m3u8" },
+            { name: "Abzy Dhakad", cat: "movies", logo: "A", url: "https://d2lk5u59tns74c.cloudfront.net/out/v1/4fe6ab07a13543d6bdb2ec63b3e2df44/index.m3u8" },
+            { name: "Colors Cineplex", cat: "movies", logo: "C", url: "http://163.61.227.29:8000/play/a04c/index.m3u8" },
+            { name: "&flix", cat: "movies", logo: "&", url: "https://edge3-moblive.yuppcdn.net/drm/smil:nflixdrm.smil/index.m3u8" },
+            { name: "Bhojpuri Cinema", cat: "movies", logo: "B", url: "https://live-bhojpuri.akamaized.net/liveabr/playlist.m3u8" },
+
+            // --- MUSIC ---
+            { name: "9XM", cat: "music", logo: "9", url: "https://9xjio.wiseplayout.com/9XM/master.m3u8" },
+            { name: "9X Jalwa", cat: "music", logo: "9", url: "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/9x-jalwa/master.m3u8" },
+            { name: "9X Tashan", cat: "music", logo: "9", url: "https://9xjio.wiseplayout.com/9X_Tashan/master.m3u8" },
+            { name: "9X Jhakaas", cat: "music", logo: "9", url: "https://9xjio.wiseplayout.com/9X_Jhakaas/master.m3u8" },
+            { name: "B4U Music", cat: "music", logo: "B", url: "https://cdnb4u.wiseplayout.com/B4U_Music/master.m3u8" },
+            { name: "Dhoom Music", cat: "music", logo: "D", url: "https://cdn-1.pishow.tv/live/1456/master.m3u8" },
+            { name: "Balle Balle", cat: "music", logo: "B", url: "https://mcncdndigital.com/balleballetv/index.m3u8" },
+
+            // --- DEVOTIONAL ---
+            { name: "Aastha", cat: "devotional", logo: "A", url: "https://aasthaott.akamaized.net/110923/smil:aasthatv.smil/index.m3u8" },
+            { name: "Aastha Bhajan", cat: "devotional", logo: "A", url: "https://aasthaott.akamaized.net/110923/smil:bhajan.smil/playlist.m3u8" },
+            { name: "Angel TV", cat: "devotional", logo: "A", url: "https://janya-digimix.akamaized.net/vglive-sk-394914/india/ngrp:angelindia_all/playlist.m3u8" },
+            { name: "Bhakthi TV", cat: "devotional", logo: "B", url: "https://cdn-1.pishow.tv/live/397/master.m3u8" },
+            { name: "Darshan TV", cat: "devotional", logo: "D", url: "https://galaxyott.live/hls/dharshantv.m3u8" },
+            
+            // --- DD REGIONAL (Mixed) ---
+            { name: "DD National", cat: "entertainment", logo: "D", url: "https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/40492a64c1db4a1385ba1a397d357d3a/index.m3u8" },
+            { name: "DD Bharati", cat: "entertainment", logo: "D", url: "https://cdn-1.pishow.tv/live/10/master.m3u8" },
+            { name: "DD Kisan", cat: "entertainment", logo: "D", url: "https://cdn-6.pishow.tv/live/9/master.m3u8" },
+            { name: "DD Urdu", cat: "entertainment", logo: "D", url: "https://cdn-4.pishow.tv/live/8/master.m3u8" },
+            { name: "DD Bangla", cat: "entertainment", logo: "D", url: "https://d3eyhgoylams0m.cloudfront.net/v1/manifest/93ce20f0f52760bf38be911ff4c91ed02aa2fd92/ed7bd2c7-8d10-4051-b397-2f6b90f99acb/2e9e32a4-c4f7-49c3-96d6-c4e3660c7e3f/2.m3u8" },
+            { name: "DD Punjabi", cat: "entertainment", logo: "D", url: "https://d3eyhgoylams0m.cloudfront.net/v1/manifest/93ce20f0f52760bf38be911ff4c91ed02aa2fd92/ed7bd2c7-8d10-4051-b397-2f6b90f99acb/20c8ad14-a158-4a42-8889-e032d070856e/2.m3u8" },
+            { name: "DD Tamil", cat: "entertainment", logo: "D", url: "https://d2lk5u59tns74c.cloudfront.net/out/v1/abf46b14847e45499f4a47f3a9afe93d/index.m3u8" },
+        ];
+
+        const grid = document.getElementById('grid-container');
+        let hls = null;
+
+        // Render Cards
+        function renderChannels(filter = 'all', search = '') {
+            grid.innerHTML = '';
+            channels.forEach(ch => {
+                const matchesCat = filter === 'all' || ch.cat === filter;
+                const matchesSearch = ch.name.toLowerCase().includes(search.toLowerCase());
+
+                if (matchesCat && matchesSearch) {
+                    const card = document.createElement('div');
+                    card.className = 'channel-card';
+                    card.innerHTML = `
+                        <div class="live-tag">LIVE</div>
+                        <div class="ch-logo" style="background:${getColor(ch.name)}">${ch.logo}</div>
+                        <div class="ch-name">${ch.name}</div>
+                    `;
+                    card.onclick = () => openPlayer(ch);
+                    grid.appendChild(card);
+                }
+            });
+        }
+
+        function getColor(name) {
+            const colors = ['#FF416C', '#4facfe', '#43e97b', '#fa709a', '#fee140', '#667eea'];
+            return colors[name.length % colors.length];
+        }
+
+        // Filtering
+        function filterCat(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const search = document.getElementById('searchInput').value;
+            renderChannels(cat, search);
+        }
+
+        function filterChannels() {
+            const activeBtn = document.querySelector('.filter-btn.active');
+            const cat = activeBtn.innerText.toLowerCase();
+            const search = document.getElementById('searchInput').value;
+            renderChannels(cat === 'all' ? 'all' : cat, search);
+        }
+
+        // Player Logic with Proxy
+        function openPlayer(channel) {
+            const overlay = document.getElementById('player-overlay');
+            const video = document.getElementById('main-video');
+            const title = document.getElementById('player-title');
+            
+            overlay.style.display = 'flex';
+            title.innerText = channel.name;
+
+            // Master Proxy Logic (Added as requested)
+            let finalUrl = channel.url;
+            if (finalUrl.startsWith("http://")) {
+                // HTTP links need proxy on HTTPS sites
+                finalUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(finalUrl);
+            }
 
             if (Hls.isSupported()) {
-                const hls = new Hls();
+                if(hls) hls.destroy();
+                hls = new Hls();
                 hls.loadSource(finalUrl);
                 hls.attachMedia(video);
-
-                hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                    const levels = hls.levels;
-                    if (levels.length > 1) {
-                        qualitySelect.style.display = 'block';
-                        qualitySelect.innerHTML = '<option value="-1">AUTO</option>';
-                        levels.forEach((level, index) => {
-                            const name = level.height ? level.height + 'P' : 'LEVEL ' + index;
-                            qualitySelect.innerHTML += `<option value="${index}">${name}</option>`;
-                        });
-                        qualitySelect.onchange = function() { hls.currentLevel = parseInt(this.value); };
-                    }
-                    video.play();
-                });
-
-                // 🔥 Error Detection Logic 🔥
-                hls.on(Hls.Events.ERROR, function (event, data) {
-                    if (data.fatal) {
-                        video.style.display = "none";
-                        errorMsg.style.display = "flex"; // Show professional error message
-                    }
-                });
-
+                hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = finalUrl;
+                video.play();
             }
         }
-        window.onload = startStream;
+
+        function closePlayer() {
+            document.getElementById('player-overlay').style.display = 'none';
+            document.getElementById('main-video').pause();
+            if(hls) hls.destroy();
+        }
+
+        // Start
+        renderChannels();
     </script>
 </body>
 </html>
