@@ -54,13 +54,16 @@
             position: relative;
         }
 
+        /* 🔥 UPDATED VIDEO WRAPPER (Flexible Height) 🔥 */
         .video-wrapper {
-            position: relative; width: 100%; aspect-ratio: 16/9; background: black;
+            position: relative; width: 100%; background: black;
             display: flex; align-items: center; justify-content: center;
+            /* Default aspect ratio removed here, handled by JS now */
+            min-height: 250px; 
+            transition: height 0.3s ease;
         }
         video { width: 100%; height: 100%; display: block; }
         
-        /* 🔥 IFRAME STYLE 🔥 */
         #iframe-box {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 10; display: none; background: #000;
@@ -112,7 +115,6 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        /* 🔥 SECRET MENU 🔥 */
         #secret-menu {
             display: none; width: 100%; max-width: 800px; margin-top: 20px;
             background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #333;
@@ -136,16 +138,12 @@
     </div>
 
     <div class="main-container">
-        
         <div class="player-box">
-            <div class="video-wrapper">
+            <div class="video-wrapper" id="videoWrapper">
                 <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
                 <div id="quality-menu"><div id="quality-list"></div></div>
-                
                 <video id="video" controls autoplay playsinline></video>
-                
                 <div id="iframe-box"></div>
-
                 <div id="loader"></div>
             </div>
             <div class="controls-box">
@@ -166,17 +164,13 @@
             </div>
             <div id="secret-grid" class="secret-grid"></div>
         </div>
-
     </div>
 
     <script>
-        // YOUR CHANNELS LIST
-        // Note: I added a test iframe link at the end to show it works
+        // CHANNELS LIST
         const channels = [
             { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
             { id: "sky", name: "Sky Cricket", url: "https://d3.merichunidya.com:1686/hls/skyscric.m3u8?md5=kHbfVfVtKKqVWMPwLY8DBg&expires=1769241381" },
-            { id: "tnt1", name: "TNT Sports 1", url: "https://tnt-sports-1.amagi.tv/playlist.m3u8" },
-            { id: "tnt2", name: "TNT Sports 2", url: "https://tnt-sports-2.amagi.tv/index.m3u8" },
             { id: "iframe_test", name: "Iframe Test", url: "https://mks-live.pages.dev/mkstar?channel_id=1956" }
         ];
 
@@ -187,13 +181,8 @@
         function init() {
             const urlParams = new URLSearchParams(window.location.search);
             const channelId = urlParams.get('id');
-
-            if (channelId) {
-                const found = channels.find(c => c.id === channelId);
-                activeCh = found ? found : channels[0];
-            } else {
-                activeCh = channels[0]; // Default
-            }
+            const found = channels.find(c => c.id === channelId);
+            activeCh = found ? found : channels[0];
             loadPlayer(activeCh);
             renderSecretMenu();
         }
@@ -205,8 +194,6 @@
                 let password = prompt("Enter Admin Password:");
                 if (password === "manas") { 
                     document.getElementById('secret-menu').style.display = 'block';
-                } else {
-                    alert("Wrong Password!");
                 }
             }
         }
@@ -234,26 +221,28 @@
         }
 
         function playStream() {
+            const wrapper = document.getElementById('videoWrapper');
             const video = document.getElementById('video');
             const iframeBox = document.getElementById('iframe-box');
             const loader = document.getElementById('loader');
             const settingsBtn = document.getElementById('settings-btn');
-            const qualityMenu = document.getElementById('quality-menu');
             
             let url = activeCh.url; 
             loader.style.display = 'block';
 
-            // Clean up previous states
             if(hls) { hls.destroy(); hls = null; }
-            qualityMenu.style.display = 'none'; // Hide menu if open
+            document.getElementById('quality-menu').style.display = 'none';
 
-            // 🔥 LOGIC: Check if it is M3U8/HLS or Iframe 🔥
+            // 🔥 LOGIC TO FIX HEIGHT ISSUE 🔥
             if (url.includes('.m3u8')) {
-                // --- HLS MODE ---
+                // Video Mode: Use 16:9 Aspect Ratio
+                wrapper.style.aspectRatio = "16/9";
+                wrapper.style.height = "auto";
+                
                 iframeBox.style.display = 'none';
-                iframeBox.innerHTML = ""; // Clear iframe
+                iframeBox.innerHTML = "";
                 video.style.display = 'block';
-                settingsBtn.style.display = 'block'; // Show Quality Button
+                settingsBtn.style.display = 'block';
 
                 if (Hls.isSupported()) {
                     hls = new Hls();
@@ -270,13 +259,17 @@
                     loader.style.display = 'none';
                 }
             } else {
-                // --- IFRAME MODE ---
+                // Iframe Mode: Increase Height so it doesn't get cut
+                wrapper.style.aspectRatio = "auto"; // Remove ratio constraint
+                wrapper.style.height = "550px"; // 🔥 FIXED HEIGHT INCREASED 🔥
+                
                 video.style.display = 'none';
                 video.pause();
-                settingsBtn.style.display = 'none'; // Hide Quality Button for Iframe
+                settingsBtn.style.display = 'none';
                 
                 iframeBox.style.display = 'block';
-                iframeBox.innerHTML = `<iframe src="${url}" allowfullscreen scrolling="no" allow="autoplay; encrypted-media"></iframe>`;
+                // Added scrolling='auto' just in case
+                iframeBox.innerHTML = `<iframe src="${url}" allowfullscreen scrolling="auto" allow="autoplay; encrypted-media"></iframe>`;
                 loader.style.display = 'none';
             }
         }
@@ -294,8 +287,7 @@
         function setQuality(index) {
             if(hls) {
                 hls.currentLevel = index;
-                toggleQualityMenu();
-                document.querySelectorAll('.q-item').forEach((item, i) => item.classList.toggle('active', i === index + 1));
+                document.getElementById('quality-menu').style.display = 'none';
             }
         }
 
