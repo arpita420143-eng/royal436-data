@@ -6,6 +6,11 @@
     <title>Match Manas - Direct Live</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script type='text/javascript' src='//pl28610287.effectivegatecpm.com/0a/f6/97/0af6976a131afc828a7e5bb535fbe305.js'></script>
+
+    <script src="https://pl28610431.effectivegatecpm.com/ff/e8/77/ffe877c5a9204d730c6d295f287d33e3.js"></script>
+
     <style>
         /* --- PREMIUM DARK THEME --- */
         :root {
@@ -58,7 +63,6 @@
         .video-wrapper {
             position: relative; width: 100%; background: black;
             display: flex; align-items: center; justify-content: center;
-            /* Default aspect ratio removed here, handled by JS now */
             min-height: 250px; 
             transition: height 0.3s ease;
         }
@@ -233,9 +237,8 @@
             if(hls) { hls.destroy(); hls = null; }
             document.getElementById('quality-menu').style.display = 'none';
 
-            // 🔥 LOGIC TO FIX HEIGHT ISSUE 🔥
             if (url.includes('.m3u8')) {
-                // Video Mode: Use 16:9 Aspect Ratio
+                // Video Mode
                 wrapper.style.aspectRatio = "16/9";
                 wrapper.style.height = "auto";
                 
@@ -259,16 +262,15 @@
                     loader.style.display = 'none';
                 }
             } else {
-                // Iframe Mode: Increase Height so it doesn't get cut
-                wrapper.style.aspectRatio = "auto"; // Remove ratio constraint
-                wrapper.style.height = "550px"; // 🔥 FIXED HEIGHT INCREASED 🔥
+                // Iframe Mode
+                wrapper.style.aspectRatio = "auto";
+                wrapper.style.height = "550px";
                 
                 video.style.display = 'none';
                 video.pause();
                 settingsBtn.style.display = 'none';
                 
                 iframeBox.style.display = 'block';
-                // Added scrolling='auto' just in case
                 iframeBox.innerHTML = `<iframe src="${url}" allowfullscreen scrolling="auto" allow="autoplay; encrypted-media"></iframe>`;
                 loader.style.display = 'none';
             }
