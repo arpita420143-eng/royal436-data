@@ -29,19 +29,13 @@
         .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 5px; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
         .player-box { width: 100%; max-width: 800px; background: var(--bg-card); border-radius: 12px; overflow: hidden; box-shadow: 0 10px 50px rgba(0,0,0,0.7); border: 1px solid #333; position: relative; margin-top: 5px; }
 
-        /* 🔥 VIDEO WRAPPER (FIXED) 🔥 */
-        .video-wrapper {
-            position: relative; width: 100%; background: #000;
-            display: flex; align-items: center; justify-content: center;
-            aspect-ratio: 16/9; /* Fix Aspect Ratio */
-            overflow: hidden; border-radius: 12px;
-        }
+        /* VIDEO WRAPPER */
+        .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; aspect-ratio: 16/9; overflow: hidden; border-radius: 12px; }
         video { width: 100%; height: 100%; display: block; object-fit: contain; }
-
         #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; background: #000; }
         #iframe-box iframe { width: 100%; height: 100%; border: none; }
 
-        /* LIVE BADGE & CONTROLS */
+        /* CONTROLS & ADS */
         .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(0, 0, 0, 0.6); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; gap: 8px; pointer-events: none; }
         .live-dot { width: 8px; height: 8px; background: #e50914; border-radius: 50%; box-shadow: 0 0 10px #e50914; animation: blink 1.2s infinite ease-in-out; }
         .live-sep { width: 1px; height: 12px; background: rgba(255,255,255,0.3); }
@@ -51,12 +45,6 @@
         #quality-menu { position: absolute; top: 45px; right: 10px; z-index: 30; background: rgba(15, 15, 15, 0.95); border: 1px solid #444; border-radius: 8px; width: 140px; display: none; overflow: hidden; }
         .q-item { padding: 10px 12px; font-size: 13px; color: #ddd; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .q-item:hover { background: #333; } .q-item.active { background: var(--accent-red); color: white; font-weight: bold; }
-        
-        /* SOCIAL TOAST & ADS */
-        #social-toast { position: fixed; bottom: 20px; left: 20px; z-index: 200; background: rgba(20, 22, 28, 0.95); border-left: 4px solid var(--accent-blue); color: white; padding: 12px 15px; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 10px; transform: translateY(100px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(10px); width: 250px; }
-        #social-toast.show { transform: translateY(0); }
-        .toast-icon { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; background: rgba(255,255,255,0.1); }
-        .toast-text span { display: block; font-size: 10px; color: #aaa; margin-top: 2px; }
 
         .controls-box { padding: 15px 10px; }
         .prominent-fix-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; margin-bottom: 15px; background: linear-gradient(45deg, #ffb400, #ff8800); color: #000; font-weight: 900; font-size: 16px; border-radius: 12px; text-decoration: none; text-transform: uppercase; box-shadow: 0 4px 15px rgba(255, 180, 0, 0.4); animation: glow 2s infinite; }
@@ -80,19 +68,11 @@
 </head>
 <body>
 
-    <div id="social-toast">
-        <div class="toast-icon" id="toast-icon">🚀</div>
-        <div class="toast-text">
-            <div id="toast-msg">User Joined</div>
-            <span id="toast-sub">Just now</span>
-        </div>
-    </div>
-
     <div class="header">
         <div class="logo" onclick="unlockSecret()">MATCH <span>MANAS</span></div>
         <div class="head-btns">
-            <a href="https://t.me/MKSSports_3" class="h-btn hb-tg" target="_blank" onclick="userClicked('Telegram')"><i class="fab fa-telegram-plane"></i> Join</a>
-            <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="h-btn hb-yt" target="_blank" onclick="userClicked('YouTube')"><i class="fab fa-youtube"></i> Sub</a>
+            <a href="https://t.me/MKSSports_3" class="h-btn hb-tg" target="_blank"><i class="fab fa-telegram-plane"></i> Join</a>
+            <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="h-btn hb-yt" target="_blank"><i class="fab fa-youtube"></i> Sub</a>
         </div>
     </div>
 
@@ -127,8 +107,8 @@
                 </a>
 
                 <div class="btn-grid">
-                    <a href="https://t.me/MKSSports_3" class="action-btn tg" target="_blank" onclick="userClicked('Telegram')"><i class="fab fa-telegram"></i> Telegram</a>
-                    <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="action-btn yt" target="_blank" onclick="userClicked('YouTube')"><i class="fab fa-youtube"></i> Subscribe</a>
+                    <a href="https://t.me/MKSSports_3" class="action-btn tg" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
+                    <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="action-btn yt" target="_blank"><i class="fab fa-youtube"></i> Subscribe</a>
                 </div>
 
                 <div style="text-align: center; color: #555; font-size: 10px; margin-bottom: 5px;">SPONSORED LINKS</div>
@@ -158,16 +138,16 @@
             <div id="secret-grid" class="secret-grid"></div>
         </div>
     </div>
-        <script>
+            <script>
         const channels = [
             { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
             { id: "u19wcfinal", name: "MKS Sports (Worker)", url: "https://mksplay.pages.dev/mkid?id=u19" },
             { id: "jokerbrand", name: "MKS sports", url: "https://mksplay.pages.dev/mkid?id=t20wc" },
             { id: "ytlive", name: "YouTube Live", url: "https://www.youtube.com/embed/vQ4B2PaniYs" },
             { id: "HINDI", name: "Star Sports 1 Hindi", url: "https://mks-live.pages.dev/mkstar?channel_id=1985"},
-            // 🔥 Added Catbox for Testing 🔥
-            { id: "testcheck", name: "Testing Video", url: "https://www.w3schools.com/html/mov_bbb.mp4" }
             
+            // 🔥 YOUR UPLOADED FILE (GoFile) 🔥
+            { id: "myfile", name: "Live Match", url: "https://store3.gofile.io/download/direct/YOUR-LINK-HERE/video.mp4" }
         ];
 
         let hls = null;
@@ -175,6 +155,17 @@
         let clickCount = 0;
 
         function init() {
+            // 🔥 MONEY LOGIC: SHOW AD ONLY ONCE (PAISA + NO IRRITATION) 🔥
+            // Ye check karega ki user ne ad dekha hai ya nahi
+            if (!sessionStorage.getItem('adShown')) {
+                let adScript = document.createElement('script');
+                adScript.src = "https://exterminatorfalter.com/ff/e8/77/ffe877c5a9204d730c6d295f287d33e3.js"; // Aapki Earning Script
+                document.body.appendChild(adScript);
+                
+                // Flag set kar diya taaki dobara na khule
+                sessionStorage.setItem('adShown', 'true');
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
             const channelId = urlParams.get('id');
             const found = channels.find(c => c.id === channelId);
@@ -227,62 +218,43 @@
 
             if(hls) { hls.destroy(); hls = null; }
             document.getElementById('quality-menu').style.display = 'none';
-            
-            // Clean up previous video state
             video.src = "";
             video.removeAttribute('src');
 
-            // 🔥 LOGIC: Handle .mp4 and .m3u8 directly (Auto Mute for MP4)
             if ((url.includes('.m3u8') || url.includes('.mp4')) && !url.includes('embed=true')) {
-                wrapper.style.height = "100%"; // 🔥 Fixed Height issue
+                wrapper.style.height = "100%"; 
                 wrapper.style.aspectRatio = "16/9"; 
-                
                 iframeBox.style.display = 'none'; 
                 iframeBox.innerHTML = "";
                 video.style.display = 'block';
                 
-                // Settings button only for M3U8 (HLS)
                 settingsBtn.style.display = url.includes('.m3u8') ? 'block' : 'none';
 
                 if (url.includes('.m3u8') && Hls.isSupported()) {
-                    // HLS Logic
                     hls = new Hls(); 
                     hls.loadSource(url); 
                     hls.attachMedia(video);
                     hls.on(Hls.Events.MANIFEST_PARSED, () => { 
                         loader.style.display = 'none'; 
-                        video.play().catch(e => {
-                            console.log("Autoplay blocked, muting...");
-                            video.muted = true;
-                            video.play();
-                        }); 
+                        video.play().catch(e => { video.muted = true; video.play(); }); 
                         generateQualityOptions(); 
                     });
                 } else {
-                    // 🔥 MP4 Direct Logic (Fixed)
                     video.src = url;
                     video.load();
-                    video.muted = true; // 🔥 IMPORTANT: Mute to allow autoplay
-                    
+                    video.muted = true; 
                     var p = video.play();
                     if(p !== undefined) {
                         p.then(() => { loader.style.display = 'none'; })
-                         .catch(e => { 
-                             loader.style.display = 'none'; 
-                             console.log("MP4 play error", e);
-                             video.controls = true; 
-                         });
+                         .catch(e => { loader.style.display = 'none'; video.controls = true; });
                     }
                 }
             } else {
-                // IFRAME MODE
                 wrapper.style.aspectRatio = "auto"; 
                 wrapper.style.height = "550px"; 
-                
                 video.style.display = 'none'; 
                 video.pause(); 
                 settingsBtn.style.display = 'none';
-                
                 iframeBox.style.display = 'block';
                 iframeBox.innerHTML = `<iframe src="${url}" width="100%" height="100%" frameborder="0" allowfullscreen scrolling="no" allow="autoplay; encrypted-media"></iframe>`;
                 loader.style.display = 'none';
@@ -313,37 +285,8 @@
         }
         setInterval(updateViewers, 5000);
 
-        // 🔥 FAKE SOCIAL NOTIFICATIONS 🔥
-        function showToast(msg, icon) {
-            const toast = document.getElementById('social-toast');
-            document.getElementById('toast-msg').innerText = msg;
-            document.getElementById('toast-icon').innerHTML = icon;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
-        function userClicked(platform) {
-            if(platform === 'Telegram') showToast("Thanks for Joining! 🔥", '<i class="fab fa-telegram"></i>');
-            if(platform === 'YouTube') showToast("Thanks for Subscribing! ❤️", '<i class="fab fa-youtube"></i>');
-        }
-
-        function triggerFakeSocial() {
-            const names = ["User 84**", "CricketFan", "User 19**", "Ravi_**", "User 55**", "Rahul_X", "Aman_07", "KingKohli_Fan", "Rohit_45", "Sky_Surya"];
-            const actions = [
-                { msg: "joined Telegram Channel", icon: '<i class="fab fa-telegram"></i>' },
-                { msg: "subscribed to Channel", icon: '<i class="fab fa-youtube"></i>' }
-            ];
-            const randomName = names[Math.floor(Math.random() * names.length)];
-            const randomAction = actions[Math.floor(Math.random() * actions.length)];
-            
-            showToast(`${randomName} ${randomAction.msg}`, randomAction.icon);
-            setTimeout(triggerFakeSocial, Math.random() * 25000 + 25000);
-        }
-        setTimeout(triggerFakeSocial, 5000);
-
         init();
     </script>
-    
-    <script src="https://exterminatorfalter.com/ff/e8/77/ffe877c5a9204d730c6d295f287d33e3.js"></script>
     </body>
 </html>
+
