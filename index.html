@@ -11,155 +11,86 @@
 
     <style>
         /* --- PREMIUM DARK THEME --- */
-        :root {
-            --bg-main: #0a0b0e;
-            --bg-card: #14161c;
-            --accent-red: #e50914;
-            --accent-blue: #0088cc;
-            --accent-yellow: #ffb400;
-            --text-main: #ffffff;
-        }
+        :root { --bg-main: #0a0b0e; --bg-card: #14161c; --accent-red: #e50914; --accent-blue: #0088cc; --accent-yellow: #ffb400; --text-main: #ffffff; }
+        body { margin: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
 
-        body {
-            margin: 0; background: var(--bg-main); color: var(--text-main);
-            font-family: 'Segoe UI', sans-serif; overflow-x: hidden;
-            display: flex; flex-direction: column; min-height: 100vh;
-        }
-
-        /* --- HEADER --- */
-        .header {
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(20, 22, 28, 0.95); padding: 10px 15px; /* Padding thodi kam ki */
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 2px solid #222; backdrop-filter: blur(10px);
-        }
+        /* HEADER */
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(20, 22, 28, 0.95); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #222; backdrop-filter: blur(10px); }
         .logo { font-size: 18px; font-weight: 900; letter-spacing: 1px; color: white; cursor: pointer; user-select: none; }
         .logo span { color: var(--accent-red); text-shadow: 0 0 10px var(--accent-red); }
-
         .head-btns { display: flex; gap: 8px; }
-        .h-btn {
-            padding: 6px 10px; border-radius: 50px; font-size: 10px; font-weight: 700;
-            text-decoration: none; color: white; display: flex; align-items: center; gap: 5px;
-            transition: 0.3s;
-        }
-        .hb-tg { background: var(--accent-blue); }
-        .hb-yt { background: var(--accent-red); }
+        .h-btn { padding: 6px 10px; border-radius: 50px; font-size: 10px; font-weight: 700; text-decoration: none; color: white; display: flex; align-items: center; gap: 5px; transition: 0.3s; }
+        .hb-tg { background: var(--accent-blue); } .hb-yt { background: var(--accent-red); }
 
-        /* --- PLAYER CONTAINER --- */
-        .main-container { 
-            flex: 1; display: flex; flex-direction: column; align-items: center; 
-            justify-content: flex-start; /* Upar chipkega */
-            padding: 5px; /* Padding aur kam kar di taaki button upar aaye */
-            width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box;
-        }
+        /* CONTAINER */
+        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 5px; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
+        .player-box { width: 100%; max-width: 800px; background: var(--bg-card); border-radius: 12px; overflow: hidden; box-shadow: 0 10px 50px rgba(0,0,0,0.7); border: 1px solid #333; position: relative; margin-top: 5px; }
 
-        .player-box {
-            width: 100%; max-width: 800px;
-            background: var(--bg-card); border-radius: 12px; overflow: hidden;
-            box-shadow: 0 10px 50px rgba(0,0,0,0.7); border: 1px solid #333;
-            position: relative;
-            margin-top: 5px;
-        }
-
-        /* Video Wrapper */
-        .video-wrapper {
-            position: relative; width: 100%; background: black;
-            display: flex; align-items: center; justify-content: center;
-            min-height: 230px; /* Thoda sa height adjust kiya */
-            transition: height 0.3s ease;
-        }
+        /* VIDEO */
+        .video-wrapper { position: relative; width: 100%; background: black; display: flex; align-items: center; justify-content: center; min-height: 230px; transition: height 0.3s ease; }
         video { width: 100%; height: 100%; display: block; }
-        
-        #iframe-box {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 10; display: none; background: #000;
-        }
+        #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; background: #000; }
         #iframe-box iframe { width: 100%; height: 100%; border: none; }
 
-        /* Quality Settings */
-        .settings-btn {
-            position: absolute; top: 10px; right: 10px; z-index: 20;
-            background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3);
-            padding: 5px 10px; border-radius: 6px; cursor: pointer; backdrop-filter: blur(5px);
-            font-size: 16px; transition: 0.3s;
+        /* 🔥 NEW LIVE BADGE INSIDE PLAYER 🔥 */
+        .live-overlay {
+            position: absolute; top: 15px; left: 15px; z-index: 25;
+            background: rgba(229, 9, 20, 0.9); color: white;
+            padding: 4px 10px; border-radius: 4px;
+            font-size: 12px; font-weight: 800; letter-spacing: 0.5px;
+            pointer-events: none; /* Click through to video */
+            display: flex; align-items: center; gap: 6px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
         }
-        #quality-menu {
-            position: absolute; top: 45px; right: 10px; z-index: 30;
-            background: rgba(15, 15, 15, 0.95); border: 1px solid #444;
-            border-radius: 8px; width: 140px; display: none; overflow: hidden;
+        .live-dot {
+            width: 8px; height: 8px; background: white; border-radius: 50%;
+            animation: blink 1s infinite;
         }
+
+        /* SETTINGS */
+        .settings-btn { position: absolute; top: 10px; right: 10px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 6px; cursor: pointer; backdrop-filter: blur(5px); font-size: 16px; transition: 0.3s; }
+        #quality-menu { position: absolute; top: 45px; right: 10px; z-index: 30; background: rgba(15, 15, 15, 0.95); border: 1px solid #444; border-radius: 8px; width: 140px; display: none; overflow: hidden; }
         .q-item { padding: 10px 12px; font-size: 13px; color: #ddd; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .q-item:hover { background: #333; }
         .q-item.active { background: var(--accent-red); color: white; font-weight: bold; }
 
-        /* 🔥 COMPACT CONTROLS (Yahan jagah bachayi hai) 🔥 */
-        .controls-box { padding: 10px; } /* Padding 25px se 10px kar di */
-        
-        .live-title { 
-            font-size: 15px; /* Size chhota kiya */
-            font-weight: 700; 
-            margin-bottom: 5px; /* Gap kam kar diya */
-            margin-top: 5px;
-            display: flex; align-items: center; justify-content: center; gap: 8px; 
-            text-align: center;
-        }
-        .badge { background: red; color: white; padding: 2px 6px; border-radius: 3px; font-size: 9px; animation: pulse 1.5s infinite; }
-        
-        /* 🔥 VIP AD SPOT (Gap Reduced) 🔥 */
-        .vip-ad-box {
-            display: flex; justify-content: center; 
-            margin-bottom: 5px; /* Gap 20px se 5px kar diya */
-            background: #000; padding: 5px; border-radius: 8px; border: 1px solid #333;
-        }
+        /* CONTROLS BOX */
+        .controls-box { padding: 15px 10px; }
 
-        /* Buttons Grid */
-        .btn-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-        }
-        .action-btn {
-            padding: 12px; border-radius: 8px; border: none;
-            color: white; font-weight: 700; cursor: pointer; font-size: 13px;
-            display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none;
-            transition: 0.2s; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        .action-btn:active { transform: scale(0.98); }
-        .tg { background: var(--accent-blue); }
-        .yt { background: var(--accent-red); }
-
-        /* Trick Button Style */
-        .ad-btn {
-            grid-column: span 2; /* Full Width */
+        /* FIX BUTTON */
+        .prominent-fix-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; padding: 15px; margin-bottom: 15px;
             background: linear-gradient(45deg, #ffb400, #ff8800);
-            color: #000; font-size: 14px; animation: glow 2s infinite;
+            color: #000; font-weight: 900; font-size: 16px;
+            border-radius: 12px; text-decoration: none; text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(255, 180, 0, 0.4);
+            animation: glow 2s infinite;
         }
 
-        /* Bottom Ad Wall */
-        .ad-wall {
-            display: grid; grid-template-columns: 1fr; 
-            gap: 10px; margin-top: 15px; padding: 10px;
-            background: #0a0b0e; border-radius: 10px; border: 1px solid #333;
-        }
+        /* VIP AD SPOT */
+        .vip-ad-box { display: flex; justify-content: center; margin-bottom: 10px; background: #000; padding: 5px; border-radius: 8px; border: 1px solid #333; }
+
+        /* SOCIAL BUTTONS */
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .action-btn { padding: 12px; border-radius: 8px; border: none; color: white; font-weight: 700; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: 0.2s; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .tg { background: var(--accent-blue); } .yt { background: var(--accent-red); }
+
+        /* BOTTOM ADS */
+        .ad-wall { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 15px; padding: 10px; background: #0a0b0e; border-radius: 10px; border: 1px solid #333; }
         .ad-slot { background: #111; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; min-height: 260px; border: 1px dashed #444; }
 
-        #loader {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3);
-            border-top: 4px solid var(--accent-red); border-radius: 50%;
-            animation: spin 1s linear infinite; display: none; z-index: 5;
-        }
+        /* ANIMATIONS */
+        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid var(--accent-red); border-radius: 50%; animation: spin 1s linear infinite; display: none; z-index: 5; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        @keyframes glow { 0% { box-shadow: 0 0 5px #ffb400; } 50% { box-shadow: 0 0 20px #ffb400; } 100% { box-shadow: 0 0 5px #ffb400; } }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        @keyframes glow { 0% { box-shadow: 0 0 5px #ffb400; } 50% { box-shadow: 0 0 25px #ffb400; } 100% { box-shadow: 0 0 5px #ffb400; } }
 
-        #secret-menu {
-            display: none; width: 100%; max-width: 800px; margin-top: 20px;
-            background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #333;
-        }
+        /* ADMIN */
+        #secret-menu { display: none; width: 100%; max-width: 800px; margin-top: 20px; background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #333; }
         .secret-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
-        .secret-card {
-            background: #222; padding: 10px; text-align: center; border-radius: 8px;
-            font-size: 12px; font-weight: bold; cursor: pointer; border: 1px solid #333;
-        }
+        .secret-card { background: #222; padding: 10px; text-align: center; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; border: 1px solid #333; }
         .secret-card:hover { background: var(--accent-red); border-color: var(--accent-red); }
     </style>
 </head>
@@ -176,6 +107,11 @@
     <div class="main-container">
         <div class="player-box">
             <div class="video-wrapper" id="videoWrapper">
+                
+                <div class="live-overlay">
+                    <span class="live-dot"></span> LIVE
+                </div>
+
                 <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
                 <div id="quality-menu"><div id="quality-list"></div></div>
                 <video id="video" controls autoplay playsinline></video>
@@ -184,42 +120,27 @@
             </div>
             
             <div class="controls-box">
-                <div class="live-title">
-                    <span id="channel-name">Live Stream</span>
-                    <span class="badge">LIVE</span>
-                </div>
                 
+                <a href="https://exterminatorfalter.com/xx36b9f9p?key=e694586701139358b6949cf0d2041fc4" target="_blank" class="prominent-fix-btn">
+                    <i class="fas fa-sync-alt"></i> ⚡ Fix Lag / Refresh Stream
+                </a>
+
+                <div style="text-align: center; color: #555; font-size: 10px; margin-bottom: 5px;">SPONSORED</div>
                 <div class="vip-ad-box">
                     <script type="text/javascript">
-                        atOptions = {
-                            'key' : 'c54c7d6bd836d9fe66d2c49614f17d00',
-                            'format' : 'iframe',
-                            'height' : 250,
-                            'width' : 300,
-                            'params' : {}
-                        };
+                        atOptions = { 'key' : 'c54c7d6bd836d9fe66d2c49614f17d00', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
                     </script>
                     <script type="text/javascript" src="https://exterminatorfalter.com/c54c7d6bd836d9fe66d2c49614f17d00/invoke.js"></script>
                 </div>
 
                 <div class="vip-ad-box">
                     <script type="text/javascript">
-                        atOptions = {
-                            'key' : 'c54c7d6bd836d9fe66d2c49614f17d00',
-                            'format' : 'iframe',
-                            'height' : 250,
-                            'width' : 300,
-                            'params' : {}
-                        };
+                        atOptions = { 'key' : 'c54c7d6bd836d9fe66d2c49614f17d00', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
                     </script>
                     <script type="text/javascript" src="https://exterminatorfalter.com/c54c7d6bd836d9fe66d2c49614f17d00/invoke.js"></script>
                 </div>
 
                 <div class="btn-grid">
-                    <a href="https://exterminatorfalter.com/xx36b9f9p?key=e694586701139358b6949cf0d2041fc4" target="_blank" class="action-btn ad-btn">
-                        <i class="fas fa-sync-alt"></i> ⚡ Fix Lag / Refresh
-                    </a>
-
                     <a href="https://t.me/MKSSports_3" class="action-btn tg" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
                     <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="action-btn yt" target="_blank"><i class="fab fa-youtube"></i> Subscribe</a>
                 </div>
@@ -242,6 +163,8 @@
 
             </div>
         </div>
+
+        <div id="channel-name" style="display: none;">Live Stream</div>
 
         <div id="secret-menu">
             <div style="margin-bottom:10px; color:#aaa; font-size:12px; border-bottom:1px solid #333; padding-bottom:5px;">
@@ -304,6 +227,7 @@
 
         function loadPlayer(ch) {
             activeCh = ch;
+            // Channel name update karega but user ko nahi dikhega (hidden div)
             document.getElementById('channel-name').innerText = ch.name;
             playStream();
         }
