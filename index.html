@@ -271,7 +271,7 @@
         function toggleQualityMenu() { const menu = document.getElementById('quality-menu'); menu.style.display = (menu.style.display === 'block') ? 'none' : 'block'; }
 
         // 🔥 FAKE VIEWER LOGIC (300 Avg) 🔥
-        let viewerCount = 312; 
+        let viewerCount = 169; 
         const viewerDisplay = document.getElementById('fake-viewers');
         function updateViewers() {
             // Random Direction (+ or -)
@@ -283,12 +283,12 @@
 
             // Boundaries (50 to 800)
             if (viewerCount < 50) viewerCount += 10;
-            if (viewerCount > 800) viewerCount -= 10;
+            if (viewerCount > 500) viewerCount -= 10;
 
             viewerDisplay.innerText = viewerCount.toLocaleString();
         }
-        // Update every 5 seconds
-        setInterval(updateViewers, 5000);
+        // Update every 4 seconds
+        setInterval(updateViewers, 4000);
 
         // 🔥 FAKE SOCIAL NOTIFICATIONS 🔥
         function showToast(msg, icon) {
