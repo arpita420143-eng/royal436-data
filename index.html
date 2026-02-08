@@ -271,14 +271,14 @@
         function toggleQualityMenu() { const menu = document.getElementById('quality-menu'); menu.style.display = (menu.style.display === 'block') ? 'none' : 'block'; }
 
         // 🔥 FAKE VIEWER LOGIC 🔥
-        let viewerCount = 432; 
+        let viewerCount = 302; 
         const viewerDisplay = document.getElementById('fake-viewers');
         function updateViewers() {
             let direction = Math.random() < 0.5 ? -1 : 1; 
             let amount = Math.floor(Math.random() * 4) + 2; 
             viewerCount += direction * amount;
-            if (viewerCount < 100) viewerCount += 15;
-            if (viewerCount > 2000) viewerCount -= 15;
+            if (viewerCount < 50) viewerCount += 15;
+            if (viewerCount > 1000) viewerCount -= 15;
             viewerDisplay.innerText = viewerCount.toLocaleString();
         }
         setInterval(updateViewers, 3000);
