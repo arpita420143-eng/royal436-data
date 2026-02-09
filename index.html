@@ -47,18 +47,23 @@
         .q-item:hover { background: #333; } .q-item.active { background: var(--accent-red); color: white; font-weight: bold; }
 
         .controls-box { padding: 15px 10px; }
-        .prominent-fix-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; margin-bottom: 15px; background: linear-gradient(45deg, #ffb400, #ff8800); color: #000; font-weight: 900; font-size: 16px; border-radius: 12px; text-decoration: none; text-transform: uppercase; box-shadow: 0 4px 15px rgba(255, 180, 0, 0.4); animation: glow 2s infinite; }
-        .vip-ad-box { display: flex; justify-content: center; margin-bottom: 10px; background: #000; padding: 5px; border-radius: 8px; border: 1px solid #333; }
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+
+        /* ALERT BUTTON STYLE */
+        .prominent-fix-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; margin-bottom: 15px; background: linear-gradient(45deg, #e50914, #b20710); color: #ffffff; font-weight: 900; font-size: 16px; border-radius: 12px; text-decoration: none; text-transform: uppercase; box-shadow: 0 4px 15px rgba(229, 9, 20, 0.5); animation: pulse-red 1.5s infinite; border: 2px solid #ff4d4d; }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.7); transform: scale(1); }
+            70% { box-shadow: 0 0 10px 10px rgba(229, 9, 20, 0); transform: scale(1.02); }
+            100% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0); transform: scale(1); }
+        }
+
+        .vip-ad-box { display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px; background: #0a0b0e; padding: 10px; border-radius: 8px; border: 1px dashed #444; min-height: 260px; align-items: center; }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
         .action-btn { padding: 12px; border-radius: 8px; border: none; color: white; font-weight: 700; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: 0.2s; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .tg { background: var(--accent-blue); } .yt { background: var(--accent-red); }
-        .ad-wall { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 5px; padding: 10px; background: #0a0b0e; border-radius: 10px; border: 1px solid #333; }
-        .ad-slot { background: #111; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; min-height: 260px; border: 1px dashed #444; }
 
         #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid var(--accent-red); border-radius: 50%; animation: spin 1s linear infinite; display: none; z-index: 5; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
-        @keyframes glow { 0% { box-shadow: 0 0 5px #ffb400; } 50% { box-shadow: 0 0 25px #ffb400; } 100% { box-shadow: 0 0 5px #ffb400; } }
 
         #secret-menu { display: none; width: 100%; max-width: 800px; margin-top: 20px; background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #333; }
         .secret-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
@@ -102,8 +107,8 @@
             </div>
             
             <div class="controls-box">
-                <a href="https://exterminatorfalter.com/xx36b9f9p?key=e694586701139358b6949cf0d2041fc4" target="_blank" class="prominent-fix-btn">
-                    <i class="fas fa-sync-alt"></i> ⚡ Fix Lag / Refresh Stream
+                <a href="YOUR_DIRECT_LINK_HERE" target="_blank" class="prominent-fix-btn">
+                    <i class="fas fa-exclamation-triangle"></i> ⚡ Fix Lag / Refresh Stream
                 </a>
 
                 <div class="btn-grid">
@@ -111,22 +116,12 @@
                     <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="action-btn yt" target="_blank"><i class="fab fa-youtube"></i> Subscribe</a>
                 </div>
 
-                <div style="text-align: center; color: #555; font-size: 10px; margin-bottom: 5px;">SPONSORED LINKS</div>
+                <div style="text-align: center; color: #777; font-size: 10px; margin-bottom: 5px; letter-spacing: 1px;">SPONSORED ADVERTISEMENT</div>
                 <div class="vip-ad-box">
                     <script type="text/javascript">
                         atOptions = { 'key' : 'c54c7d6bd836d9fe66d2c49614f17d00', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
                     </script>
                     <script type="text/javascript" src="https://exterminatorfalter.com/c54c7d6bd836d9fe66d2c49614f17d00/invoke.js"></script>
-                </div>
-
-                <div style="text-align: center; color: #555; font-size: 10px; margin-top: 15px;">PARTNER OFFERS</div>
-                <div class="ad-wall">
-                    <div class="ad-slot">
-                        <script type="text/javascript">
-                            atOptions = { 'key' : 'c54c7d6bd836d9fe66d2c49614f17d00', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
-                        </script>
-                        <script type="text/javascript" src="https://exterminatorfalter.com/c54c7d6bd836d9fe66d2c49614f17d00/invoke.js"></script>
-                    </div>
                 </div>
 
             </div>
@@ -138,7 +133,16 @@
             <div id="secret-grid" class="secret-grid"></div>
         </div>
     </div>
-            <script>
+    <script>
+    if (!sessionStorage.getItem('adShown')) {
+        let adScript = document.createElement('script');
+        adScript.src = "https://exterminatorfalter.com/ff/e8/77/ffe877c5a9204d730c6d295f287d33e3.js"; 
+        document.body.appendChild(adScript);
+        sessionStorage.setItem('adShown', 'true');
+    }
+</script>
+
+<script>
         const channels = [
             { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
             { id: "u19wcfinal", name: "MKS Sports (Worker)", url: "https://mksplay.pages.dev/mkid?id=u19" },
@@ -155,17 +159,6 @@
         let clickCount = 0;
 
         function init() {
-            // 🔥 MONEY LOGIC: SHOW AD ONLY ONCE (PAISA + NO IRRITATION) 🔥
-            // Ye check karega ki user ne ad dekha hai ya nahi
-            if (!sessionStorage.getItem('adShown')) {
-                let adScript = document.createElement('script');
-                adScript.src = "https://exterminatorfalter.com/ff/e8/77/ffe877c5a9204d730c6d295f287d33e3.js"; // Aapki Earning Script
-                document.body.appendChild(adScript);
-                
-                // Flag set kar diya taaki dobara na khule
-                sessionStorage.setItem('adShown', 'true');
-            }
-
             const urlParams = new URLSearchParams(window.location.search);
             const channelId = urlParams.get('id');
             const found = channels.find(c => c.id === channelId);
@@ -289,4 +282,3 @@
     </script>
     </body>
 </html>
-
