@@ -48,13 +48,21 @@
 
         .controls-box { padding: 15px 10px; }
 
-        /* ALERT BUTTON STYLE */
-        .prominent-fix-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; margin-bottom: 15px; background: linear-gradient(45deg, #e50914, #b20710); color: #ffffff; font-weight: 900; font-size: 16px; border-radius: 12px; text-decoration: none; text-transform: uppercase; box-shadow: 0 4px 15px rgba(229, 9, 20, 0.5); animation: pulse-red 1.5s infinite; border: 2px solid #ff4d4d; }
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.7); transform: scale(1); }
-            70% { box-shadow: 0 0 10px 10px rgba(229, 9, 20, 0); transform: scale(1.02); }
-            100% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0); transform: scale(1); }
+        /* 🔥 NEW TOXIC YELLOW HAZARD BUTTON (High CTR) 🔥 */
+        .prominent-fix-btn { 
+            position: relative; display: flex; align-items: center; justify-content: center; gap: 10px; 
+            width: 100%; padding: 16px; margin-bottom: 15px; 
+            background: linear-gradient(45deg, #ffcc00, #ff9900); color: #000000; 
+            font-weight: 900; font-size: 18px; border-radius: 12px; 
+            text-decoration: none; text-transform: uppercase; border: 2px solid #ffcc00; 
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.6); overflow: hidden; 
+            animation: pulse-yellow 2s infinite; 
         }
+        /* Shine Effect Logic */
+        .prominent-fix-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); animation: shine 2.5s infinite; }
+        
+        @keyframes pulse-yellow { 0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 204, 0, 0.5); } 50% { transform: scale(1.02); box-shadow: 0 0 25px rgba(255, 204, 0, 0.9); } 100% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 204, 0, 0.5); } }
+        @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
 
         .vip-ad-box { display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px; background: #0a0b0e; padding: 10px; border-radius: 8px; border: 1px dashed #444; min-height: 260px; align-items: center; }
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
@@ -71,7 +79,7 @@
         .secret-card:hover { background: var(--accent-red); border-color: var(--accent-red); }
     </style>
 </head>
-<body>
+    <body>
 
     <div class="header">
         <div class="logo" onclick="unlockSecret()">MATCH <span>MANAS</span></div>
@@ -133,7 +141,7 @@
             <div id="secret-grid" class="secret-grid"></div>
         </div>
     </div>
-    <script>
+        <script>
     if (!sessionStorage.getItem('adShown')) {
         let adScript = document.createElement('script');
         adScript.src = "https://exterminatorfalter.com/ff/e8/77/ffe877c5a9204d730c6d295f287d33e3.js"; 
@@ -282,3 +290,4 @@
     </script>
     </body>
 </html>
+
