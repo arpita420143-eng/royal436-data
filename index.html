@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Match Manas - Direct Live</title>
+    <title>Match Manas - Premium Live</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -11,27 +11,29 @@
         :root { --bg-main: #0a0b0e; --bg-card: #14161c; --accent-red: #e50914; --accent-blue: #0088cc; --text-main: #ffffff; }
         body { margin: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
 
+        /* HEADER */
         .header { position: sticky; top: 0; z-index: 100; background: rgba(20, 22, 28, 0.95); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #222; }
         .logo { font-size: 18px; font-weight: 900; color: white; cursor: pointer; user-select: none; }
         .logo span { color: var(--accent-red); }
         .head-btns { display: flex; gap: 8px; }
-        .h-btn { padding: 6px 10px; border-radius: 50px; font-size: 10px; font-weight: 700; text-decoration: none; color: white; }
+        .h-btn { padding: 6px 12px; border-radius: 50px; font-size: 11px; font-weight: 700; text-decoration: none; color: white; }
         .hb-tg { background: var(--accent-blue); } .hb-yt { background: var(--accent-red); }
 
         .main-container { flex: 1; padding: 5px; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
-        .player-box { width: 100%; background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid #333; position: relative; }
         
-        /* VIDEO WRAPPER & QUALITY BUTTON */
+        /* PLAYER & QUALITY */
+        .player-box { width: 100%; background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid #333; position: relative; }
         .video-wrapper { position: relative; width: 100%; background: #000; aspect-ratio: 16/9; }
         video { width: 100%; height: 100%; display: block; }
         #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
         #iframe-box iframe { width: 100%; height: 100%; border: none; }
 
         .settings-btn { position: absolute; top: 10px; right: 10px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 6px; cursor: pointer; display: none; }
-        #quality-menu { position: absolute; top: 45px; right: 10px; z-index: 30; background: rgba(15, 15, 15, 0.95); border: 1px solid #444; border-radius: 8px; width: 120px; display: none; overflow: hidden; }
+        #quality-menu { position: absolute; top: 45px; right: 10px; z-index: 30; background: rgba(15, 15, 15, 0.95); border: 1px solid #444; border-radius: 8px; width: 120px; display: none; }
         .q-item { padding: 10px; font-size: 12px; color: #ddd; cursor: pointer; border-bottom: 1px solid #333; }
-        .q-item:hover { background: var(--accent-red); color: white; }
+        .q-item:hover { background: var(--accent-red); }
 
+        /* YELLOW FIX BUTTON */
         .prominent-fix-btn { 
             display: flex; align-items: center; justify-content: center; gap: 10px; 
             width: 100%; padding: 16px; margin-top: 15px; margin-bottom: 10px; 
@@ -41,15 +43,18 @@
         }
         @keyframes pulse-yellow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 
+        /* GRID */
         .channel-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px 5px; }
-        .channel-card { background: var(--bg-card); border-radius: 12px; padding: 15px; text-align: center; border: 1px solid #333; cursor: pointer; }
-        .channel-card img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 8px; }
+        @media (min-width: 768px) { .channel-grid { grid-template-columns: repeat(4, 1fr); } }
+        .channel-card { background: var(--bg-card); border-radius: 12px; padding: 15px; text-align: center; border: 1px solid #333; cursor: pointer; transition: 0.3s; }
+        .channel-card:hover { border-color: var(--accent-red); transform: translateY(-3px); }
+        .channel-card img { width: 50px; height: 50px; object-fit: contain; margin-bottom: 8px; border-radius: 5px; background: white; padding: 2px; }
 
+        /* ADMIN */
         #secret-menu { display: none; background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid var(--accent-red); margin: 15px 0; }
         .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; background: #000; border: 1px solid #444; color: #fff; border-radius: 5px; }
 
         #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--accent-red); border-radius: 50%; animation: spin 1s linear infinite; display: none; z-index: 5; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -67,7 +72,6 @@
             <div class="video-wrapper">
                 <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
                 <div id="quality-menu"><div id="quality-list"></div></div>
-                
                 <video id="video" controls autoplay playsinline></video>
                 <div id="iframe-box"></div>
                 <div id="loader"></div>
@@ -85,27 +89,41 @@
         </div>
 
         <div id="secret-menu">
+            <h4 style="color:var(--accent-red); margin-top:0;">ADMIN UPDATER</h4>
             <select id="admin-select" class="admin-input"></select>
-            <input type="text" id="admin-url" class="admin-input" placeholder="New Link">
-            <button onclick="saveAdminLink()" style="width:100%; padding:10px; background:var(--accent-red); color:white; border:none; border-radius:5px;">UPDATE</button>
+            <input type="text" id="admin-url" class="admin-input" placeholder="Paste Link">
+            <button onclick="saveAdminLink()" style="width:100%; padding:10px; background:var(--accent-red); color:white; border:none; border-radius:5px;">UPDATE LINK 🚀</button>
+            <button onclick="localStorage.clear(); location.reload();" style="width:100%; padding:5px; margin-top:10px; background:#333; color:#fff; border:none; font-size:10px;">RESET ALL CHANNELS</button>
         </div>
 
+        <h3 style="padding: 10px 5px; font-size: 16px;">LIVE CHANNELS</h3>
         <div class="channel-grid" id="main-grid"></div>
     </div>
 
     <script type='text/javascript' src='//exterminatorfalter.com/ff/e8/77/ffe877c5a9204d730c6d295f287d33e3.js'></script>
 
 <script>
-    const defaultChannels = [
+    const allChannels = [
         { id: "willow", name: "Willow HD", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Willow_TV_logo.png/640px-Willow_TV_logo.png", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
+        { id: "worker", name: "MKS Worker", logo: "https://via.placeholder.com/60?text=MKS", url: "https://mksplay.pages.dev/mkid?id=t20wc" },
+        { id: "yt", name: "YouTube Live", logo: "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png", url: "https://www.youtube.com/embed/CSTRAWxWBwQ" },
         { id: "starhindi", name: "Star Sports 1 Hindi", logo: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Star_Sports_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=174" },
         { id: "ss3", name: "Star Sports 3", logo: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Star_Sports_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=147" },
         { id: "hungama", name: "Hungama", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Hungama_TV_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=1391" },
         { id: "disney", name: "Disney", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Disney_Channel_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=1373" },
-        { id: "pogo", name: "Pogo", logo: "https://upload.wikimedia.org/wikipedia/commons/0/0c/Pogo_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=559" }
+        { id: "pogo", name: "Pogo", logo: "https://upload.wikimedia.org/wikipedia/commons/0/0c/Pogo_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=559" },
+        { id: "discovery", name: "Discovery", logo: "https://upload.wikimedia.org/wikipedia/commons/4/41/Discovery_Channel_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=242" },
+        { id: "stargold", name: "Star Gold", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7f/Star_Gold_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=1125" },
+        { id: "stargold2", name: "Star Gold 2", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7f/Star_Gold_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=1154" },
+        { id: "ss_sel2", name: "Star Sports Select 2", logo: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Star_Sports_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=301" },
+        { id: "shemaroo", name: "Shemaroo TV", logo: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Shemaroo_TV_Logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=1961" },
+        { id: "starplus", name: "Star Plus", logo: "https://upload.wikimedia.org/wikipedia/commons/f/f6/Star_Plus_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=1116" }
     ];
 
-    let channels = JSON.parse(localStorage.getItem('mks_final_v2')) || defaultChannels;
+    // YEH LINE ZAROORI HAI: Purane browser data ko update karne ke liye
+    let saved = localStorage.getItem('mks_v3_data');
+    let channels = saved ? JSON.parse(saved) : allChannels;
+
     let hls = null;
     let clickCount = 0;
 
@@ -127,20 +145,11 @@
         });
     }
 
-    function unlockSecret() {
-        if (++clickCount === 5) {
-            let pass = prompt("Password:");
-            if (pass === "manas") document.getElementById('secret-menu').style.display = 'block';
-            clickCount = 0;
-        }
-    }
-
     function loadPlayer(ch) {
         const video = document.getElementById('video');
         const iframeBox = document.getElementById('iframe-box');
         const settingsBtn = document.getElementById('settings-btn');
         document.getElementById('loader').style.display = 'block';
-        
         if(hls) hls.destroy();
         video.style.display = 'none';
         iframeBox.style.display = 'none';
@@ -161,7 +170,7 @@
             }
         } else {
             iframeBox.style.display = 'block';
-            iframeBox.innerHTML = `<iframe src="${ch.url}" allowfullscreen></iframe>`;
+            iframeBox.innerHTML = `<iframe src="${ch.url}" allowfullscreen scrolling="no"></iframe>`;
             document.getElementById('loader').style.display = 'none';
         }
     }
@@ -169,15 +178,21 @@
     function generateQualityMenu() {
         const list = document.getElementById('quality-list');
         list.innerHTML = '<div class="q-item" onclick="setQuality(-1)">Auto</div>';
-        hls.levels.forEach((l, i) => {
-            list.innerHTML += `<div class="q-item" onclick="setQuality(${i})">${l.height}p</div>`;
-        });
+        hls.levels.forEach((l, i) => { list.innerHTML += `<div class="q-item" onclick="setQuality(${i})">${l.height}p</div>`; });
     }
 
     function setQuality(i) { hls.currentLevel = i; toggleQualityMenu(); }
     function toggleQualityMenu() { 
         const m = document.getElementById('quality-menu');
         m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function unlockSecret() {
+        if (++clickCount === 5) {
+            let pass = prompt("Password:");
+            if (pass === "manas") document.getElementById('secret-menu').style.display = 'block';
+            clickCount = 0;
+        }
     }
 
     function fillAdminSelect() {
@@ -189,9 +204,9 @@
         const url = document.getElementById('admin-url').value;
         if(url) {
             channels.find(c => c.id === id).url = url;
-            localStorage.setItem('mks_final_v2', JSON.stringify(channels));
+            localStorage.setItem('mks_v3_data', JSON.stringify(channels));
             alert("Updated!");
-            location.reload();
+            renderGrid();
         }
     }
 
