@@ -3,80 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Match Manas - Direct Live</title>
+    <title>Match Manas - Premium Live</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- PREMIUM DARK THEME --- */
-        :root { --bg-main: #0a0b0e; --bg-card: #14161c; --accent-red: #e50914; --accent-blue: #0088cc; --accent-yellow: #ffb400; --text-main: #ffffff; }
+        :root { --bg-main: #0a0b0e; --bg-card: #14161c; --accent-red: #e50914; --accent-blue: #0088cc; --text-main: #ffffff; }
         body { margin: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
 
         /* HEADER */
         .header { position: sticky; top: 0; z-index: 100; background: rgba(20, 22, 28, 0.95); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #222; backdrop-filter: blur(10px); }
-        .logo { font-size: 18px; font-weight: 900; letter-spacing: 1px; color: white; cursor: pointer; user-select: none; }
-        .logo span { color: var(--accent-red); text-shadow: 0 0 10px var(--accent-red); }
-        .head-btns { display: flex; gap: 8px; }
-        .h-btn { padding: 6px 10px; border-radius: 50px; font-size: 10px; font-weight: 700; text-decoration: none; color: white; display: flex; align-items: center; gap: 5px; transition: 0.3s; }
-        .hb-tg { background: var(--accent-blue); } .hb-yt { background: var(--accent-red); }
+        .logo { font-size: 18px; font-weight: 900; color: white; cursor: pointer; user-select: none; }
+        .logo span { color: var(--accent-red); }
 
-        /* NEWS TICKER */
-        .news-ticker-box { background: #e50914; color: white; font-size: 12px; font-weight: 800; letter-spacing: 0.5px; padding: 8px 0; overflow: hidden; white-space: nowrap; position: relative; border-bottom: 2px solid #b20710; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 90; }
-        .ticker-content { display: inline-block; white-space: nowrap; animation: scroll-left 20s linear infinite; padding-left: 100%; }
-        @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-
-        /* CONTAINER */
-        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 5px; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
-        .player-box { width: 100%; max-width: 800px; background: var(--bg-card); border-radius: 12px; overflow: hidden; box-shadow: 0 10px 50px rgba(0,0,0,0.7); border: 1px solid #333; position: relative; margin-top: 5px; }
-
-        /* VIDEO WRAPPER */
-        .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; aspect-ratio: 16/9; overflow: hidden; border-radius: 12px; }
-        video { width: 100%; height: 100%; display: block; object-fit: contain; }
+        /* MAIN CONTAINER */
+        .main-container { flex: 1; padding: 5px; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
+        .player-box { width: 100%; background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid #333; position: relative; }
+        .video-wrapper { position: relative; width: 100%; background: #000; aspect-ratio: 16/9; }
+        video { width: 100%; height: 100%; display: block; }
         #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; background: #000; }
         #iframe-box iframe { width: 100%; height: 100%; border: none; }
 
-        /* CONTROLS & ADS */
-        .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(0, 0, 0, 0.6); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; gap: 8px; pointer-events: none; }
-        .live-dot { width: 8px; height: 8px; background: #e50914; border-radius: 50%; box-shadow: 0 0 10px #e50914; animation: blink 1.2s infinite ease-in-out; }
-        .live-sep { width: 1px; height: 12px; background: rgba(255,255,255,0.3); }
-        .view-count-box { display: flex; align-items: center; gap: 4px; color: #fff; font-variant-numeric: tabular-nums; }
-
-        .settings-btn { position: absolute; top: 10px; right: 10px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 6px; cursor: pointer; backdrop-filter: blur(5px); font-size: 16px; transition: 0.3s; display: none; }
-        #quality-menu { position: absolute; top: 45px; right: 10px; z-index: 30; background: rgba(15, 15, 15, 0.95); border: 1px solid #444; border-radius: 8px; width: 140px; display: none; overflow: hidden; }
-        .q-item { padding: 10px 12px; font-size: 13px; color: #ddd; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .q-item:hover { background: #333; } .q-item.active { background: var(--accent-red); color: white; font-weight: bold; }
-
-        .controls-box { padding: 15px 10px; }
-
-        /* 🔥 NEW TOXIC YELLOW HAZARD BUTTON (High CTR) 🔥 */
-        .prominent-fix-btn { 
-            position: relative; display: flex; align-items: center; justify-content: center; gap: 10px; 
-            width: 100%; padding: 16px; margin-bottom: 15px; 
-            background: linear-gradient(45deg, #ffcc00, #ff9900); color: #000000; 
-            font-weight: 900; font-size: 18px; border-radius: 12px; 
-            text-decoration: none; text-transform: uppercase; border: 2px solid #ffcc00; 
-            box-shadow: 0 0 15px rgba(255, 204, 0, 0.6); overflow: hidden; 
-            animation: pulse-yellow 2s infinite; 
-        }
-        /* Shine Effect Logic */
-        .prominent-fix-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); animation: shine 2.5s infinite; }
+        /* PREMIUM CHANNEL GRID */
+        .channel-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px 5px; }
+        @media (min-width: 768px) { .channel-grid { grid-template-columns: repeat(4, 1fr); } }
         
-        @keyframes pulse-yellow { 0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 204, 0, 0.5); } 50% { transform: scale(1.02); box-shadow: 0 0 25px rgba(255, 204, 0, 0.9); } 100% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 204, 0, 0.5); } }
-        @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
+        .channel-card { background: var(--bg-card); border-radius: 12px; padding: 15px; text-align: center; border: 1px solid #333; cursor: pointer; transition: 0.3s; }
+        .channel-card:hover { border-color: var(--accent-red); transform: translateY(-5px); }
+        .channel-card img { width: 55px; height: 55px; object-fit: contain; margin-bottom: 10px; border-radius: 8px; background: #fff; padding: 4px; }
+        .channel-card h4 { margin: 0; font-size: 13px; font-weight: 700; color: #fff; }
+        .channel-card p { margin: 5px 0 0; font-size: 10px; color: #777; text-transform: uppercase; }
 
-        .vip-ad-box { display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px; background: #0a0b0e; padding: 10px; border-radius: 8px; border: 1px dashed #444; min-height: 260px; align-items: center; }
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .action-btn { padding: 12px; border-radius: 8px; border: none; color: white; font-weight: 700; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: 0.2s; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .tg { background: var(--accent-blue); } .yt { background: var(--accent-red); }
+        /* ADMIN PANEL */
+        #secret-menu { display: none; background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid var(--accent-red); margin: 15px 5px; }
+        .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; background: #000; border: 1px solid #444; color: #fff; border-radius: 6px; box-sizing: border-box; }
+        .admin-btn { background: var(--accent-red); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid var(--accent-red); border-radius: 50%; animation: spin 1s linear infinite; display: none; z-index: 5; }
+        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--accent-red); border-radius: 50%; animation: spin 1s linear infinite; display: none; z-index: 5; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
-
-        #secret-menu { display: none; width: 100%; max-width: 800px; margin-top: 20px; background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #333; }
-        .secret-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
-        .secret-card { background: #222; padding: 10px; text-align: center; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; border: 1px solid #333; }
-        .secret-card:hover { background: var(--accent-red); border-color: var(--accent-red); }
     </style>
 </head>
 <body>
@@ -84,202 +48,127 @@
     <div class="header">
         <div class="logo" onclick="unlockSecret()">MATCH <span>MANAS</span></div>
         <div class="head-btns">
-            <a href="https://t.me/MKSSports_3" class="h-btn hb-tg" target="_blank"><i class="fab fa-telegram-plane"></i> Join</a>
-            <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="h-btn hb-yt" target="_blank"><i class="fab fa-youtube"></i> Sub</a>
-        </div>
-    </div>
-
-    <div class="news-ticker-box">
-        <div class="ticker-content">
-            🚀 JOIN TELEGRAM FOR TOSS, SESSION & MATCH WINNER REPORT! 🏆 100% ACCURATE MATCH PREDICTION! ⚡ CLICK JOIN NOW! 🚀 &nbsp;&nbsp;&nbsp;&nbsp; 🔴 WATCH LIVE MATCH HD FREE! 🔴
+            <a href="https://t.me/MKSSports_3" target="_blank" style="text-decoration:none; color:white; background:var(--accent-blue); padding:6px 15px; border-radius:20px; font-size:11px; font-weight:bold;">Telegram</a>
         </div>
     </div>
 
     <div class="main-container">
         <div class="player-box">
             <div class="video-wrapper" id="videoWrapper">
-                
-                <div class="live-overlay">
-                    <span class="live-dot"></span> LIVE
-                    <span class="live-sep"></span>
-                    <span class="view-count-box">
-                        <i class="fas fa-eye"></i> <span id="fake-viewers">312</span>
-                    </span>
-                </div>
-
-                <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
-                <div id="quality-menu"><div id="quality-list"></div></div>
                 <video id="video" controls autoplay playsinline></video>
                 <div id="iframe-box"></div>
                 <div id="loader"></div>
             </div>
-            
-            <div class="controls-box">
-                <a href="https://href.li/?https://reportallege.com/uz5gxng1g?key=64a81be87aa8191cfc7d82578512a0c3" target="_blank" class="prominent-fix-btn">
-                    <i class="fas fa-exclamation-triangle"></i> ⚡ Fix Lag / Refresh Stream
-                </a>
-
-                <div class="btn-grid">
-                    <a href="https://t.me/MKSSports_3" class="action-btn tg" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
-                    <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="action-btn yt" target="_blank"><i class="fab fa-youtube"></i> Subscribe</a>
-                </div>
-
-                <div style="text-align: center; color: #777; font-size: 10px; margin-bottom: 5px; letter-spacing: 1px;">SPONSORED ADVERTISEMENT</div>
-                <div class="vip-ad-box">
-                    <script type="text/javascript">
-                        atOptions = { 'key' : 'c54c7d6bd836d9fe66d2c49614f17d00', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
-                    </script>
-                    <script type="text/javascript" src="https://exterminatorfalter.com/c54c7d6bd836d9fe66d2c49614f17d00/invoke.js"></script>
-                </div>
-
-            </div>
         </div>
 
-        <div id="channel-name" style="display: none;">Live Stream</div>
         <div id="secret-menu">
-            <div style="margin-bottom:10px; color:#aaa; font-size:12px; border-bottom:1px solid #333; padding-bottom:5px;">ADMIN PANEL - CHANGE CHANNEL</div>
-            <div id="secret-grid" class="secret-grid"></div>
+            <h4 style="margin-top:0; color:var(--accent-red);">UPDATE STREAM LINKS</h4>
+            <select id="admin-select" class="admin-input"></select>
+            <input type="text" id="admin-url" class="admin-input" placeholder="Paste New URL Here">
+            <button class="admin-btn" onclick="saveAdminLink()">Update Now 🚀</button>
         </div>
+
+        <h3 style="padding: 15px 5px 5px; font-size: 16px;">ALL CHANNELS</h3>
+        <div class="channel-grid" id="main-grid"></div>
     </div>
-    <script type='text/javascript' src='//exterminatorfalter.com/ff/e8/77/ffe877c5a9204d730c6d295f287d33e3.js'></script>
 
 <script>
-        const channels = [
-            { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
-            { id: "haterskigandmaro", name: "MKS Sports (Worker)", url: "https://mksplay.pages.dev/mkid?id=t20wc" },
-            { id: "jokerbrand", name: "MKS sports", url: "https://mksplay.pages.dev/mkid?id=t20wc" },
-            { id: "ytlive", name: "YouTube Live", url: "https://www.youtube.com/embed/CSTRAWxWBwQ" },
-            { id: "HINDI", name: "Star Sports 1 Hindi", url: "https://mks-live.pages.dev/mkstar?channel_id=174"},
-            
-            // 🔥 YOUR UPLOADED FILE (GoFile) 🔥
-            { id: "myfile", name: "Live Match", url: "https://mksplay.pages.dev/mkid?id=t20wc" }
-        ];
+    // COMBINED CHANNELS (Purane + Naye 10)
+    const defaultChannels = [
+        // Purane Channels
+        { id: "willow", name: "Willow HD", lang: "Cricket", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Willow_TV_logo.png/640px-Willow_TV_logo.png", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
+        { id: "haterskigandmaro", name: "MKS Sports (Worker)", lang: "Multi", logo: "https://via.placeholder.com/60?text=MKS", url: "https://mksplay.pages.dev/mkid?id=t20wc" },
+        { id: "ytlive", name: "YouTube Live", lang: "Web", logo: "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png", url: "https://www.youtube.com/embed/CSTRAWxWBwQ" },
+        { id: "HINDI", name: "Star Sports 1 Hindi", lang: "Cricket", logo: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Star_Sports_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=174" },
+        
+        // Naye 10 Channels
+        { id: "hungama", name: "Hungama", lang: "Kids", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Hungama_TV_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=1391" },
+        { id: "disney", name: "Disney", lang: "Kids", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Disney_Channel_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=1373" },
+        { id: "ss3", name: "Star Sports 3", lang: "Sports", logo: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Star_Sports_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=147" },
+        { id: "ss-select2", name: "Star Sports Select 2 HD", lang: "Sports", logo: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Star_Sports_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=301" },
+        { id: "shemaroo", name: "Shemaroo TV", lang: "Entertainment", logo: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Shemaroo_TV_Logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=1961" },
+        { id: "star-plus", name: "Star Plus", lang: "Entertainment", logo: "https://upload.wikimedia.org/wikipedia/commons/f/f6/Star_Plus_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=1116" },
+        { id: "star-gold", name: "Star Gold", lang: "Movies", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7f/Star_Gold_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=1125" },
+        { id: "star-gold2", name: "Star Gold 2", lang: "Movies", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7f/Star_Gold_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=1154" },
+        { id: "pogo", name: "Pogo", lang: "Kids", logo: "https://upload.wikimedia.org/wikipedia/commons/0/0c/Pogo_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=559" },
+        { id: "discovery", name: "Discovery", lang: "Infotainment", logo: "https://upload.wikimedia.org/wikipedia/commons/4/41/Discovery_Channel_logo.png", url: "https://mks-live.pages.dev/mkstar?channel_id=242" }
+    ];
 
-        let hls = null;
-        let activeCh = null;
-        let clickCount = 0;
+    let channels = JSON.parse(localStorage.getItem('mks_combined_channels')) || defaultChannels;
+    let hls = null;
+    let clickCount = 0;
 
-        function init() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const channelId = urlParams.get('id');
-            const found = channels.find(c => c.id === channelId);
-            activeCh = found ? found : channels[0];
-            loadPlayer(activeCh);
-            renderSecretMenu();
+    function init() {
+        renderGrid();
+        fillAdminSelect();
+        loadPlayer(channels[0]);
+    }
+
+    function renderGrid() {
+        const grid = document.getElementById('main-grid');
+        grid.innerHTML = "";
+        channels.forEach(ch => {
+            const card = document.createElement('div');
+            card.className = 'channel-card';
+            card.onclick = () => { loadPlayer(ch); window.scrollTo({top:0, behavior:'smooth'}); };
+            card.innerHTML = `<img src="${ch.logo}" onerror="this.src='https://via.placeholder.com/60?text=TV'"><h4>${ch.name}</h4><p>${ch.lang}</p>`;
+            grid.appendChild(card);
+        });
+    }
+
+    function unlockSecret() {
+        clickCount++;
+        if (clickCount === 5) {
+            clickCount = 0;
+            let password = prompt("Admin Password:");
+            if (password === "manas") { document.getElementById('secret-menu').style.display = 'block'; }
         }
+    }
 
-        function unlockSecret() {
-            clickCount++;
-            if (clickCount === 5) {
-                clickCount = 0;
-                let password = prompt("Enter Admin Password:");
-                if (password === "manas") { document.getElementById('secret-menu').style.display = 'block'; }
+    function fillAdminSelect() {
+        const select = document.getElementById('admin-select');
+        select.innerHTML = channels.map(ch => `<option value="${ch.id}">${ch.name}</option>`).join('');
+    }
+
+    function saveAdminLink() {
+        const id = document.getElementById('admin-select').value;
+        const newUrl = document.getElementById('admin-url').value;
+        if(newUrl) {
+            const ch = channels.find(c => c.id === id);
+            ch.url = newUrl;
+            localStorage.setItem('mks_combined_channels', JSON.stringify(channels));
+            alert(ch.name + " updated!");
+            renderGrid();
+        }
+    }
+
+    function loadPlayer(ch) {
+        const video = document.getElementById('video');
+        const iframeBox = document.getElementById('iframe-box');
+        const loader = document.getElementById('loader');
+        loader.style.display = 'block';
+
+        if(hls) { hls.destroy(); hls = null; }
+        video.style.display = 'none';
+        iframeBox.style.display = 'none';
+        iframeBox.innerHTML = "";
+
+        if (ch.url.includes('.m3u8')) {
+            video.style.display = 'block';
+            if (Hls.isSupported()) {
+                hls = new Hls();
+                hls.loadSource(ch.url);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => { loader.style.display = 'none'; video.play(); });
             }
+        } else {
+            iframeBox.style.display = 'block';
+            iframeBox.innerHTML = `<iframe src="${ch.url}" allowfullscreen scrolling="no"></iframe>`;
+            loader.style.display = 'none';
         }
+    }
 
-        function renderSecretMenu() {
-            const grid = document.getElementById('secret-grid');
-            grid.innerHTML = "";
-            channels.forEach(ch => {
-                const btn = document.createElement('div');
-                btn.className = 'secret-card';
-                btn.innerText = ch.name;
-                btn.onclick = () => {
-                    loadPlayer(ch);
-                    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?id=' + ch.id;
-                    window.history.pushState({path:newUrl}, '', newUrl);
-                    document.getElementById('secret-menu').style.display = 'none';
-                };
-                grid.appendChild(btn);
-            });
-        }
-
-        function loadPlayer(ch) {
-            activeCh = ch;
-            document.getElementById('channel-name').innerText = ch.name;
-            playStream();
-        }
-
-        function playStream() {
-            const wrapper = document.getElementById('videoWrapper');
-            const video = document.getElementById('video');
-            const iframeBox = document.getElementById('iframe-box');
-            const loader = document.getElementById('loader');
-            const settingsBtn = document.getElementById('settings-btn');
-            
-            let url = activeCh.url; 
-            loader.style.display = 'block';
-
-            if(hls) { hls.destroy(); hls = null; }
-            document.getElementById('quality-menu').style.display = 'none';
-            video.src = "";
-            video.removeAttribute('src');
-
-            if ((url.includes('.m3u8') || url.includes('.mp4')) && !url.includes('embed=true')) {
-                wrapper.style.height = "100%"; 
-                wrapper.style.aspectRatio = "16/9"; 
-                iframeBox.style.display = 'none'; 
-                iframeBox.innerHTML = "";
-                video.style.display = 'block';
-                
-                settingsBtn.style.display = url.includes('.m3u8') ? 'block' : 'none';
-
-                if (url.includes('.m3u8') && Hls.isSupported()) {
-                    hls = new Hls(); 
-                    hls.loadSource(url); 
-                    hls.attachMedia(video);
-                    hls.on(Hls.Events.MANIFEST_PARSED, () => { 
-                        loader.style.display = 'none'; 
-                        video.play().catch(e => { video.muted = true; video.play(); }); 
-                        generateQualityOptions(); 
-                    });
-                } else {
-                    video.src = url;
-                    video.load();
-                    video.muted = true; 
-                    var p = video.play();
-                    if(p !== undefined) {
-                        p.then(() => { loader.style.display = 'none'; })
-                         .catch(e => { loader.style.display = 'none'; video.controls = true; });
-                    }
-                }
-            } else {
-                wrapper.style.aspectRatio = "auto"; 
-                wrapper.style.height = "550px"; 
-                video.style.display = 'none'; 
-                video.pause(); 
-                settingsBtn.style.display = 'none';
-                iframeBox.style.display = 'block';
-                iframeBox.innerHTML = `<iframe src="${url}" width="100%" height="100%" frameborder="0" allowfullscreen scrolling="no" allow="autoplay; encrypted-media"></iframe>`;
-                loader.style.display = 'none';
-            }
-        }
-
-        function generateQualityOptions() {
-            const list = document.getElementById('quality-list');
-            list.innerHTML = '<div class="q-item active" onclick="setQuality(-1)">Auto</div>';
-            if(hls && hls.levels.length > 0) {
-                hls.levels.forEach((level, index) => { if (level.height) list.innerHTML += `<div class="q-item" onclick="setQuality(${index})">${level.height}p</div>`; });
-            }
-        }
-
-        function setQuality(index) { if(hls) { hls.currentLevel = index; document.getElementById('quality-menu').style.display = 'none'; } }
-        function toggleQualityMenu() { const menu = document.getElementById('quality-menu'); menu.style.display = (menu.style.display === 'block') ? 'none' : 'block'; }
-
-        // 🔥 FAKE VIEWER LOGIC 🔥
-        let viewerCount = 312; 
-        const viewerDisplay = document.getElementById('fake-viewers');
-        function updateViewers() {
-            let direction = Math.random() < 0.5 ? -1 : 1; 
-            let amount = Math.floor(Math.random() * 2) + 2; 
-            viewerCount += direction * amount;
-            if (viewerCount < 50) viewerCount += 10;
-            if (viewerCount > 800) viewerCount -= 10;
-            viewerDisplay.innerText = viewerCount.toLocaleString();
-        }
-        setInterval(updateViewers, 5000);
-
-        init();
-    </script>
-    </body>
+    init();
+</script>
+</body>
 </html>
