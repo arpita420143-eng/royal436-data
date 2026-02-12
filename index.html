@@ -41,7 +41,7 @@
         .live-sep { width: 1px; height: 12px; background: rgba(255,255,255,0.3); }
         .view-count-box { display: flex; align-items: center; gap: 4px; color: #fff; font-variant-numeric: tabular-nums; }
 
-.settings-btn { position: absolute; top: 10px; right: 10px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 6px; cursor: pointer; backdrop-filter: blur(5px); font-size: 16px; transition: 0.3s; display: none; }
+        .settings-btn { position: absolute; top: 10px; right: 10px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 6px; cursor: pointer; backdrop-filter: blur(5px); font-size: 16px; transition: 0.3s; display: none; }
         #quality-menu { position: absolute; top: 45px; right: 10px; z-index: 30; background: rgba(15, 15, 15, 0.95); border: 1px solid #444; border-radius: 8px; width: 140px; display: none; overflow: hidden; }
         .q-item { padding: 10px 12px; font-size: 13px; color: #ddd; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .q-item:hover { background: #333; } .q-item.active { background: var(--accent-red); color: white; font-weight: bold; }
@@ -81,7 +81,7 @@
 </head>
 <body>
 
-<div class="header">
+    <div class="header">
         <div class="logo" onclick="unlockSecret()">MATCH <span>MANAS</span></div>
         <div class="head-btns">
             <a href="https://t.me/MKSSports_3" class="h-btn hb-tg" target="_blank"><i class="fab fa-telegram-plane"></i> Join</a>
@@ -148,8 +148,7 @@
             { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
             { id: "haterskigandmaro", name: "MKS Sports (Worker)", url: "https://mksplay.pages.dev/mkid?id=t20wc" },
             { id: "jokerbrand", name: "MKS sports", url: "https://mksplay.pages.dev/mkid?id=t20wc" },
-
-{ id: "ytlive", name: "YouTube Live", url: "https://www.youtube.com/embed/CSTRAWxWBwQ" },
+            { id: "ytlive", name: "YouTube Live", url: "https://www.youtube.com/embed/CSTRAWxWBwQ" },
             { id: "HINDI", name: "Star Sports 1 Hindi", url: "https://mks-live.pages.dev/mkstar?channel_id=174"},
             
             // 🔥 YOUR UPLOADED FILE (GoFile) 🔥
@@ -239,8 +238,7 @@
                     video.load();
                     video.muted = true; 
                     var p = video.play();
-
-if(p !== undefined) {
+                    if(p !== undefined) {
                         p.then(() => { loader.style.display = 'none'; })
                          .catch(e => { loader.style.display = 'none'; video.controls = true; });
                     }
@@ -252,7 +250,7 @@ if(p !== undefined) {
                 video.pause(); 
                 settingsBtn.style.display = 'none';
                 iframeBox.style.display = 'block';
-                iframeBox.innerHTML = <iframe src="${url}" width="100%" height="100%" frameborder="0" allowfullscreen scrolling="no" allow="autoplay; encrypted-media"></iframe>;
+                iframeBox.innerHTML = `<iframe src="${url}" width="100%" height="100%" frameborder="0" allowfullscreen scrolling="no" allow="autoplay; encrypted-media"></iframe>`;
                 loader.style.display = 'none';
             }
         }
@@ -261,7 +259,7 @@ if(p !== undefined) {
             const list = document.getElementById('quality-list');
             list.innerHTML = '<div class="q-item active" onclick="setQuality(-1)">Auto</div>';
             if(hls && hls.levels.length > 0) {
-                hls.levels.forEach((level, index) => { if (level.height) list.innerHTML += <div class="q-item" onclick="setQuality(${index})">${level.height}p</div>; });
+                hls.levels.forEach((level, index) => { if (level.height) list.innerHTML += `<div class="q-item" onclick="setQuality(${index})">${level.height}p</div>`; });
             }
         }
 
