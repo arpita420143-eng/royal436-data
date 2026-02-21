@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MKS sports - Direct Live</title>
+    <title>Match Manas - Direct Live</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -61,8 +61,8 @@
         @keyframes blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
         @keyframes glow { 0% { box-shadow: 0 0 5px #ffb400; } 50% { box-shadow: 0 0 25px #ffb400; } 100% { box-shadow: 0 0 5px #ffb400; } }
 
-        /* TELEGRAM POPUP MODAL CSS */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        /* TELEGRAM POPUP MODAL CSS (Dark & Blurred Background) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 14, 0.98); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
         .modal-box { background: #1a1c23; border-radius: 16px; padding: 25px 20px; width: 90%; max-width: 350px; text-align: center; border: 1px solid #333; box-shadow: 0 10px 40px rgba(0,0,0,0.9); }
         .modal-title { font-size: 20px; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; color: white; }
         .modal-desc { font-size: 14px; color: #bbb; margin-bottom: 25px; line-height: 1.5; }
@@ -100,7 +100,7 @@
 
     <div class="news-ticker-box">
         <div class="ticker-content">
-            🚀 JOIN TELEGRAM FOR TOSS, SESSION & MATCH WINNER REPORT! 🏆 100% ACCURATE MATCH PREDICTION! ⚡ CLICK JOIN NOW! 🚀 &nbsp;&nbsp;&nbsp;&nbsp; 
+            🚀 JOIN TELEGRAM FOR TOSS, SESSION & MATCH WINNER REPORT! 🏆 100% ACCURATE MATCH PREDICTION! ⚡ CLICK JOIN NOW! 🚀 &nbsp;&nbsp;&nbsp;&nbsp; 🔴 WATCH LIVE MATCH HD FREE! 🔴
         </div>
     </div>
 
@@ -183,19 +183,12 @@
         let clickCount = 0;
 
         function init() {
-            // LOGIC: KAHIN BHI CLICK KARNE PAR POPUP AAYEGA
+            // 🔥 NEW LOGIC: LINK KHULTE HI INSTANT POPUP AAYEGA 🔥
             if (!sessionStorage.getItem('tgModalShown')) {
-                document.addEventListener('click', function triggerPopup(event) {
-                    if (event.target.closest('#tgModal')) return;
-
-                    if (!sessionStorage.getItem('tgModalShown')) {
-                        document.getElementById('tgModal').style.display = 'flex';
-                        document.removeEventListener('click', triggerPopup); 
-                    }
-                });
+                document.getElementById('tgModal').style.display = 'flex';
             }
 
-            // Ads Logic
+            // Ads Logic (Adsterra Popunder)
             if (!sessionStorage.getItem('adShown')) {
                 let adScript = document.createElement('script');
                 adScript.src = "https://exterminatorfalter.com/ff/e8/77/ffe877c5a9204d730c6d295f287d33e3.js"; 
@@ -265,7 +258,6 @@
             video.removeAttribute('src');
 
             if ((url.includes('.m3u8') || url.includes('.mp4')) && !url.includes('embed=true')) {
-                // M3U8/MP4 VIDEO KE LIYE 16:9 RATIO
                 wrapper.style.height = "auto"; 
                 wrapper.style.aspectRatio = "16/9"; 
                 iframeBox.style.display = 'none'; 
@@ -294,7 +286,6 @@
                     }
                 }
             } else {
-                // 🔥 IFRAME KE LIYE FIX (Badi height taaki video chota na ho) 🔥
                 wrapper.style.aspectRatio = "auto"; 
                 wrapper.style.height = window.innerWidth <= 600 ? "320px" : "450px"; 
                 video.style.display = 'none'; 
@@ -318,7 +309,7 @@
         function toggleQualityMenu() { const menu = document.getElementById('quality-menu'); menu.style.display = (menu.style.display === 'block') ? 'none' : 'block'; }
 
         // FAKE VIEWER LOGIC
-        let viewerCount = 191; 
+        let viewerCount = 312; 
         const viewerDisplay = document.getElementById('fake-viewers');
         function updateViewers() {
             let direction = Math.random() < 0.5 ? -1 : 1; 
