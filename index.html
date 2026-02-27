@@ -9,41 +9,42 @@
     
     <style>
         :root { --bg-main: #0a0b0e; --bg-card: #14161c; --accent-red: #e50914; --accent-blue: #0088cc; --accent-yellow: #ffb400; --text-main: #ffffff; }
-        body { margin: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
+        body { margin: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
         .header { position: sticky; top: 0; z-index: 100; background: rgba(20, 22, 28, 0.95); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #222; backdrop-filter: blur(10px); }
-        .logo { font-size: 18px; font-weight: 900; letter-spacing: 1px; color: white; cursor: pointer; user-select: none; }
-        .logo span { color: var(--accent-red); text-shadow: 0 0 10px var(--accent-red); }
+        .logo { font-size: 18px; font-weight: 900; color: white; cursor: pointer; }
+        .logo span { color: var(--accent-red); }
         .head-btns { display: flex; gap: 8px; }
-        .h-btn { padding: 6px 10px; border-radius: 50px; font-size: 10px; font-weight: 700; text-decoration: none; color: white; display: flex; align-items: center; gap: 5px; transition: 0.3s; }
+        .h-btn { padding: 6px 10px; border-radius: 50px; font-size: 10px; font-weight: 700; text-decoration: none; color: white; display: flex; align-items: center; gap: 5px; }
         .hb-tg { background: var(--accent-blue); } .hb-yt { background: var(--accent-red); }
-        .news-ticker-box { background: #e50914; color: white; font-size: 12px; font-weight: 800; padding: 8px 0; overflow: hidden; white-space: nowrap; position: relative; border-bottom: 2px solid #b20710; z-index: 90; }
-        .ticker-content { display: inline-block; white-space: nowrap; animation: scroll-left 20s linear infinite; padding-left: 100%; }
+        .news-ticker-box { background: #e50914; color: white; font-size: 12px; font-weight: 800; padding: 8px 0; overflow: hidden; white-space: nowrap; border-bottom: 2px solid #b20710; }
+        .ticker-content { display: inline-block; animation: scroll-left 20s linear infinite; padding-left: 100%; }
         @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
         .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 5px; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
-        .player-box { width: 100%; max-width: 800px; background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid #333; position: relative; margin-top: 5px; }
-        .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 12px; }
+        .player-box { width: 100%; max-width: 800px; background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid #333; margin-top: 5px; }
+        
+        /* --- FIXED VIDEO PLAYER CSS --- */
+        .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        /* Mobile ke liye aspect ratio fix */
+        .video-wrapper { min-height: 250px; aspect-ratio: 16/9; }
+        
         video { width: 100%; height: 100%; display: block; object-fit: contain; }
-        #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; background: #000; }
+        #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
         #iframe-box iframe { width: 100%; height: 100%; border: none; }
+        
         .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(0, 0, 0, 0.6); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 8px; pointer-events: none; }
         .live-dot { width: 8px; height: 8px; background: #e50914; border-radius: 50%; animation: blink 1.2s infinite ease-in-out; }
-        .settings-btn { position: absolute; top: 10px; right: 10px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 6px; cursor: pointer; display: none; }
-        #quality-menu { position: absolute; top: 45px; right: 10px; z-index: 30; background: rgba(15, 15, 15, 0.95); border: 1px solid #444; border-radius: 8px; width: 140px; display: none; }
-        .q-item { padding: 10px 12px; font-size: 13px; color: #ddd; cursor: pointer; }
-        .q-item.active { background: var(--accent-red); color: white; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .controls-box { padding: 15px 10px; }
         .prominent-fix-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; margin-bottom: 15px; background: linear-gradient(45deg, #ffb400, #ff8800); color: #000; font-weight: 900; font-size: 16px; border-radius: 12px; text-decoration: none; text-transform: uppercase; animation: glow 2s infinite; }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 5px #ffb400; } 50% { box-shadow: 0 0 20px #ffb400; } }
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
         .action-btn { padding: 12px; border-radius: 8px; color: white; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .tg { background: var(--accent-blue); } .yt { background: var(--accent-red); }
-        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid var(--accent-red); border-radius: 50%; animation: spin 1s linear infinite; display: none; z-index: 5; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        @keyframes glow { 0%, 100% { box-shadow: 0 0 5px #ffb400; } 50% { box-shadow: 0 0 20px #ffb400; } }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 14, 0.98); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
         .modal-box { background: #1a1c23; border-radius: 16px; padding: 25px 20px; width: 90%; max-width: 350px; text-align: center; border: 1px solid #333; }
-        .m-btn { padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; color: white; display: flex; align-items: center; justify-content: center; margin-top: 10px; }
         .site-footer { text-align: center; padding: 20px 10px; border-top: 1px solid #222; color: #777; font-size: 11px; background: #0a0b0e; }
+        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid var(--accent-red); border-radius: 50%; animation: spin 1s linear infinite; display: none; z-index: 5; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -51,8 +52,8 @@
         <div class="modal-box">
             <div style="font-size: 20px; font-weight: 800; color: white; margin-bottom: 10px;">Join Telegram! 📢</div>
             <div style="font-size: 14px; color: #bbb; margin-bottom: 20px;">Get 100% Accurate Match Prediction & Updates!</div>
-            <a href="https://t.me/MKSSports_3" target="_blank" class="m-btn" style="background: #0088cc;" onclick="closeTelegramModal()">🚀 Join Now</a>
-            <div class="m-btn" style="background: #2a2d3a;" onclick="closeTelegramModal()">Already Joined</div>
+            <a href="https://t.me/MKSSports_3" target="_blank" style="background: #0088cc; display: block; padding: 12px; border-radius: 8px; color: white; text-decoration: none; font-weight: 700;" onclick="closeTelegramModal()">🚀 Join Now</a>
+            <div style="background: #2a2d3a; margin-top: 10px; padding: 12px; border-radius: 8px; color: #ddd; cursor: pointer;" onclick="closeTelegramModal()">Already Joined</div>
         </div>
     </div>
 
@@ -75,8 +76,6 @@
                     <span class="live-dot"></span> LIVE <span style="margin: 0 5px; opacity: 0.3;">|</span>
                     <i class="fas fa-eye"></i> <span id="fake-viewers">312</span>
                 </div>
-                <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
-                <div id="quality-menu"><div id="quality-list"></div></div>
                 <video id="video" controls autoplay playsinline></video>
                 <div id="iframe-box"></div>
                 <div id="loader"></div>
@@ -92,7 +91,8 @@
                     <a href="https://youtube.com/@mkssports3" class="action-btn yt" target="_blank"><i class="fab fa-youtube"></i> Subscribe</a>
                 </div>
 
-                <div style="text-align: center; padding: 10px; background: #111; border-radius: 8px;">
+                <div style="text-align: center; padding: 10px; background: #111; border-radius: 8px; border: 1px dashed #333;">
+                    <div style="color: #666; font-size: 10px; margin-bottom: 5px;">SPONSORED</div>
                     <script type="text/javascript">
                         atOptions = { 'key' : 'c54c7d6bd836d9fe66d2c49614f17d00', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
                     </script>
@@ -122,7 +122,7 @@
         function init() {
             if (!sessionStorage.getItem('tgModalShown')) { document.getElementById('tgModal').style.display = 'flex'; }
 
-            // Naya Popunder Script yaha laga hai
+            // --- NAYA POPUNDER SCRIPT (Fixed) ---
             if (!sessionStorage.getItem('adShown')) {
                 let adScript = document.createElement('script');
                 adScript.src = "https://nickeldefiancepriest.com/e3/07/dc/e307dcd6c8c6b91d30a32cb2ac7540cb.js"; 
@@ -143,7 +143,7 @@
             const grid = document.getElementById('secret-grid');
             channels.forEach(ch => {
                 const btn = document.createElement('div');
-                btn.style.cssText = "background: #222; padding: 10px; text-align: center; border-radius: 8px; cursor: pointer; color: white; font-size: 12px;";
+                btn.style.cssText = "background: #222; padding: 10px; text-align: center; border-radius: 8px; cursor: pointer; color: white; font-size: 12px; border: 1px solid #333;";
                 btn.innerText = ch.name;
                 btn.onclick = () => { loadPlayer(ch); document.getElementById('secret-menu').style.display = 'none'; };
                 grid.appendChild(btn);
@@ -155,37 +155,28 @@
             const video = document.getElementById('video');
             const iframeBox = document.getElementById('iframe-box');
             const loader = document.getElementById('loader');
-            const settingsBtn = document.getElementById('settings-btn');
-            
+            const wrapper = document.getElementById('videoWrapper');
+
+            // Force wrapper display
+            wrapper.style.display = 'flex';
             loader.style.display = 'block';
+            
             if(hls) hls.destroy();
-            document.getElementById('quality-menu').style.display = 'none';
 
             if (ch.url.includes('.m3u8')) {
                 iframeBox.style.display = 'none';
                 video.style.display = 'block';
-                settingsBtn.style.display = 'block';
                 if (Hls.isSupported()) {
                     hls = new Hls(); hls.loadSource(ch.url); hls.attachMedia(video);
-                    hls.on(Hls.Events.MANIFEST_PARSED, () => { loader.style.display = 'none'; video.play(); generateQualityOptions(); });
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => { loader.style.display = 'none'; video.play().catch(() => { video.muted = true; video.play(); }); });
                 }
             } else {
                 video.style.display = 'none';
-                settingsBtn.style.display = 'none';
                 iframeBox.style.display = 'block';
                 iframeBox.innerHTML = `<iframe src="${ch.url}" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
                 loader.style.display = 'none';
             }
         }
-
-        function generateQualityOptions() {
-            const list = document.getElementById('quality-list');
-            list.innerHTML = '<div class="q-item active" onclick="setQuality(-1)">Auto</div>';
-            hls.levels.forEach((l, i) => { if(l.height) list.innerHTML += `<div class="q-item" onclick="setQuality(${i})">${l.height}p</div>`; });
-        }
-
-        function setQuality(i) { hls.currentLevel = i; document.getElementById('quality-menu').style.display = 'none'; }
-        function toggleQualityMenu() { const m = document.getElementById('quality-menu'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; }
 
         setInterval(() => { 
             let count = parseInt(document.getElementById('fake-viewers').innerText.replace(',',''));
