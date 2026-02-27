@@ -8,85 +8,51 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- PREMIUM DARK THEME --- */
         :root { --bg-main: #0a0b0e; --bg-card: #14161c; --accent-red: #e50914; --accent-blue: #0088cc; --accent-yellow: #ffb400; --text-main: #ffffff; }
         body { margin: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
-
-        /* HEADER */
         .header { position: sticky; top: 0; z-index: 100; background: rgba(20, 22, 28, 0.95); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #222; backdrop-filter: blur(10px); }
         .logo { font-size: 18px; font-weight: 900; letter-spacing: 1px; color: white; cursor: pointer; user-select: none; }
         .logo span { color: var(--accent-red); text-shadow: 0 0 10px var(--accent-red); }
         .head-btns { display: flex; gap: 8px; }
         .h-btn { padding: 6px 10px; border-radius: 50px; font-size: 10px; font-weight: 700; text-decoration: none; color: white; display: flex; align-items: center; gap: 5px; transition: 0.3s; }
         .hb-tg { background: var(--accent-blue); } .hb-yt { background: var(--accent-red); }
-
-        /* NEWS TICKER */
-        .news-ticker-box { background: #e50914; color: white; font-size: 12px; font-weight: 800; letter-spacing: 0.5px; padding: 8px 0; overflow: hidden; white-space: nowrap; position: relative; border-bottom: 2px solid #b20710; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 90; }
+        .news-ticker-box { background: #e50914; color: white; font-size: 12px; font-weight: 800; padding: 8px 0; overflow: hidden; white-space: nowrap; position: relative; border-bottom: 2px solid #b20710; z-index: 90; }
         .ticker-content { display: inline-block; white-space: nowrap; animation: scroll-left 20s linear infinite; padding-left: 100%; }
         @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-
-        /* CONTAINER */
-        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 5px; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
-        .player-box { width: 100%; max-width: 800px; background: var(--bg-card); border-radius: 12px; overflow: hidden; box-shadow: 0 10px 50px rgba(0,0,0,0.7); border: 1px solid #333; position: relative; margin-top: 5px; }
-
-        /* VIDEO WRAPPER */
+        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 5px; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
+        .player-box { width: 100%; max-width: 800px; background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid #333; position: relative; margin-top: 5px; }
         .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 12px; }
         video { width: 100%; height: 100%; display: block; object-fit: contain; }
         #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; background: #000; }
         #iframe-box iframe { width: 100%; height: 100%; border: none; }
-
-        /* CONTROLS & ADS */
-        .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(0, 0, 0, 0.6); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; gap: 8px; pointer-events: none; }
-        .live-dot { width: 8px; height: 8px; background: #e50914; border-radius: 50%; box-shadow: 0 0 10px #e50914; animation: blink 1.2s infinite ease-in-out; }
-        .live-sep { width: 1px; height: 12px; background: rgba(255,255,255,0.3); }
-        .view-count-box { display: flex; align-items: center; gap: 4px; color: #fff; font-variant-numeric: tabular-nums; }
-
-        .settings-btn { position: absolute; top: 10px; right: 10px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 6px; cursor: pointer; backdrop-filter: blur(5px); font-size: 16px; transition: 0.3s; display: none; }
-        #quality-menu { position: absolute; top: 45px; right: 10px; z-index: 30; background: rgba(15, 15, 15, 0.95); border: 1px solid #444; border-radius: 8px; width: 140px; display: none; overflow: hidden; }
-        .q-item { padding: 10px 12px; font-size: 13px; color: #ddd; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .q-item:hover { background: #333; } .q-item.active { background: var(--accent-red); color: white; font-weight: bold; }
-
+        .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(0, 0, 0, 0.6); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 8px; pointer-events: none; }
+        .live-dot { width: 8px; height: 8px; background: #e50914; border-radius: 50%; animation: blink 1.2s infinite ease-in-out; }
+        .settings-btn { position: absolute; top: 10px; right: 10px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 6px; cursor: pointer; display: none; }
+        #quality-menu { position: absolute; top: 45px; right: 10px; z-index: 30; background: rgba(15, 15, 15, 0.95); border: 1px solid #444; border-radius: 8px; width: 140px; display: none; }
+        .q-item { padding: 10px 12px; font-size: 13px; color: #ddd; cursor: pointer; }
+        .q-item.active { background: var(--accent-red); color: white; }
         .controls-box { padding: 15px 10px; }
-        .prominent-fix-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; margin-bottom: 15px; background: linear-gradient(45deg, #ffb400, #ff8800); color: #000; font-weight: 900; font-size: 16px; border-radius: 12px; text-decoration: none; text-transform: uppercase; box-shadow: 0 4px 15px rgba(255, 180, 0, 0.4); animation: glow 2s infinite; }
-        
-        .vip-ad-box { display: flex; justify-content: center; margin-bottom: 10px; background: #000; padding: 5px; border-radius: 8px; border: 1px solid #333; }
+        .prominent-fix-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; margin-bottom: 15px; background: linear-gradient(45deg, #ffb400, #ff8800); color: #000; font-weight: 900; font-size: 16px; border-radius: 12px; text-decoration: none; text-transform: uppercase; animation: glow 2s infinite; }
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
-        .action-btn { padding: 12px; border-radius: 8px; border: none; color: white; font-weight: 700; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: 0.2s; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .action-btn { padding: 12px; border-radius: 8px; color: white; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .tg { background: var(--accent-blue); } .yt { background: var(--accent-red); }
-        .ad-wall { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 5px; padding: 10px; background: #0a0b0e; border-radius: 10px; border: 1px solid #333; }
-        .ad-slot { background: #111; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; min-height: 260px; border: 1px dashed #444; }
-        
         #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid var(--accent-red); border-radius: 50%; animation: spin 1s linear infinite; display: none; z-index: 5; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
-        @keyframes glow { 0% { box-shadow: 0 0 5px #ffb400; } 50% { box-shadow: 0 0 25px #ffb400; } 100% { box-shadow: 0 0 5px #ffb400; } }
-
-        /* TELEGRAM POPUP MODAL CSS (Dark & Blurred Background) */
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 5px #ffb400; } 50% { box-shadow: 0 0 20px #ffb400; } }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 14, 0.98); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
-        .modal-box { background: #1a1c23; border-radius: 16px; padding: 25px 20px; width: 90%; max-width: 350px; text-align: center; border: 1px solid #333; box-shadow: 0 10px 40px rgba(0,0,0,0.9); }
-        .modal-title { font-size: 20px; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; color: white; }
-        .modal-desc { font-size: 14px; color: #bbb; margin-bottom: 25px; line-height: 1.5; }
-        .modal-btns { display: flex; gap: 10px; }
-        .m-btn { flex: 1; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 5px; text-decoration: none; color: white; transition: 0.3s; }
-        .mb-join { background: #0088cc; } .mb-join:hover { background: #0077b5; }
-        .mb-close { background: #2a2d3a; color: #ddd; border: 1px solid #444; } .mb-close:hover { background: #333645; }
-
-        /* FOOTER CSS */
-        .site-footer { text-align: center; padding: 20px 10px; margin-top: auto; border-top: 1px solid #222; color: #777; font-size: 11px; line-height: 1.5; width: 100%; box-sizing: border-box; background: #0a0b0e; }
-        .site-footer .fw-bold { color: #aaa; font-weight: 700; }
-        .site-footer .heart { color: #e50914; }
+        .modal-box { background: #1a1c23; border-radius: 16px; padding: 25px 20px; width: 90%; max-width: 350px; text-align: center; border: 1px solid #333; }
+        .m-btn { padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; text-decoration: none; color: white; display: flex; align-items: center; justify-content: center; margin-top: 10px; }
+        .site-footer { text-align: center; padding: 20px 10px; border-top: 1px solid #222; color: #777; font-size: 11px; background: #0a0b0e; }
     </style>
 </head>
 <body>
-
     <div class="modal-overlay" id="tgModal">
         <div class="modal-box">
-            <div class="modal-title">Join Our Telegram Channel! 📢</div>
-            <div class="modal-desc">Get instant updates, exclusive content and premium support by joining our community.</div>
-            <div class="modal-btns">
-                <a href="https://t.me/MKSSports_3" target="_blank" class="m-btn mb-join" onclick="closeTelegramModal()">🚀 Join Now</a>
-                <button class="m-btn mb-close" onclick="closeTelegramModal()">✅ Already Joined</button>
-            </div>
+            <div style="font-size: 20px; font-weight: 800; color: white; margin-bottom: 10px;">Join Telegram! 📢</div>
+            <div style="font-size: 14px; color: #bbb; margin-bottom: 20px;">Get 100% Accurate Match Prediction & Updates!</div>
+            <a href="https://t.me/MKSSports_3" target="_blank" class="m-btn" style="background: #0088cc;" onclick="closeTelegramModal()">🚀 Join Now</a>
+            <div class="m-btn" style="background: #2a2d3a;" onclick="closeTelegramModal()">Already Joined</div>
         </div>
     </div>
 
@@ -94,28 +60,21 @@
         <div class="logo" onclick="unlockSecret()">MATCH <span>MANAS</span></div>
         <div class="head-btns">
             <a href="https://t.me/MKSSports_3" class="h-btn hb-tg" target="_blank"><i class="fab fa-telegram-plane"></i> Join</a>
-            <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="h-btn hb-yt" target="_blank"><i class="fab fa-youtube"></i> Sub</a>
+            <a href="https://youtube.com/@mkssports3" class="h-btn hb-yt" target="_blank"><i class="fab fa-youtube"></i> Sub</a>
         </div>
     </div>
 
     <div class="news-ticker-box">
-        <div class="ticker-content">
-            🚀 JOIN TELEGRAM FOR TOSS, SESSION & MATCH WINNER REPORT! 🏆 100% ACCURATE MATCH PREDICTION! ⚡ CLICK JOIN NOW! 🚀 &nbsp;&nbsp;&nbsp;&nbsp; 🔴 WATCH LIVE MATCH HD FREE! 🔴
-        </div>
+        <div class="ticker-content">🚀 WATCH LIVE MATCH HD FREE! 🔴 JOIN TELEGRAM FOR TOSS & WINNER REPORTS! 🏆 &nbsp;&nbsp;&nbsp;&nbsp;</div>
     </div>
 
     <div class="main-container">
         <div class="player-box">
             <div class="video-wrapper" id="videoWrapper">
-                
                 <div class="live-overlay">
-                    <span class="live-dot"></span> LIVE
-                    <span class="live-sep"></span>
-                    <span class="view-count-box">
-                        <i class="fas fa-eye"></i> <span id="fake-viewers">312</span>
-                    </span>
+                    <span class="live-dot"></span> LIVE <span style="margin: 0 5px; opacity: 0.3;">|</span>
+                    <i class="fas fa-eye"></i> <span id="fake-viewers">312</span>
                 </div>
-
                 <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
                 <div id="quality-menu"><div id="quality-list"></div></div>
                 <video id="video" controls autoplay playsinline></video>
@@ -124,56 +83,34 @@
             </div>
             
             <div class="controls-box">
-                <a href="https://exterminatorfalter.com/xx36b9f9p?key=e694586701139358b6949cf0d2041fc4" target="_blank" class="prominent-fix-btn">
+                <a href="https://nickeldefiancepriest.com/uz5gxng1g?key=64a81be87aa8191cfc7d82578512a0c3" target="_blank" class="prominent-fix-btn">
                     <i class="fas fa-sync-alt"></i> ⚡ Fix Lag / Refresh Stream
                 </a>
 
                 <div class="btn-grid">
                     <a href="https://t.me/MKSSports_3" class="action-btn tg" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
-                    <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="action-btn yt" target="_blank"><i class="fab fa-youtube"></i> Subscribe</a>
+                    <a href="https://youtube.com/@mkssports3" class="action-btn yt" target="_blank"><i class="fab fa-youtube"></i> Subscribe</a>
                 </div>
 
-                <div style="text-align: center; color: #555; font-size: 10px; margin-bottom: 5px;">SPONSORED LINKS</div>
-                <div class="vip-ad-box">
+                <div style="text-align: center; padding: 10px; background: #111; border-radius: 8px;">
                     <script type="text/javascript">
                         atOptions = { 'key' : 'c54c7d6bd836d9fe66d2c49614f17d00', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
                     </script>
                     <script type="text/javascript" src="https://exterminatorfalter.com/c54c7d6bd836d9fe66d2c49614f17d00/invoke.js"></script>
                 </div>
-
-                <div style="text-align: center; color: #555; font-size: 10px; margin-top: 15px;">PARTNER OFFERS</div>
-                <div class="ad-wall">
-                    <div class="ad-slot">
-                        <script type="text/javascript">
-                            atOptions = { 'key' : 'c54c7d6bd836d9fe66d2c49614f17d00', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
-                        </script>
-                        <script type="text/javascript" src="https://exterminatorfalter.com/c54c7d6bd836d9fe66d2c49614f17d00/invoke.js"></script>
-                    </div>
-                </div>
-
             </div>
         </div>
 
-        <div id="channel-name" style="display: none;">Live Stream</div>
-        
         <div id="secret-menu" style="display: none; width: 100%; max-width: 800px; margin-top: 20px; background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #333;">
-            <div style="margin-bottom:10px; color:#aaa; font-size:12px; border-bottom:1px solid #333; padding-bottom:5px;">ADMIN PANEL - CHANGE CHANNEL</div>
             <div id="secret-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;"></div>
         </div>
     </div>
 
-    <div class="site-footer">
-        <span class="fw-bold">© MKS SPORTS</span> — Made with <span class="heart">❤️</span>. I am not the owner of any<br>
-        channels displayed. Streams are aggregated from public sources.<br>
-        Copyright remains with respective owners.
-    </div>
-
-<script>
+    <div class="site-footer">© MKS SPORTS — Made with ❤️</div>
+    <script>
         const channels = [
             { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
-            { id: "ytlive", name: "MKS Sports (Worker)", url: "https://www.youtube.com/embed/FMxgXZol_dY" },
             { id: "jokerbrand", name: "MKS sports", url: "https://mksplay.pages.dev/mkid?id=t20wc" },
-            { id: "royal", name: "YouTube Live", url: "https://www.youtube.com/embed/wc2UbeTRYf8" },
             { id: "HINDI", name: "Star Sports 1 Hindi", url: "https://skstar.pages.dev/splay?id=1108"},
             { id: "myfile", name: "Live Match", url: "https://vlive-au4.pages.dev/live-stream" }
         ];
@@ -183,116 +120,60 @@
         let clickCount = 0;
 
         function init() {
-            // 🔥 NEW LOGIC: LINK KHULTE HI INSTANT POPUP AAYEGA 🔥
-            if (!sessionStorage.getItem('tgModalShown')) {
-                document.getElementById('tgModal').style.display = 'flex';
-            }
+            if (!sessionStorage.getItem('tgModalShown')) { document.getElementById('tgModal').style.display = 'flex'; }
 
-            // Ads Logic (Adsterra Popunder)
+            // Naya Popunder Script yaha laga hai
             if (!sessionStorage.getItem('adShown')) {
                 let adScript = document.createElement('script');
-                adScript.src = "https://exterminatorfalter.com/ff/e8/77/ffe877c5a9204d730c6d295f287d33e3.js"; 
+                adScript.src = "https://nickeldefiancepriest.com/e3/07/dc/e307dcd6c8c6b91d30a32cb2ac7540cb.js"; 
                 document.body.appendChild(adScript);
                 sessionStorage.setItem('adShown', 'true');
             }
 
             const urlParams = new URLSearchParams(window.location.search);
-            const channelId = urlParams.get('id');
-            const found = channels.find(c => c.id === channelId);
-            activeCh = found ? found : channels[0];
-            
+            activeCh = channels.find(c => c.id === urlParams.get('id')) || channels[0];
             loadPlayer(activeCh);
             renderSecretMenu();
         }
 
-        function closeTelegramModal() {
-            document.getElementById('tgModal').style.display = 'none';
-            sessionStorage.setItem('tgModalShown', 'true'); 
-        }
-
-        function unlockSecret() {
-            clickCount++;
-            if (clickCount === 5) {
-                clickCount = 0;
-                let password = prompt("Enter Admin Password:");
-                if (password === "manas") { document.getElementById('secret-menu').style.display = 'block'; }
-            }
-        }
+        function closeTelegramModal() { document.getElementById('tgModal').style.display = 'none'; sessionStorage.setItem('tgModalShown', 'true'); }
+        function unlockSecret() { clickCount++; if (clickCount === 5) { clickCount = 0; if (prompt("Password:") === "manas") document.getElementById('secret-menu').style.display = 'block'; } }
 
         function renderSecretMenu() {
             const grid = document.getElementById('secret-grid');
-            grid.innerHTML = "";
             channels.forEach(ch => {
                 const btn = document.createElement('div');
-                btn.style.cssText = "background: #222; padding: 10px; text-align: center; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; border: 1px solid #333; color: white;";
+                btn.style.cssText = "background: #222; padding: 10px; text-align: center; border-radius: 8px; cursor: pointer; color: white; font-size: 12px;";
                 btn.innerText = ch.name;
-                btn.onclick = () => {
-                    loadPlayer(ch);
-                    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?id=' + ch.id;
-                    window.history.pushState({path:newUrl}, '', newUrl);
-                    document.getElementById('secret-menu').style.display = 'none';
-                };
+                btn.onclick = () => { loadPlayer(ch); document.getElementById('secret-menu').style.display = 'none'; };
                 grid.appendChild(btn);
             });
         }
 
         function loadPlayer(ch) {
             activeCh = ch;
-            document.getElementById('channel-name').innerText = ch.name;
-            playStream();
-        }
-
-        function playStream() {
-            const wrapper = document.getElementById('videoWrapper');
             const video = document.getElementById('video');
             const iframeBox = document.getElementById('iframe-box');
             const loader = document.getElementById('loader');
             const settingsBtn = document.getElementById('settings-btn');
             
-            let url = activeCh.url; 
             loader.style.display = 'block';
-
-            if(hls) { hls.destroy(); hls = null; }
+            if(hls) hls.destroy();
             document.getElementById('quality-menu').style.display = 'none';
-            video.src = "";
-            video.removeAttribute('src');
 
-            if ((url.includes('.m3u8') || url.includes('.mp4')) && !url.includes('embed=true')) {
-                wrapper.style.height = "auto"; 
-                wrapper.style.aspectRatio = "16/9"; 
-                iframeBox.style.display = 'none'; 
-                iframeBox.innerHTML = "";
+            if (ch.url.includes('.m3u8')) {
+                iframeBox.style.display = 'none';
                 video.style.display = 'block';
-                
-                settingsBtn.style.display = url.includes('.m3u8') ? 'block' : 'none';
-
-                if (url.includes('.m3u8') && Hls.isSupported()) {
-                    hls = new Hls(); 
-                    hls.loadSource(url); 
-                    hls.attachMedia(video);
-                    hls.on(Hls.Events.MANIFEST_PARSED, () => { 
-                        loader.style.display = 'none'; 
-                        video.play().catch(e => { video.muted = true; video.play(); }); 
-                        generateQualityOptions(); 
-                    });
-                } else {
-                    video.src = url;
-                    video.load();
-                    video.muted = true; 
-                    var p = video.play();
-                    if(p !== undefined) {
-                        p.then(() => { loader.style.display = 'none'; })
-                         .catch(e => { loader.style.display = 'none'; video.controls = true; });
-                    }
+                settingsBtn.style.display = 'block';
+                if (Hls.isSupported()) {
+                    hls = new Hls(); hls.loadSource(ch.url); hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => { loader.style.display = 'none'; video.play(); generateQualityOptions(); });
                 }
             } else {
-                wrapper.style.aspectRatio = "auto"; 
-                wrapper.style.height = window.innerWidth <= 600 ? "320px" : "450px"; 
-                video.style.display = 'none'; 
-                video.pause(); 
+                video.style.display = 'none';
                 settingsBtn.style.display = 'none';
                 iframeBox.style.display = 'block';
-                iframeBox.innerHTML = `<iframe src="${url}" width="100%" height="100%" frameborder="0" allowfullscreen scrolling="no" allow="autoplay; encrypted-media"></iframe>`;
+                iframeBox.innerHTML = `<iframe src="${ch.url}" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
                 loader.style.display = 'none';
             }
         }
@@ -300,26 +181,16 @@
         function generateQualityOptions() {
             const list = document.getElementById('quality-list');
             list.innerHTML = '<div class="q-item active" onclick="setQuality(-1)">Auto</div>';
-            if(hls && hls.levels.length > 0) {
-                hls.levels.forEach((level, index) => { if (level.height) list.innerHTML += `<div class="q-item" onclick="setQuality(${index})">${level.height}p</div>`; });
-            }
+            hls.levels.forEach((l, i) => { if(l.height) list.innerHTML += `<div class="q-item" onclick="setQuality(${i})">${l.height}p</div>`; });
         }
 
-        function setQuality(index) { if(hls) { hls.currentLevel = index; document.getElementById('quality-menu').style.display = 'none'; } }
-        function toggleQualityMenu() { const menu = document.getElementById('quality-menu'); menu.style.display = (menu.style.display === 'block') ? 'none' : 'block'; }
+        function setQuality(i) { hls.currentLevel = i; document.getElementById('quality-menu').style.display = 'none'; }
+        function toggleQualityMenu() { const m = document.getElementById('quality-menu'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; }
 
-        // FAKE VIEWER LOGIC
-        let viewerCount = 312; 
-        const viewerDisplay = document.getElementById('fake-viewers');
-        function updateViewers() {
-            let direction = Math.random() < 0.5 ? -1 : 1; 
-            let amount = Math.floor(Math.random() * 2) + 2; 
-            viewerCount += direction * amount;
-            if (viewerCount < 50) viewerCount += 10;
-            if (viewerCount > 800) viewerCount -= 10;
-            viewerDisplay.innerText = viewerCount.toLocaleString();
-        }
-        setInterval(updateViewers, 5000);
+        setInterval(() => { 
+            let count = parseInt(document.getElementById('fake-viewers').innerText.replace(',',''));
+            document.getElementById('fake-viewers').innerText = (count + (Math.floor(Math.random() * 5) - 2)).toLocaleString();
+        }, 5000);
 
         init();
     </script>
