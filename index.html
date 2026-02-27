@@ -35,6 +35,15 @@
         .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(0, 0, 0, 0.6); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 8px; pointer-events: none; }
         .live-dot { width: 8px; height: 8px; background: #e50914; border-radius: 50%; animation: blink 1.2s infinite ease-in-out; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* QUALITY SETTINGS BUTTON */
+        .settings-btn { position: absolute; top: 10px; right: 10px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 6px; cursor: pointer; backdrop-filter: blur(5px); font-size: 16px; transition: 0.3s; display: none; }
+        .settings-btn:hover { background: rgba(255,255,255,0.1); }
+        
+        /* QUALITY MENU */
+        #quality-menu { position: absolute; top: 45px; right: 10px; z-index: 30; background: rgba(15, 15, 15, 0.95); border: 1px solid #444; border-radius: 8px; width: 140px; display: none; overflow: hidden; }
+        .q-item { padding: 10px 12px; font-size: 13px; color: #ddd; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .q-item:hover { background: #333; } .q-item.active { background: var(--accent-red); color: white; font-weight: bold; }
         
         /* CONTROLS & BUTTONS */
         .controls-box { padding: 15px 10px; }
@@ -82,6 +91,10 @@
                     <span class="live-dot"></span> LIVE <span style="margin: 0 5px; opacity: 0.3;">|</span>
                     <i class="fas fa-eye"></i> <span id="fake-viewers">45</span>
                 </div>
+                
+                <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
+                <div id="quality-menu"><div id="quality-list"></div></div>
+                
                 <video id="video" controls autoplay playsinline></video>
                 <div id="iframe-box"></div>
                 <div id="loader"></div>
@@ -110,22 +123,22 @@
     </div>
 
     <script>
-        // --- UPDATED CHANNEL LIST ---
+        // --- CHANNEL LIST ---
         const channels = [
-            // 1. WILLOW HD (New Amagi Link)
+            // 1. WILLOW HD (Direct Player Link - Quality Btn Visible)
             { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", isIframe: false },
             
-            // 2. WEB STREAM (Vlive - Iframe)
+            // 2. WEB STREAM (Vlive - Iframe - Quality Btn Hidden)
             { id: "vlive", name: "Web Stream 1", url: "https://vlive-au4.pages.dev/live-stream", isIframe: true },
             
-            // 3. YOUTUBE (Embed - Iframe)
+            // 3. YOUTUBE (Embed - Iframe - Quality Btn Hidden)
             { id: "yt", name: "YouTube Live", url: "https://www.youtube.com/embed/jfKfPfyJRdk", isIframe: true }
         ];
 
         let hls = null;
         let activeCh = null;
         let clickCount = 0;
-        let viewerCount = Math.floor(Math.random() * 30) + 40; // Start around 40-70
+        let viewerCount = Math.floor(Math.random() * 30) + 40; 
 
         function init() {
             // Telegram Popup Logic
@@ -170,33 +183,73 @@
             const iframeBox = document.getElementById('iframe-box');
             const loader = document.getElementById('loader');
             const wrapper = document.getElementById('videoWrapper');
+            const settingsBtn = document.getElementById('settings-btn');
+            const qualityMenu = document.getElementById('quality-menu');
 
             wrapper.style.display = 'flex';
             loader.style.display = 'block';
+            qualityMenu.style.display = 'none'; // Hide menu on channel change
+            
             if(hls) { hls.destroy(); hls = null; }
 
             // --- IFRAME VS VIDEO LOGIC ---
             if (ch.isIframe || ch.url.includes('embed') || ch.url.includes('pages.dev')) {
                 // Iframe Mode
                 video.style.display = 'none';
+                settingsBtn.style.display = 'none'; // HIDE SETTINGS BUTTON
                 iframeBox.style.display = 'block';
                 iframeBox.innerHTML = `<iframe src="${ch.url}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; encrypted-media" scrolling="no"></iframe>`;
                 setTimeout(() => { loader.style.display = 'none'; }, 2000);
             } else {
-                // Direct Video Mode (HLS) - For Willow Link
+                // Direct Video Mode (HLS)
                 iframeBox.style.display = 'none';
                 iframeBox.innerHTML = "";
                 video.style.display = 'block';
+                settingsBtn.style.display = 'block'; // SHOW SETTINGS BUTTON
 
                 if (Hls.isSupported()) {
-                    hls = new Hls(); hls.loadSource(ch.url); hls.attachMedia(video);
-                    hls.on(Hls.Events.MANIFEST_PARSED, () => { loader.style.display = 'none'; video.play().catch(() => { video.muted = true; video.play(); }); });
+                    hls = new Hls(); 
+                    hls.loadSource(ch.url); 
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => { 
+                        loader.style.display = 'none'; 
+                        video.play().catch(() => { video.muted = true; video.play(); }); 
+                        generateQualityOptions(); // Generate options
+                    });
                 }
                 else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                     video.src = ch.url;
                     video.addEventListener('loadedmetadata', function() { loader.style.display = 'none'; video.play(); });
+                    settingsBtn.style.display = 'none'; // iOS native controls handle quality
                 }
             }
+        }
+
+        // --- QUALITY SETTINGS FUNCTIONS ---
+        function generateQualityOptions() {
+            const list = document.getElementById('quality-list');
+            list.innerHTML = '<div class="q-item active" onclick="setQuality(-1)">Auto</div>';
+            if(hls && hls.levels.length > 0) {
+                hls.levels.forEach((level, index) => { 
+                    if (level.height) list.innerHTML += `<div class="q-item" onclick="setQuality(${index})">${level.height}p</div>`; 
+                });
+            }
+        }
+
+        function setQuality(index) { 
+            if(hls) { 
+                hls.currentLevel = index; 
+                document.getElementById('quality-menu').style.display = 'none'; 
+                // Update active class
+                const items = document.querySelectorAll('.q-item');
+                items.forEach(item => item.classList.remove('active'));
+                items[index + 1].classList.add('active');
+            } 
+        }
+
+        function toggleQualityMenu() { 
+            const menu = document.getElementById('quality-menu'); 
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block'; 
         }
 
         // --- FAKE VIEWER LOGIC (15-99) ---
