@@ -110,9 +110,9 @@
     </div>
 
     <script>
-        // --- CHANNEL LIST ---
+        // --- UPDATED CHANNEL LIST ---
         const channels = [
-            // 1. WILLOW (Direct Player Link)
+            // 1. WILLOW HD (New Amagi Link)
             { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", isIframe: false },
             
             // 2. WEB STREAM (Vlive - Iframe)
@@ -125,9 +125,7 @@
         let hls = null;
         let activeCh = null;
         let clickCount = 0;
-        
-        // Initial Viewer Count (Starting between 40-70)
-        let viewerCount = Math.floor(Math.random() * 30) + 40; 
+        let viewerCount = Math.floor(Math.random() * 30) + 40; // Start around 40-70
 
         function init() {
             // Telegram Popup Logic
@@ -185,7 +183,7 @@
                 iframeBox.innerHTML = `<iframe src="${ch.url}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; encrypted-media" scrolling="no"></iframe>`;
                 setTimeout(() => { loader.style.display = 'none'; }, 2000);
             } else {
-                // Direct Video Mode (HLS)
+                // Direct Video Mode (HLS) - For Willow Link
                 iframeBox.style.display = 'none';
                 iframeBox.innerHTML = "";
                 video.style.display = 'block';
@@ -201,18 +199,14 @@
             }
         }
 
-        // --- FAKE VIEWER LOGIC (UNDER 100) ---
+        // --- FAKE VIEWER LOGIC (15-99) ---
         setInterval(() => {
-            // Randomly increase or decrease viewers by -2 to +3
             let change = Math.floor(Math.random() * 6) - 2; 
             viewerCount += change;
-            
-            // STRICT LIMIT: Keep between 15 and 99
             if (viewerCount > 99) viewerCount = 98;
             if (viewerCount < 15) viewerCount = 15;
-            
             document.getElementById('fake-viewers').innerText = viewerCount;
-        }, 4000); // Update every 4 seconds
+        }, 4000);
 
         init();
     </script>
