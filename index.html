@@ -20,27 +20,38 @@
         .h-btn { padding: 6px 10px; border-radius: 50px; font-size: 10px; font-weight: 700; text-decoration: none; color: white; display: flex; align-items: center; gap: 5px; }
         .hb-tg { background: var(--accent-blue); } .hb-yt { background: var(--accent-red); }
 
-        /* MAIN CONTAINER */
-        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 5px; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
-        .player-box { width: 100%; max-width: 800px; background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid #333; margin-top: 5px; }
+        /* MAIN CONTAINER (Mobile Full Width) */
+        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
         
-        /* PLAYER SIZE FIX */
-        .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 240px; aspect-ratio: 16/9; }
+        /* PLAYER BOX */
+        .player-box { width: 100%; max-width: 800px; background: var(--bg-card); overflow: hidden; border-bottom: 1px solid #333; margin-top: 0; }
+        @media(min-width: 600px) {
+            .main-container { padding: 10px; }
+            .player-box { border-radius: 12px; border: 1px solid #333; margin-top: 5px; }
+        }
+        
+        /* PLAYER SIZE INCREASED */
+        .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        
+        /* Mobile ke liye Height Badhai hai (300px) */
+        .video-wrapper { height: 300px; }
+        
+        /* Desktop/Tablet par Aspect Ratio follow karega */
+        @media(min-width: 600px) {
+            .video-wrapper { height: auto; aspect-ratio: 16/9; min-height: 400px; }
+        }
         
         video { width: 100%; height: 100%; display: block; object-fit: contain; }
         #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
         #iframe-box iframe { width: 100%; height: 100%; border: none; }
         
-        /* LIVE BADGE WITH VIEWERS */
+        /* LIVE BADGE */
         .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(0, 0, 0, 0.6); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 8px; pointer-events: none; }
         .live-dot { width: 8px; height: 8px; background: #e50914; border-radius: 50%; animation: blink 1.2s infinite ease-in-out; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-        /* QUALITY SETTINGS BUTTON */
+        /* SETTINGS BTN */
         .settings-btn { position: absolute; top: 10px; right: 10px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 6px; cursor: pointer; backdrop-filter: blur(5px); font-size: 16px; transition: 0.3s; display: none; }
-        .settings-btn:hover { background: rgba(255,255,255,0.1); }
-        
-        /* QUALITY MENU */
         #quality-menu { position: absolute; top: 45px; right: 10px; z-index: 30; background: rgba(15, 15, 15, 0.95); border: 1px solid #444; border-radius: 8px; width: 140px; display: none; overflow: hidden; }
         .q-item { padding: 10px 12px; font-size: 13px; color: #ddd; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .q-item:hover { background: #333; } .q-item.active { background: var(--accent-red); color: white; font-weight: bold; }
@@ -60,7 +71,6 @@
         /* FOOTER */
         .site-footer { text-align: center; padding: 20px 10px; border-top: 1px solid #222; color: #777; font-size: 11px; background: #0a0b0e; line-height: 1.6; }
         
-        /* LOADER */
         #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid var(--accent-red); border-radius: 50%; animation: spin 1s linear infinite; display: none; z-index: 5; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -123,15 +133,12 @@
     </div>
 
     <script>
-        // --- CHANNEL LIST ---
         const channels = [
-            // 1. WILLOW HD (Direct Player Link - Quality Btn Visible)
+            // 1. WILLOW HD
             { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", isIframe: false },
-            
-            // 2. WEB STREAM (Vlive - Iframe - Quality Btn Hidden)
+            // 2. WEB STREAM
             { id: "vlive", name: "Web Stream 1", url: "https://vlive-au4.pages.dev/live-stream", isIframe: true },
-            
-            // 3. YOUTUBE (Embed - Iframe - Quality Btn Hidden)
+            // 3. YOUTUBE
             { id: "yt", name: "YouTube Live", url: "https://www.youtube.com/embed/jfKfPfyJRdk", isIframe: true }
         ];
 
@@ -141,10 +148,8 @@
         let viewerCount = Math.floor(Math.random() * 30) + 40; 
 
         function init() {
-            // Telegram Popup Logic
             if (!sessionStorage.getItem('tgModalShown')) { document.getElementById('tgModal').style.display = 'flex'; }
 
-            // --- POPUNDER AD SCRIPT ---
             if (!sessionStorage.getItem('adShown')) {
                 let adScript = document.createElement('script');
                 adScript.src = "https://nickeldefiancepriest.com/e3/07/dc/e307dcd6c8c6b91d30a32cb2ac7540cb.js"; 
@@ -152,7 +157,6 @@
                 sessionStorage.setItem('adShown', 'true');
             }
 
-            // Load Channel
             const urlParams = new URLSearchParams(window.location.search);
             activeCh = channels.find(c => c.id === urlParams.get('id')) || channels[0];
             
@@ -161,8 +165,6 @@
         }
 
         function closeTelegramModal() { document.getElementById('tgModal').style.display = 'none'; sessionStorage.setItem('tgModalShown', 'true'); }
-        
-        // Secret Menu Logic (Click Logo 5 times)
         function unlockSecret() { clickCount++; if (clickCount === 5) { clickCount = 0; if (prompt("Password:") === "manas") document.getElementById('secret-menu').style.display = 'block'; } }
 
         function renderSecretMenu() {
@@ -188,44 +190,38 @@
 
             wrapper.style.display = 'flex';
             loader.style.display = 'block';
-            qualityMenu.style.display = 'none'; // Hide menu on channel change
+            qualityMenu.style.display = 'none';
             
             if(hls) { hls.destroy(); hls = null; }
 
-            // --- IFRAME VS VIDEO LOGIC ---
             if (ch.isIframe || ch.url.includes('embed') || ch.url.includes('pages.dev')) {
-                // Iframe Mode
                 video.style.display = 'none';
-                settingsBtn.style.display = 'none'; // HIDE SETTINGS BUTTON
+                settingsBtn.style.display = 'none';
                 iframeBox.style.display = 'block';
                 iframeBox.innerHTML = `<iframe src="${ch.url}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; encrypted-media" scrolling="no"></iframe>`;
                 setTimeout(() => { loader.style.display = 'none'; }, 2000);
             } else {
-                // Direct Video Mode (HLS)
                 iframeBox.style.display = 'none';
                 iframeBox.innerHTML = "";
                 video.style.display = 'block';
-                settingsBtn.style.display = 'block'; // SHOW SETTINGS BUTTON
+                settingsBtn.style.display = 'block';
 
                 if (Hls.isSupported()) {
-                    hls = new Hls(); 
-                    hls.loadSource(ch.url); 
-                    hls.attachMedia(video);
+                    hls = new Hls(); hls.loadSource(ch.url); hls.attachMedia(video);
                     hls.on(Hls.Events.MANIFEST_PARSED, () => { 
                         loader.style.display = 'none'; 
                         video.play().catch(() => { video.muted = true; video.play(); }); 
-                        generateQualityOptions(); // Generate options
+                        generateQualityOptions(); 
                     });
                 }
                 else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                     video.src = ch.url;
                     video.addEventListener('loadedmetadata', function() { loader.style.display = 'none'; video.play(); });
-                    settingsBtn.style.display = 'none'; // iOS native controls handle quality
+                    settingsBtn.style.display = 'none'; 
                 }
             }
         }
 
-        // --- QUALITY SETTINGS FUNCTIONS ---
         function generateQualityOptions() {
             const list = document.getElementById('quality-list');
             list.innerHTML = '<div class="q-item active" onclick="setQuality(-1)">Auto</div>';
@@ -240,7 +236,6 @@
             if(hls) { 
                 hls.currentLevel = index; 
                 document.getElementById('quality-menu').style.display = 'none'; 
-                // Update active class
                 const items = document.querySelectorAll('.q-item');
                 items.forEach(item => item.classList.remove('active'));
                 items[index + 1].classList.add('active');
@@ -252,7 +247,6 @@
             menu.style.display = (menu.style.display === 'block') ? 'none' : 'block'; 
         }
 
-        // --- FAKE VIEWER LOGIC (15-99) ---
         setInterval(() => {
             let change = Math.floor(Math.random() * 6) - 2; 
             viewerCount += change;
