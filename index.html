@@ -20,26 +20,23 @@
         .h-btn { padding: 6px 10px; border-radius: 50px; font-size: 10px; font-weight: 700; text-decoration: none; color: white; display: flex; align-items: center; gap: 5px; }
         .hb-tg { background: var(--accent-blue); } .hb-yt { background: var(--accent-red); }
 
-        /* MAIN CONTAINER (Mobile Full Width) */
+        /* MAIN CONTAINER (Mobile Full Width Fix) */
         .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
         
-        /* PLAYER BOX */
+        /* PLAYER BOX (Edge-to-Edge on Mobile) */
         .player-box { width: 100%; max-width: 800px; background: var(--bg-card); overflow: hidden; border-bottom: 1px solid #333; margin-top: 0; }
+        
+        /* Desktop/Tablet Specific Styles */
         @media(min-width: 600px) {
             .main-container { padding: 10px; }
             .player-box { border-radius: 12px; border: 1px solid #333; margin-top: 5px; }
         }
         
-        /* PLAYER SIZE INCREASED */
+        /* PLAYER WRAPPER */
         .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         
-        /* Mobile ke liye Height Badhai hai (300px) */
-        .video-wrapper { height: 300px; }
-        
-        /* Desktop/Tablet par Aspect Ratio follow karega */
-        @media(min-width: 600px) {
-            .video-wrapper { height: auto; aspect-ratio: 16/9; min-height: 400px; }
-        }
+        /* Force 16:9 Aspect Ratio & Full Width */
+        .video-wrapper { width: 100%; aspect-ratio: 16/9; }
         
         video { width: 100%; height: 100%; display: block; object-fit: contain; }
         #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
